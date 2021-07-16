@@ -15,6 +15,7 @@
   - [裸金属调试 rvbt Baremetal Backtrace](./riscv/rvbt.md)
   - [D1 移植小记](./riscv/rt0.md)
   - [RISC-V PMP 小记](./riscv/pmp.md)
+  - [D1 引导 Linux](./riscv/linux_d1.md)
 - 分布式存储 Raft & KV
   - [领导者选举 Raft Leader Election](./raft/leader_election.md)
 - 非线性薛定谔方程 Nonlinear Schrodinger Equation
