@@ -6,7 +6,7 @@
 !_TAG_PROGRAM_URL	https://ctags.io/	/official site/
 !_TAG_PROGRAM_VERSION	0.0.0	//
 Candidate 职责	raft/leader_election.md	/^### Candidate 职责$/;"	S
-Coffer 引导 Linux 小记	riscv/linux_d1.md	/^# Coffer 引导 Linux 小记$/;"	c
+Coffer 引导 Linux 与 RISC-V 定时器的坑	riscv/linux_d1.md	/^# Coffer 引导 Linux 与 RISC-V 定时器的坑$/;"	c
 Coffer 移植哪吒 D1 开发板小记	riscv/rt0.md	/^# Coffer 移植哪吒 D1 开发板小记$/;"	c
 D1 SDK OpenSBI 打包位置	riscv/rt0.md	/^## D1 SDK OpenSBI 打包位置$/;"	s
 DWARF 符号读取 (基于 `addr2line` 与 `gimli` 库)	riscv/rvbt.md	/^### DWARF 符号读取 (基于 `addr2line` 与 `gimli` 库)$/;"	S

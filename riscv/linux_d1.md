@@ -1,4 +1,4 @@
-# Coffer 引导 Linux 小记
+# Coffer 引导 Linux 与 RISC-V 定时器的坑
 
 最近尝试用 Coffer 为哪吒 D1 引导 RISC-V Linux 遇到了下面一些问题，记录一下。
 
@@ -35,10 +35,15 @@
 > 而 RISC-V 目前并没有 `stimer` 寄存器，所有定时器异常均为 machine mode 异常，无法被委托。
 > 只能以下列顺序传递。
 
+---
+
 1. machine mode 接收到中断，清除 `mie.MTIE` (防止再次触发)，设置 `mip.STIP` (触发 supervisor timer 中断)。
 2. 在 `mideleg` 被正确配置的情况下，supervisor timer 中断被 `stvec` 中的中断处理函数处理。
 3. `stvec` 处理完业务，调用 `set_timer` 约定下次定时器中断。
 4. `set_timer` 清理 `mip.STIP`，设置`mie.MTIE` 启用定时器中断。
+
+> PS: `mip.MTIP` 机器中断位为只读位，只能通过写入 `mtimecmp` 寄存器进行清理。 因此若希望清理 `mip.MTIP` 而不希望约定下次定时器中断时，
+> 可以向其中写入一个较大的值。
 
 ```rust
 pub(crate) fn set_timer(stime_value: u64) -> SbiRet {
