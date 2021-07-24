@@ -9,7 +9,7 @@
 - 可信执行环境 Trusted Execution Environment
   - To Be Updated
 - 编译器 Compilers
-  - To Be Updated
+  - [PLDI 2000 Exploiting Superword Level Parallelism with Multimedia Instruction Sets](./pl/Superword_Level_Parallelism_2000_PLDI_10.1145349299.349320.md)
 - RISC-V
   - [工具链安装 Toolchain Installation](./riscv/toolchain.md)
   - [裸金属调试 rvbt Baremetal Backtrace](./riscv/rvbt.md)
