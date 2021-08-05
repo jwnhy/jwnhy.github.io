@@ -10,6 +10,7 @@
   - To Be Updated
 - 编译器 Compilers
   - [PLDI 2000 Exploiting Superword Level Parallelism with Multimedia Instruction Sets](./pl/Superword_Level_Parallelism_2000_PLDI.md)
+  - [TAPL Lambda Calculus](./tapl/untyped_lambda_calculus.md)
 - RISC-V
   - [工具链安装 Toolchain Installation](./riscv/toolchain.md)
   - [裸金属调试 rvbt Baremetal Backtrace](./riscv/rvbt.md)
