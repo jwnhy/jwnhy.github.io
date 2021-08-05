@@ -5,14 +5,14 @@
 ## 语法
 
 λ-演算的语法非常简单，只由三种基础结构构成。
-\$\$
+$$
 \begin{align}
-t::=&\\\\
-    &x\\\\
-    &\lambda x.t\\\\
+t::=&\\
+    &x\\
+    &\lambda x.t\\
     &t\ t
 \end{align}
-\$\$
+$$
 
 
 分别代表变量，函数抽象与函数调用。
@@ -56,91 +56,91 @@ $f = \lambda(x,y)\Leftrightarrow f= \lambda x.\lambda y. s$​
 ### 布尔值
 
 在 λ-演算 中，布尔值可以被表示为
-\$\$
-\text{tru} = \lambda t.\lambda f. t\\\\
+$$
+\text{tru} = \lambda t.\lambda f. t\\
 \text{fls} = \lambda t.\lambda f. f
-\$\$
+$$
 可以利用下面的 $\text{test}$ 抽象实现与 `if` 类似的效果。
-\$\$
+$$
 \text{test} = \lambda l.\lambda m.\lambda n. l\ m\ n
-\$\$
+$$
 例如
-\$\$
+$$
 \text{test tru v w} = \text{v}
-\$\$
+$$
 类似的布尔值演算还有
-\$\$
-\text{and}=\lambda b. \lambda c. b\ c\ \text{fls}\\\\
-\text{or}=\lambda b. \lambda c. b\ \text{tru}\ c\\\\
+$$
+\text{and}=\lambda b. \lambda c. b\ c\ \text{fls}\\
+\text{or}=\lambda b. \lambda c. b\ \text{tru}\ c\\
 \text{not}=\lambda b. \text{fls tru}
-\$\$
+$$
 
 ### 二元组 Pair
 
 有了布尔值之后我们就可以设计二元组结构。
-\$\$
-\text{pair} = \lambda f.\lambda s.\lambda b.b\ f\ s\\\\
-\text{fst} = \lambda p.p\ \text{tru}\\\\
+$$
+\text{pair} = \lambda f.\lambda s.\lambda b.b\ f\ s\\
+\text{fst} = \lambda p.p\ \text{tru}\\
 \text{snd} = \lambda p.p\ \text{fls}
-\$\$
+$$
 
 ### 丘奇数 Church Numeral
 
 自然数可以利用一个函数的施加次数表示，这被称为丘奇数。
-\$\$
-c_0 = \lambda s.\lambda z.z \\\\
-c_1 = \lambda s.\lambda z.s\ z \\\\
+$$
+c_0 = \lambda s.\lambda z.z \\
+c_1 = \lambda s.\lambda z.s\ z \\
 c_2 = \lambda s.\lambda z.s\ s\ z
-\$\$
+$$
 常见计算有
-\$\$
+$$
 \begin{align}
-\text{scc}  &= \lambda n.\lambda s.\lambda z.s(n\ s\ z)\\\\
-     &= \lambda n.\lambda s.\lambda z.n(s\ (s\ z))\\\\
-\text{plus} &= \lambda m.\lambda n. \lambda s. \lambda z.m\ s\ (n\ s\ z)\\\\
-\text{times}&= \lambda m. \lambda n. m\ (plus\ n)\ c_0\\\\
-     &= \lambda m.\lambda n. \lambda s. \lambda z. m\ (n\ s\ z)\ z\\\\
-\text{exp}  &= \lambda m.\lambda n. n\ m\\\\
+\text{scc}  &= \lambda n.\lambda s.\lambda z.s(n\ s\ z)\\
+     &= \lambda n.\lambda s.\lambda z.n(s\ (s\ z))\\
+\text{plus} &= \lambda m.\lambda n. \lambda s. \lambda z.m\ s\ (n\ s\ z)\\
+\text{times}&= \lambda m. \lambda n. m\ (plus\ n)\ c_0\\
+     &= \lambda m.\lambda n. \lambda s. \lambda z. m\ (n\ s\ z)\ z\\
+\text{exp}  &= \lambda m.\lambda n. n\ m\\
 \text{iszro}&= \lambda m.m(\lambda x.\text{fls})\ \text{tru}
 \end{align}
-\$\$
+$$
 比较复杂的是丘奇数的前缀函数 $pred$ ，既返回前一个数，其实现如下
-\$\$
+$$
 \begin{align}
-\text{zz}&=\text{pair}\ c_0\ c_0\\\\
-\text{ss}&=\lambda p.\text{pair}\ (\text{snd}\ p)(\text{plus}\ c_1(\text{snd}\ p))\\\\
+\text{zz}&=\text{pair}\ c_0\ c_0\\
+\text{ss}&=\lambda p.\text{pair}\ (\text{snd}\ p)(\text{plus}\ c_1(\text{snd}\ p))\\
 \text{prd}&=\lambda m.\text{fst}(m\ \text{ss}\ \text{zz})
 \end{align}
-\$\$
+$$
 原理，由 $\text{zz}$ 开始，两个参数 $c_0$​ 分别递增，其中 $fst$ 比 $snd$ 小一，当执行了 $m$ 次之后，第一个参数为 $m-1$，第二个参数为 $m$，此时取出第一个参数即可。
 
 ### 递归
 
 不能进一步求值的表达式被称为 *normal form*，而存在一种表达式，其无法被求值到 *normal form*，他们是不收敛的。
-\$\$
+$$
 \text{omega} = (\lambda x.x\ x)\ (\lambda x.x\ x)
-\$\$
+$$
 我们可以进一步利用这一点，定义出**不动点结合子 fixed-point combinator**。
-\$\$
+$$
 \text{fix} = \lambda f.(\lambda x.f\ (\lambda y.x\ x\ y))\ (\lambda x.f\ (\lambda y.x\ x\ y))
-\$\$
+$$
 由此我们可以定义出递归求阶乘的函数。
-\$\$
+$$
 \begin{align}
-\text{g}&=\lambda \text{fct}.\lambda n. \text{iszro n}\ c_1\ (\text{times}\ n\ \text{fct}(\text{prd}\ n))\\\\
+\text{g}&=\lambda \text{fct}.\lambda n. \text{iszro n}\ c_1\ (\text{times}\ n\ \text{fct}(\text{prd}\ n))\\
 \text{factorial} &= \text{fix g}
 \end{align}
-\$\$
+$$
 求值过程
-\$\$
+$$
 \begin{align}
-&\ \ \ \ \ \text{factorial }c_3\\\\
-&=\text{fix g }c_3\\\\
-&=(\lambda x.\text{g}\ (\lambda y.x\ x\ y))\ (\lambda x.\text{g}\ (\lambda y.x\ x\ y))\ c_3\\\\
-&=\text{h h } c_3\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \text{we evaluate leftmost h}\\\\
+&\ \ \ \ \ \text{factorial }c_3\\
+&=\text{fix g }c_3\\
+&=(\lambda x.\text{g}\ (\lambda y.x\ x\ y))\ (\lambda x.\text{g}\ (\lambda y.x\ x\ y))\ c_3\\
+&=\text{h h } c_3\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \text{we evaluate leftmost h}\\
 &=\text{g }(\lambda y.h\ h\ y)\ c_3
 \end{align}
-\$\$
+$$
 可以看出已经完成了自复制。
 
 ## 形式化语法
