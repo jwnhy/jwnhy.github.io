@@ -5,12 +5,12 @@
 ## 语法
 
 λ-演算的语法非常简单，只由三种基础结构构成。
-\[\begin{align}
+$$\begin{align}
 t::=&\\\\
     &x\\\\
     &\lambda x.t\\\\
     &t\ t
-\end{align}\]
+\end{align}$$
 
 
 分别代表变量，函数抽象与函数调用。
