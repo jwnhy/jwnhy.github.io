@@ -141,4 +141,19 @@ $$\begin{align}
 
 ## 形式化语法
 
+**定义：[TERMS]** Let $\mathcal{V}$ be a countable set of variable names. The set of terms is the **smallest** set $\mathcal{T}$ such that.
+1. $x\in\mathcal{T}$ for every $x\in\mathcal{T}$;
+2. if $t_1\in\mathcal{T}$ and $x\in\mathcal{V}$, then $\lambda x.t_1\in \mathcal{T}$;
+3. if $t_1\in\mathcal{T}$ and $t_2\in\mathcal{T}$, then $t_1\ t_2\in\mathcal{T}$
+
+**定义：[Free Variables]** The set of *free variables* of a term $t$, written $FV(t)$ is defined as follows
+
+$$\begin{align}
+FV(x)&={x}\\
+FV(\lambda x.t_1)&=FV(t_1)\backslash{x}\\
+FV(t_1\ t_2)&=FV(t_1)\cup FV(t_2)
+\end{align}$$
+
+**定义：[Substitution]**
 TODO.
+
