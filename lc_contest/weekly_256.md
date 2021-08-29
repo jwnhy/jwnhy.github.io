@@ -103,7 +103,7 @@ time(110_2) = 1+2 = 3$$
 然后考虑动态规划，存在两种情况。
 
 1. Base Case: 不做任何优化直接计算需要的 $time(S)$ 。
-2. Induction Case: $time(S) = min(time(S), time(A)+time(B)), S=A\union B$。
+2. Induction Case: $time(S) = min(time(S), time(A)+time(B)), S=A\cup B$。
 
 对于 Induction Case，我们只需要遍历所有子集 $A\subset S$，并且取 $A$ 对 $S$ 的补集，对于二进制而言，即为下面两个操作。
 
