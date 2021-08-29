@@ -120,6 +120,7 @@ public:
         int n = tasks.size();
         int pn = 1 << n;
 
+        // 计算 Base Case
         for (int i = 1; i < pn; i++) {
             int acc = 0;
             spend[i] = 1;
@@ -136,6 +137,7 @@ public:
             }
         }
         
+        // 计算 Induction Case
         for (int i = 1; i < pn; i++) {
             if (spend[i] == 1)
                 continue;
