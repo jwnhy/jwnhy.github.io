@@ -1,6 +1,7 @@
-# [5854. 学生分数的最小差值](https://leetcode-cn.com/problems/minimum-difference-between-highest-and-lowest-of-k-scores/)
+# Leetcode 256 次周赛
+## [5854. 学生分数的最小差值](https://leetcode-cn.com/problems/minimum-difference-between-highest-and-lowest-of-k-scores/)
 
-## Description
+### Description
 
 给你一个 下标从 `0` 开始 的整数数组 `nums` ，其中 `nums[i]` 表示第 `i` 名学生的分数。另给你一个整数 `k` 。
 
@@ -8,7 +9,7 @@
 
 返回可能的 **最小差值** 。
 
-## Solution
+### Solution
 
 排序后遍历长度为 `k` 的序列，取序列头和序列尾插值最小的即可。
 
@@ -28,9 +29,9 @@ public:
 };
 ```
 
-# [5855. 找出数组中的第 K 大整数](https://leetcode-cn.com/problems/find-the-kth-largest-integer-in-the-array/)
+## [5855. 找出数组中的第 K 大整数](https://leetcode-cn.com/problems/find-the-kth-largest-integer-in-the-array/)
 
-## Description
+### Description
 
 给你一个字符串数组 `nums` 和一个整数 `k` 。`nums` 中的每个字符串都表示一个不含前导零的整数。
 
@@ -38,7 +39,7 @@ public:
 
 注意：重复的数字在统计时会视为不同元素考虑。例如，如果 `nums` 是 `["1","2","2"]`，那么 `"2"` 是最大的整数，`"2"` 是第二大的整数，`"1"` 是第三大的整数。
 
-## Solution
+### Solution
 
 可以利用 C++ 标准库中的 `nth_element` 函数配合一个自定义的比较函数 `cmp` 解决。
 
@@ -67,7 +68,7 @@ public:
 };
 ```
 
-### 注意
+#### 注意
 
 在 C++ Reference 中，对于 `nth_element` 描述如下。
 
@@ -75,9 +76,9 @@ public:
 
 因此对于相同元素应该默认返回 `false`，也如题意所示，否则在一些情况下会导致 `nth_element` 越界。
 
-# [5856. 完成任务的最少工作时间段](https://leetcode-cn.com/problems/minimum-number-of-work-sessions-to-finish-the-tasks/)
+## [5856. 完成任务的最少工作时间段](https://leetcode-cn.com/problems/minimum-number-of-work-sessions-to-finish-the-tasks/)
 
-## Description
+### Description
 
 你被安排了 `n` 个任务。任务需要花费的时间用长度为 `n` 的整数数组 `tasks` 表示，第 `i` 个任务需要花费 `tasks[i]` 小时完成。一个 工作时间段 中，你可以 **至多** 连续工作 `sessionTime` 个小时，然后休息一会儿。
 
@@ -90,7 +91,7 @@ public:
 
 测试数据保证 `sessionTime` 大于等于 `tasks[i]` 中的 **最大值** 。
 
-## Solution
+### Solution
 
 考虑到任务数量有限，可以利用二进制表示某种任务规划所需要的时间。
 
@@ -105,7 +106,7 @@ time(110_2) = 1+2 = 3$$
 1. Base Case: 不做任何优化直接计算需要的 $time(S)$ 。
 2. Induction Case: $time(S) = min(time(S), time(A)+time(B)), S=A\cup B$。
 
-对于 Induction Case，我们只需要遍历所有子集 $A\subset S$，并且取 $A$ 对 $S$ 的补集，对于二进制而言，即为下面两个操作。
+对于 Induction Case，我们只需要遍历所有子集 $A\subset S$，并且取 $A$ 对 $S$ 的补集 $B=S\backslash A$，对于二进制而言，即为下面两个操作。
 
 - 判断子集：`A | S == S`。
 - 计算补集：`S & ~A`。
