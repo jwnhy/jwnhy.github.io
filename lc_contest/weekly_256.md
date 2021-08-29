@@ -1,4 +1,4 @@
-# ![5854. 学生分数的最小差值](https://leetcode-cn.com/problems/minimum-difference-between-highest-and-lowest-of-k-scores/)
+# [5854. 学生分数的最小差值](https://leetcode-cn.com/problems/minimum-difference-between-highest-and-lowest-of-k-scores/)
 
 ## Description
 
@@ -28,7 +28,7 @@ public:
 };
 ```
 
-# ![5855. 找出数组中的第 K 大整数](https://leetcode-cn.com/problems/find-the-kth-largest-integer-in-the-array/)
+# [5855. 找出数组中的第 K 大整数](https://leetcode-cn.com/problems/find-the-kth-largest-integer-in-the-array/)
 
 ## Description
 
@@ -74,3 +74,18 @@ public:
 > More formally, nth_element partially sorts the range `[first, last)` in ascending order so that the condition `!(*j < *i)` or `comp(*j, *i) == false` is met for any i in the range `[first, nth)` and for any j in the range `[nth, last)`.
 
 因此对于相同元素应该默认返回 `false`，也如题意所示，否则在一些情况下会导致 `nth_element` 越界。
+
+# [5856. 完成任务的最少工作时间段](https://leetcode-cn.com/problems/minimum-number-of-work-sessions-to-finish-the-tasks/)
+
+## Description
+
+你被安排了 `n` 个任务。任务需要花费的时间用长度为 `n` 的整数数组 `tasks` 表示，第 `i` 个任务需要花费 `tasks[i]` 小时完成。一个 工作时间段 中，你可以 **至多** 连续工作 `sessionTime` 个小时，然后休息一会儿。
+
+你需要按照如下条件完成给定任务：
+
+如果你在某一个时间段开始一个任务，你需要在 **同一个** 时间段完成它。
+完成一个任务后，你可以 **立马** 开始一个新的任务。
+你可以按 **任意顺序** 完成任务。
+给你 `tasks` 和 `sessionTime` ，请你按照上述要求，返回完成所有任务所需要的 **最少** 数目的 工作时间段 。
+
+测试数据保证 **sessionTime** 大于等于 **tasks[i]** 中的 **最大值** 。
