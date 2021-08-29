@@ -88,4 +88,65 @@ public:
 你可以按 **任意顺序** 完成任务。
 给你 `tasks` 和 `sessionTime` ，请你按照上述要求，返回完成所有任务所需要的 **最少** 数目的 工作时间段 。
 
-测试数据保证 **sessionTime** 大于等于 **tasks[i]** 中的 **最大值** 。
+测试数据保证 `sessionTime` 大于等于 `tasks[i]` 中的 **最大值** 。
+
+## Solution
+
+考虑到任务数量有限，可以利用二进制表示某种任务规划所需要的时间。
+
+例如
+
+$$tasks = [1,2,3]\\
+time(111_2) = 1+2+3 = 6\\
+time(110_2) = 1+2 = 3$$
+
+然后考虑动态规划，存在两种情况。
+
+1. Base Case: 不做任何优化直接计算需要的 $time(S)$ 。
+2. Induction Case: $time(S) = min(time(S), time(A)+time(B)), S=A\union B$。
+
+对于 Induction Case，我们只需要遍历所有子集 $A\subset S$，并且取 $A$ 对 $S$ 的补集，对于二进制而言，即为下面两个操作。
+
+- 判断子集：`A | S == S`。
+- 计算补集：`S & ~A`。
+
+将上述组合成程序
+
+```c++
+class Solution {
+public:
+    int minSessions(vector<int>& tasks, int sessionTime) {
+        int spend[16384] = {0};
+        int n = tasks.size();
+        int pn = 1 << n;
+
+        for (int i = 1; i < pn; i++) {
+            int acc = 0;
+            spend[i] = 1;
+            for (int j = 0; j < n; j++) {
+                int t = 1 << j;
+                if (t & i) {
+                    if (acc + tasks[j] <= sessionTime) {
+                        acc += tasks[j];
+                    } else {
+                        acc = tasks[j];
+                        spend[i]++;
+                    }
+                }
+            }
+        }
+        
+        for (int i = 1; i < pn; i++) {
+            if (spend[i] == 1)
+                continue;
+            for (int j = 1; j < i; j++) {
+                // j \subset i
+                if ((i | j)  == i) {
+                    spend[i] = min(spend[j] + spend[i & ~j], spend[i]);
+                }
+            }
+        }
+        return spend[pn - 1];
+    }
+};
+```
