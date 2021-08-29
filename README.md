@@ -22,3 +22,5 @@
 - 非线性薛定谔方程 Nonlinear Schrodinger Equation
   - [Time-Splitting Method](./time_splitting/intro.md)
   - [Exponential Time Method](./etd/intro.md)
+- Leetcode 周赛
+  - [Weekly 256](./lc_contest/weekly_256.md)
