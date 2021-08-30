@@ -1,4 +1,5 @@
 # Leetcode 256 次周赛
+
 ## [5854. 学生分数的最小差值](https://leetcode-cn.com/problems/minimum-difference-between-highest-and-lowest-of-k-scores/)
 
 ### Description
