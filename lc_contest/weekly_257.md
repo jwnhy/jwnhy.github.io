@@ -56,7 +56,6 @@ $$\{(a_i,b_i)\},\forall i<j,a_i>a_j\vee (a_i = a_j\wedge b_i<=b_j)$$
 
 - $a_k<a_0$: 跳过所有攻击力和最大元素相等的。
 - $b_k>b_{max}$: 假设出现无效解，既 $\exists i$ 使得 $a_i=a_k,b_i>=b_k$。
-
 这与排序的结果相悖，所有满足 $a_i = a_j,b_i>=b_k$ 的元素都在当前元素 $k$ 之后，因此 $b_{max}$ 一定属于一个 $a_i > a_j$ 的元素。
 
 ```c++
