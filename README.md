@@ -24,5 +24,6 @@
   - [Exponential Time Method](./etd/intro.md)
 - Leetcode 周赛
   - [Weekly 256](./lc_contest/weekly_256.md)
+  - [Weekly 257](./lc_contest/weekly_257.md)
 - MISC
   - [广告推送问题](./misc/ad_problem.md)
