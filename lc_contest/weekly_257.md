@@ -47,7 +47,35 @@ public:
 
 ### Solution I 排序 `O(nlog(n))`
 
+对第一个元素降序，第二个元素升序，既
 
+$$\{(a_i,b_i)\},\forall i<j,a_i>a_j\vee (a_i = a_j\wedge b_i<=b_j)$$
+
+从前向后遍历，维护 $b_{max}=max_{1..k}(b_k)$，若出现 $a_k<a_0 \wedge b_k > b_{max}$，则为一个有效的解。
+分开看两个条件，
+
+- $a_k<a_0$: 跳过所有攻击力和最大元素相等的。
+- $b_k>b_{max}$: 假设出现无效解，既 $\exists i$ 使得 $a_i=a_k,b_i>=b_k$。
+
+这与排序的结果相悖，所有满足 $a_i = a_j,b_i>=b_k$ 的元素都在当前元素 $k$ 之后，因此 $b_{max}$ 一定属于一个 $a_i > a_j$ 的元素。
+
+```c++
+class Solution {
+public:
+    int numberOfWeakCharacters(vector<vector<int>>& properties) {
+        sort(properties.begin(), properties.end(), [](auto& a, auto& b) -> bool { return a[0] > b[0] || (a[0] == b[0] && a[1] <= b[1]); });
+        int atk_max = properties[0][0], def_max = properties[0][1];
+        int ans = 0;
+        for(auto prop: properties) {
+            if (prop[1] < def_max && prop[0] < atk_max)
+                ans++;
+            else
+                def_max = prop[1];
+        }
+        return ans;
+    }
+};
+```
 
 ### Solution II 查表 `O(n)`
 
