@@ -134,17 +134,34 @@ public:
 
 $$ f(i) = f(i-1) + 2\mbox{ if }next(i-1)=i-1$$
 
-否则，由于 $next(i-1)\in [0,i-1)$ 会跳回之前的房间里，这时可以观察到一个现象。
+否则，由于 $next(i-1)\in [0,i-1)$ 会跳回之前的房间里（这里发生了一次跳跃），这时可以观察到一个现象。
 
 > 若第一次抵达 $i-1$ 号房间，第 $[0,i-1)$ 号房间一定被访问过**偶数**次(包括 $0$ 次，可看成 $0$ 次)。
 
 那跳回第 $next(i-1)\in [0, i-1)$ 号房间时一定是奇数，现在要处理的问题就是第一次访问 $next(i-1)$ 再回到 $i-1$ 所需要的时间。
 
-那其实就是 $f(i-1)-f(next(i-1))$，是之前循环的一部分。
+那其实就是 $f(i-1)-f(next(i-1))$，是之前循环的一部分，然后再跳一次到第 $i$ 号房间。
 
 那么总的状态转移方程就是
 
 $$f(i)=\begin{cases}
 f(i-1) + 2&\mbox{if }next(i-1)=i-1\\
-f(i-1) + 1 + f(i-1) - f(next(i-1)) &\mbox{if }next(i-1)<i-1
+f(i-1) + 2 + f(i-1) - f(next(i-1)) &\mbox{if }next(i-1)<i-1
 \end{cases}$$
+
+代入 $next(i-1)=i-1$，简化为
+$$f(i) = 2 + 2*f(i-1) -  f(next(i-1))$$
+
+```c++
+class Solution {
+public:
+    int firstDayBeenInAllRooms(vector<int>& nextVisit) {
+        long long dp[100002] = {0};
+        long long MOD = 1e9 + 7;
+        for (int i = 1; i < nextVisit.size(); i++) {
+            dp[i] = (2 + 2 * dp[i-1] + MOD - dp[nextVisit[i-1]]) % MOD;
+        }
+        return (int)dp[nextVisit.size()-1];
+    }
+};
+```
