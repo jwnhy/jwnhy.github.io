@@ -27,3 +27,6 @@
   - [Weekly 257](./lc_contest/weekly_257.md)
 - MISC
   - [广告推送问题](./misc/ad_problem.md)
+- 逻辑基础 Logic Foundation
+  - [第五章 常见 Tactics](./lf/tactics.md)
+
