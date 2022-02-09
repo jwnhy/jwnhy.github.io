@@ -14,9 +14,9 @@
 
 ```coq
 Definition is_three (n: nat) : Prop :=
-    n = 3.
+    n = 3.
 Definition is_three : nat -> Prop :=
-    fun n:nat => n=3.
+    fun n:nat => n=3.
 (* Even "=" is a parameterized proposition *)
 Check @eq : forall A: Type, A -> A -> Prop
 ```
@@ -100,5 +100,3 @@ Inductive ev: nat -> Prop
 ## Imp
 
 Imp 章节为整卷做了很好的总结，非常 Amazing！
-
-
