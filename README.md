@@ -32,4 +32,4 @@
   - [广告推送问题](./misc/ad_problem.md)
 - 逻辑基础 Logic Foundation
   - [第五章 常见 Tactics](./lf/tactics.md)
-
+  - [逻辑基础小结](./lf/conclusion)
