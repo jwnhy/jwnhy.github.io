@@ -151,6 +151,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 拉取仓库	riscv/toolchain.md	/^### 拉取仓库$/;"	S
 拉取代码	riscv/toolchain.md	/^### 拉取代码$/;"	S
 最基础的格式——ETD1	etd/intro.md	/^## 最基础的格式——ETD1$/;"	s
+最弱前提	lf/hoare.md	/^### 最弱前提$/;"	S
 本文中所用的仓库压缩包	riscv/toolchain.md	/^## 本文中所用的仓库压缩包$/;"	s
 极限形式处理——Limiting Form	etd/intro.md	/^## 极限形式处理——Limiting Form$/;"	s
 查找相邻内存引用	pl/Superword_Level_Parallelism_2000_PLDI.md	/^### 查找相邻内存引用$/;"	S
