@@ -164,6 +164,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 算法过程	pl/Superword_Level_Parallelism_2000_PLDI.md	/^## 算法过程$/;"	s
 线性部分处理	time_splitting/intro.md	/^## 线性部分处理$/;"	s
 练习：寻找不变量	lf/hoare.md	/^#### 练习：寻找不变量$/;"	t
+练习：阶乘	lf/hoare.md	/^#### 练习：阶乘$/;"	t
 编译 & 安装	riscv/toolchain.md	/^### 编译 & 安装$/;"	S
 编译执行	riscv/toolchain.md	/^### 编译执行$/;"	S
 虚拟地址到物理地址的转换——页表	os/mem_addr.md	/^## 虚拟地址到物理地址的转换——页表$/;"	s

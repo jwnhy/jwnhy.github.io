@@ -280,3 +280,6 @@ while ~ (X = 0) do
 end
 { X + Y = m + n /\ X = 0 } ->> { Y = m + n }          (* ok algebra *)
 ```
+
+#### 练习：阶乘
+
