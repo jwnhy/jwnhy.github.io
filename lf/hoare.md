@@ -203,4 +203,80 @@ end;
 为了给该程序提供一个证明，我们需要记住除法的性质，既 `n × Y + X = m /\ X < n`。
 幸运的是，该 Prop 左边就是我们需要的循环不变量。以此为基础构造证明即可。
 
+#### 练习：寻找不变量
 
+```coq
+while ~ (X = 0) do
+  Z := Z + 1;
+  X := X - 1
+end
+```
+
+- 添加期望条件
+
+```coq
+{ X = m /\ Y = n}
+while ~ (X = 0) do
+  Z := Z + 1;
+  X := X - 1
+end
+{ Y = m + n }
+```
+
+- 添加基础不变量
+
+```coq
+{ X = m /\ Y = n } ->> { True }
+while ~ (X = 0) do
+  { True /\ X <> 0 }            (* ok *)
+  Y := Y + 1;
+  { True }                      (* ok *)
+  X := X - 1
+  { True }                      (* ok *)
+end
+{ True /\ X = 0 } ->> { Y = m + n } (* wrong *)
+```
+
+- 尝试收紧不变量
+
+```coq
+{ X = m /\ Y = n } ->> { Y = m + n }
+while ~ (X = 0) do
+  { Y = m + n /\ X <> 0 }            (* wrong *)
+  Y := Y + 1;
+  { Y = m + n }                      (* wrong *)
+  X := X - 1
+  { Y = m + n }                      (* wrong *)
+end
+{ Y = m + n /\ X = 0 } ->> { Y = m + n } (* ok *)
+```
+
+看起来我们需要将 `X` 纳入考量范围。
+
+- 更改不变量，考虑 `X`
+
+```coq
+{ X = m /\ Y = n } ->> { Y + 1 = m + n - ( X - 1 )  } (* ok algebra *)
+while ~ (X = 0) do
+  { Y + 1 = m + n - (X - 1) /\ X <> 0 }               (* ok *)
+  Y := Y + 1;
+  { Y = m + n - (X - 1) }                             (* ok *)
+  X := X - 1
+  { Y = m + n - X }                                   (* ok *)
+end
+{ Y = m + n - X /\ X = 0 } ->> { Y = m + n }          (* ok algebra *)
+```
+
+- 重写成好看的形式 `X + Y = m + n`
+
+```coq
+{ X = m /\ Y = n } ->> { X + Y = m + n  }             (* ok algebra *)
+while ~ (X = 0) do
+  { (X - 1) + (Y + 1) = m + n /\ X <> 0 }             (* ok *)
+  Y := Y + 1;
+  { (X - 1) + Y = m + n }                             (* ok *)
+  X := X - 1
+  { X + Y = m + n }                                   (* ok *)
+end
+{ X + Y = m + n /\ X = 0 } ->> { Y = m + n }          (* ok algebra *)
+```
