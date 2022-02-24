@@ -142,4 +142,28 @@ task->state = state;
 
 ### 进程树
 
+每一个进程有且仅有一个父进程，并且可能有 0 ～ n 个子进程。其访问方式如下。
 
+```c
+struct task_struct *my_parent = current -> parent;
+
+struct task_struct *task;
+struct list_head *list;
+
+list_for_each(list, &current->children) {
+  task = list_entry(list, struct task_struct, sibling);
+  /* do stuff with task */
+}
+```
+
+通过双向链表，我们也可以获取进程信息，或者通过 `for_each_process` 宏。
+
+```c
+list_entry(task->tasks.next, struct task_struct, tasks)
+list_entry(task->tasks.prev, struct task_struct, tasks)
+
+struct task_struct *task;
+for_each_process(task) {
+  /* this could take a long time. */
+}
+```
