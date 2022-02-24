@@ -25,6 +25,7 @@ Conclusion	paper/two_worlds.md	/^## Conclusion$/;"	s
 Conditionals 条件规则	lf/hoare.md	/^### Conditionals 条件规则$/;"	S
 Confidentiality	paper/tap.md	/^### Confidentiality$/;"	S
 Consequence 结果规则	lf/hoare.md	/^### Consequence 结果规则$/;"	S
+Copy-on-Write	linux/lkd.md	/^#### Copy-on-Write$/;"	t
 D1 SDK OpenSBI 打包位置	riscv/rt0.md	/^## D1 SDK OpenSBI 打包位置$/;"	s
 DWARF 符号读取 (基于 `addr2line` 与 `gimli` 库)	riscv/rvbt.md	/^### DWARF 符号读取 (基于 `addr2line` 与 `gimli` 库)$/;"	S
 Description	lc_contest/weekly_256.md	/^### Description$/;"	S
@@ -34,6 +35,7 @@ Example	etd/intro.md	/^#### Example$/;"	t
 Execution Representation	paper/tap.md	/^### Execution Representation$/;"	S
 Exponential Time Differencing	etd/intro.md	/^## Exponential Time Differencing$/;"	s
 Follower 职责	raft/leader_election.md	/^### Follower 职责$/;"	S
+Forking	linux/lkd.md	/^#### Forking$/;"	t
 Hoare 三元组	lf/hoare.md	/^## Hoare 三元组$/;"	s
 Hoare 逻辑	lf/hoare.md	/^# Hoare 逻辑$/;"	c
 Iago Attack 防御	paper/two_worlds.md	/^### Iago Attack 防御$/;"	S
@@ -191,6 +193,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 进入时指针检查	paper/two_worlds.md	/^### 进入时指针检查$/;"	S
 进入时硬件状态检查【<del>SGX专享</del>】	paper/two_worlds.md	/^### 进入时硬件状态检查【<del>SGX专享<\/del>】$/;"	S
 进程上下文	linux/lkd.md	/^### 进程上下文$/;"	S
+进程创建	linux/lkd.md	/^### 进程创建$/;"	S
 进程描述符与任务结构体	linux/lkd.md	/^### 进程描述符与任务结构体$/;"	S
 进程树	linux/lkd.md	/^### 进程树$/;"	S
 进程状态	linux/lkd.md	/^### 进程状态$/;"	S

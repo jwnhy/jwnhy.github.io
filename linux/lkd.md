@@ -167,3 +167,38 @@ for_each_process(task) {
   /* this could take a long time. */
 }
 ```
+
+### 进程创建
+
+UNIX 将进程创建分为两步，`fork()` 和 `exec()`，前者将当前进程直接复制一遍，除了 `pid`，`ppid`，和信号等完全一致。
+后者加载一个新的可执行文件并且开始执行。两者结合后与其他操作系统提供的单一接口功能类似。
+
+#### Copy-on-Write
+
+在 `fork()` 调用时，Linux 并不会拷贝所有资源，而是利用页表将数据段标识为不可读（non-readable），在进程尝试写入时，
+触发异常，再进行拷贝。
+这使得 `fork()` 的唯一性能损失来自于复制父进程的页表以及创建新的进程描述符。通常 `exec()` 都是紧接着 `fork()` 执行，
+因此这不会引起过多性能损失。
+
+#### Forking
+
+Linux 通过 `clone()` 系统调用实现 `fork()`，不管是 `fork()`，`vfork()` 和 `__clone()`，最后都会
+调用 `clone()`，然后 `clone()` 会使用 `kernel/fork.c` 中的 `do_fork()` 来进行实际的操作。
+
+在 `do_fork()` 中，大部分工作都是由 `copy_process()` 函数实现的。
+
+1. `dup_task_struct()` 创建一个新的内核栈，并且初始化新的 `thread_info` 和 `task_struct` 结构体。
+这些结构体的内容和父进程完全一致。
+2. 检查新的子进程并没有超出系统设置的上限。
+3. 将多个进程描述符中的信息清空或者设回默认值。
+4. `child->state = TASK_UNINTERRUPTIBLE` 以防止其被执行或者接受到任何信号。
+5. `copy_process()` 调用 `copy_flags()` 来更新新进程的 `flags` 成员。
+清空 `PF_SUPERPRIV` 标志，该标志代表该进程是否具有 superuser 权限。
+设置 `PF_FORKNOEXEC` 标志，该标志代表该进程还未执行 `exec()`。
+6. 调用 `alloc_pid()` 来分配新的 PID。
+7. 根据 `flags` 内容决定是复制资源还是共享资源，资源包含打开的文件，文件系统信息，信号处理器。
+8. 清理并返回指向 `child` 的指针。
+
+> Linux 会先执行子进程，因为其可能立刻执行 `exec()`，这会抵消父进程写入地址空间带来的 CoW 损失。
+
+
