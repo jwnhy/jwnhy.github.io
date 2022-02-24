@@ -190,7 +190,10 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 调用栈维护【<del>好像又是SGX专享</del>】	paper/two_worlds.md	/^### 调用栈维护【<del>好像又是SGX专享<\/del>】$/;"	S
 进入时指针检查	paper/two_worlds.md	/^### 进入时指针检查$/;"	S
 进入时硬件状态检查【<del>SGX专享</del>】	paper/two_worlds.md	/^### 进入时硬件状态检查【<del>SGX专享<\/del>】$/;"	S
+进程上下文	linux/lkd.md	/^### 进程上下文$/;"	S
 进程描述符与任务结构体	linux/lkd.md	/^### 进程描述符与任务结构体$/;"	S
+进程树	linux/lkd.md	/^### 进程树$/;"	S
+进程状态	linux/lkd.md	/^### 进程状态$/;"	S
 退出时状态清理【<del>SGX-LKL 行不行</del>】	paper/two_worlds.md	/^### 退出时状态清理【<del>SGX-LKL 行不行<\/del>】$/;"	S
 递归	tapl/untyped_lambda_calculus.md	/^### 递归$/;"	S
 逻辑基础小结	lf/conclusion.md	/^## 逻辑基础小结$/;"	s

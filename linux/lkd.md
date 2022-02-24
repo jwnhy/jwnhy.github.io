@@ -118,4 +118,28 @@ andl %esp, %eax
 current_thread_info() -> task;
 ```
 
+### 进程状态
+
+进程状态分为 5 种，定义在 `/include/linux/sched.h` 中。
+
+1. `TASK_RUNNING` 指可以运行的进程，它要么正在运行要么正在运行队列中等待，一个用户进程想要执行，
+它必然处于这种状态。
+2. `TASK_INTERRUPTIBLE` 指正在休眠的进程，等待某种条件满足，它可能因为两种原因被激活。
+    - 等待的条件满足
+    - 接收到信号
+3. `TASK_UNINTERRUPTIBLE` 与前者相同，只是它不会被信号唤醒，通常是因为进程必须不被中断的等待，或者等待的时间一般很短。
+4. `__TASK_TRACED` 和 `__TASK_STOPPED` 分别代表正在被调试的进程和已经终止的进程。
+
+进程状态可以通过 `<linux/sched.h>` 中的 `set_task_state(task, state)` 设置，它等价于下面的语句（单线程情况）。
+
+```c
+task->state = state;
+```
+
+### 进程上下文
+
+在用户态进程触发系统调用/异常之后，会陷入内核态，此时内核态可以视为正在该进程的上下文内执行（`current` 宏可用）。
+
+### 进程树
+
 
