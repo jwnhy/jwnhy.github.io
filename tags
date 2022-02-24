@@ -98,6 +98,7 @@ Unfolding Definitions	lf/tactics.md	/^## Unfolding Definitions$/;"	s
 Untyped Lambda Calculus	tapl/untyped_lambda_calculus.md	/^# Untyped Lambda Calculus$/;"	c
 Using Tactics in Hypothesis	lf/tactics.md	/^## Using Tactics in Hypothesis$/;"	s
 Varying the Induction Hypothesis	lf/tactics.md	/^## Varying the Induction Hypothesis$/;"	s
+Vfork	linux/lkd.md	/^#### Vfork$/;"	t
 Welcome to JohnWeston's Blog	README.md	/^## Welcome to JohnWeston's Blog$/;"	s
 What can we do?	paper/tap.md	/^## What can we do?$/;"	s
 While 循环规则	lf/hoare.md	/^### While 循环规则$/;"	S
@@ -129,6 +130,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 例子：除法	lf/hoare.md	/^#### 例子：除法$/;"	t
 修改内核版本	riscv/toolchain.md	/^### 修改内核版本$/;"	S
 全志自定义 Header	riscv/rt0.md	/^### 全志自定义 Header$/;"	S
+内核线程	linux/lkd.md	/^#### 内核线程$/;"	t
 内核编程的特殊性	linux/lkd.md	/^### 内核编程的特殊性$/;"	S
 内核配置	linux/lkd.md	/^### 内核配置$/;"	S
 内联函数	linux/lkd.md	/^#### 内联函数$/;"	t
@@ -178,6 +180,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 硬件层级 PMP 寄存器读写	riscv/pmp.md	/^## 硬件层级 PMP 寄存器读写$/;"	s
 算法过程	pl/Superword_Level_Parallelism_2000_PLDI.md	/^## 算法过程$/;"	s
 线性部分处理	time_splitting/intro.md	/^## 线性部分处理$/;"	s
+线程	linux/lkd.md	/^### 线程$/;"	S
 练习：寻找不变量	lf/hoare.md	/^#### 练习：寻找不变量$/;"	t
 练习：阶乘	lf/hoare.md	/^#### 练习：阶乘$/;"	t
 编译 & 安装	riscv/toolchain.md	/^### 编译 & 安装$/;"	S
@@ -197,6 +200,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 进程描述符与任务结构体	linux/lkd.md	/^### 进程描述符与任务结构体$/;"	S
 进程树	linux/lkd.md	/^### 进程树$/;"	S
 进程状态	linux/lkd.md	/^### 进程状态$/;"	S
+进程终止	linux/lkd.md	/^### 进程终止$/;"	S
 退出时状态清理【<del>SGX-LKL 行不行</del>】	paper/two_worlds.md	/^### 退出时状态清理【<del>SGX-LKL 行不行<\/del>】$/;"	S
 递归	tapl/untyped_lambda_calculus.md	/^### 递归$/;"	S
 逻辑基础小结	lf/conclusion.md	/^## 逻辑基础小结$/;"	s

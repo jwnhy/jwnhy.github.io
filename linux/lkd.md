@@ -201,4 +201,42 @@ Linux 通过 `clone()` 系统调用实现 `fork()`，不管是 `fork()`，`vfork
 
 > Linux 会先执行子进程，因为其可能立刻执行 `exec()`，这会抵消父进程写入地址空间带来的 CoW 损失。
 
+#### Vfork
+
+不带页表复制的 `fork()`，子进程要么执行 `exec()` 要么 `exit()`，感觉比较丑陋。
+
+### 线程
+
+Linux 并不具有特殊的”线程“，他们只是恰好共享了”资源“的进程。
+
+根据传入 `clone()` 系统调用的内容不同，共享的资源也不同，例如。
+
+```c
+// This creates a "thread" in common sense
+clone(CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, 0);
+// This is a normal fork would do
+clone(SIGCHLD, 0);
+// This is a vfork would do
+clone(CLONE_VFORK | CLONE_VM | SIGCHLD, 0);
+```
+
+具体列表在此，[CLONE 文档](https://man7.org/linux/man-pages/man2/clone.2.html)
+
+#### 内核线程
+
+Linux 内核会创建多个内核线程来进行后台操作，例如 `flush` 和 `ksoftirqd`。
+他们没有自己的地址空间 `mm = NULL`，并且不会与用户空间进行上下文切换。
+
+所有新的内核进程都是由 `kthreadd` fork 出来的，接口定义在 `<linux/kthread.h>`。
+
+```c
+// 创建但不执行，需要使用 wake_up_process 唤醒
+struct task_struct *kthread_create(int (*threadfn)(void *data), void* data, ...)
+// 创建并执行
+struct task_struct *kthread_run(int (*threadfn)(void *data), void* data, ...)
+// 结束内核线程
+struct task_struct *kthread_stop(struct task_struct *k)
+```
+
+### 进程终止
 
