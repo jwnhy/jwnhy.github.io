@@ -60,4 +60,62 @@ if (unlikely(error)) {
 ## LKD Chapter 3 Process 进程
 
 在 Linux 中，进程和线程并没有明显区分，只是一部分进程“恰好”共享了一些资源（文件描述符，内存空间等）。
-进程
+进程的生命周期如下。
+
+1. 父进程调用 `fork()` 库函数，其返回两次，一次在父进程，另一次在子进程。
+2. 子进程通常在 `fork()` 返回后立刻使用 `exec()` 来创建新的地址空间并加载程序。
+3. 当一个程序通过 `exit()` 退出时，父进程可以调用 `wait4()` 来查询其状态，如果父进程不调用，该进程会被置于僵尸进程区。
+
+### 进程描述符与任务结构体
+
+内核使用**循环双向链表**来存储类型为 `struct task_struct` 的进程描述符，其定义在 `<linux/sched.sh>`。
+这类型的描述符在 32 位机器上大小为 1.7 KB，还是比较大的，但它包含了所有内核需要的进程信息，例如进程的地址空间，挂起的信号，进程状态等。
+
+![image.png](https://ae03.alicdn.com/kf/H7e8b990f689e449f92a2000f66e55167m.png)
+
+### 分配进程描述符
+
+为了便于利用 `sp` 获取进程描述符位置，通常将 `task_struct` 放于内核栈顶部[最低地址]（prior 2.4），
+这样只需要一个寄存器 `sp` 以及一些计算，即可知道 `task_struct` 位置。
+由于 `task_struct` 太大了，逐渐不适合直接放置于内核栈顶部，后来改为使用 `slab` 分配器分配 `task_struct` ，
+以此允许使用对象重用（object reuse）和缓存染色（cache coloring）。
+并使用 `thread_info` 替代 `task_struct` 放入内核栈顶部（2.6～4.8），`thread_info` 如下所示。
+
+```c
+struct thread_info {
+  struct task_struct *task;
+  struct exec_domain *exec_domain;
+  __u32 flags;
+  __u32 status;
+  __u32 cpu;
+  int preempt_count;
+  mm_segment_t addr_limit;
+  struct restart_block restart_block;
+  void *sysenter_return;
+  int uaccess_err;
+};
+```
+
+再后来，由于 Linux 引入了 `percpu` 全局变量描述当前 CPU 上执行任务的信息，`thread_info` 内存储的
+信息也逐渐减少，具体见该 [commit](https://github.com/torvalds/linux/commit/15f4eae70d365bba26854c90b6002aaabb18c8aa)。
+
+### 存储进程描述符
+
+系统通过 `pid_t pid;` 来识别每个进程，为了与 UNIX 兼容，其最大值仅为 `32,768`，
+不过可以通过 `/proc/sys/kernel/pid_max` 修改。获取进程描述符的方式（prior 4.9），
+可以通过将栈顶指针的低 13 位清零获得位于最低地址的进程描述符。
+
+![image.png](https://ae02.alicdn.com/kf/H73462181c476422f9e90273ad2741217M.png)
+
+```asm
+movl $-8192, %eax
+andl %esp, %eax
+```
+
+这些都是由 `current_thread_info()` 函数实现的，最后可以通过其 `task` 成员获得 `task_struct`。
+
+```c
+current_thread_info() -> task;
+```
+
+

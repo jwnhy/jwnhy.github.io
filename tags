@@ -134,6 +134,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 出现在目标中的存在量词	lf/conclusion.md	/^#### 出现在目标中的存在量词$/;"	t
 分支标注	linux/lkd.md	/^#### 分支标注$/;"	t
 分解误差	time_splitting/intro.md	/^## 分解误差$/;"	s
+分配进程描述符	linux/lkd.md	/^### 分配进程描述符$/;"	S
 分页	os/mem_addr.md	/^### 分页$/;"	S
 利用 λ-演算 编程	tapl/untyped_lambda_calculus.md	/^## 利用 λ-演算 编程$/;"	s
 前置知识	pl/Superword_Level_Parallelism_2000_PLDI.md	/^## 前置知识$/;"	s
@@ -147,6 +148,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 堆栈展开函数	riscv/rvbt.md	/^### 堆栈展开函数$/;"	S
 多参数函数	tapl/untyped_lambda_calculus.md	/^### 多参数函数$/;"	S
 字符串参数检查	paper/two_worlds.md	/^### 字符串参数检查$/;"	S
+存储进程描述符	linux/lkd.md	/^### 存储进程描述符$/;"	S
 完整实现	raft/leader_election.md	/^### 完整实现$/;"	S
 定时器中断	riscv/linux_d1.md	/^## 定时器中断$/;"	s
 定理的实例化	lf/conclusion.md	/^## 定理的实例化$/;"	s
@@ -188,6 +190,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 调用栈维护【<del>好像又是SGX专享</del>】	paper/two_worlds.md	/^### 调用栈维护【<del>好像又是SGX专享<\/del>】$/;"	S
 进入时指针检查	paper/two_worlds.md	/^### 进入时指针检查$/;"	S
 进入时硬件状态检查【<del>SGX专享</del>】	paper/two_worlds.md	/^### 进入时硬件状态检查【<del>SGX专享<\/del>】$/;"	S
+进程描述符与任务结构体	linux/lkd.md	/^### 进程描述符与任务结构体$/;"	S
 退出时状态清理【<del>SGX-LKL 行不行</del>】	paper/two_worlds.md	/^### 退出时状态清理【<del>SGX-LKL 行不行<\/del>】$/;"	S
 递归	tapl/untyped_lambda_calculus.md	/^### 递归$/;"	S
 逻辑基础小结	lf/conclusion.md	/^## 逻辑基础小结$/;"	s
