@@ -25,7 +25,7 @@ Conclusion	paper/two_worlds.md	/^## Conclusion$/;"	s
 Conditionals 条件规则	lf/hoare.md	/^### Conditionals 条件规则$/;"	S
 Confidentiality	paper/tap.md	/^### Confidentiality$/;"	S
 Consequence 结果规则	lf/hoare.md	/^### Consequence 结果规则$/;"	S
-Copy-on-Write	linux/lkd.md	/^#### Copy-on-Write$/;"	t
+Copy-on-Write	linux/lkd1.md	/^#### Copy-on-Write$/;"	t
 D1 SDK OpenSBI 打包位置	riscv/rt0.md	/^## D1 SDK OpenSBI 打包位置$/;"	s
 DWARF 符号读取 (基于 `addr2line` 与 `gimli` 库)	riscv/rvbt.md	/^### DWARF 符号读取 (基于 `addr2line` 与 `gimli` 库)$/;"	S
 Description	lc_contest/weekly_256.md	/^### Description$/;"	S
@@ -35,7 +35,7 @@ Example	etd/intro.md	/^#### Example$/;"	t
 Execution Representation	paper/tap.md	/^### Execution Representation$/;"	S
 Exponential Time Differencing	etd/intro.md	/^## Exponential Time Differencing$/;"	s
 Follower 职责	raft/leader_election.md	/^### Follower 职责$/;"	S
-Forking	linux/lkd.md	/^#### Forking$/;"	t
+Forking	linux/lkd1.md	/^#### Forking$/;"	t
 Hoare 三元组	lf/hoare.md	/^## Hoare 三元组$/;"	s
 Hoare 逻辑	lf/hoare.md	/^# Hoare 逻辑$/;"	c
 Iago Attack 防御	paper/two_worlds.md	/^### Iago Attack 防御$/;"	S
@@ -43,12 +43,12 @@ Imp	lf/conclusion.md	/^## Imp$/;"	s
 Inductive Proposition	lf/conclusion.md	/^## Inductive Proposition$/;"	s
 Integrity	paper/tap.md	/^### Integrity$/;"	S
 Intel x86 架构下的内存寻址	os/mem_addr.md	/^## Intel x86 架构下的内存寻址$/;"	s
-LKD Chapter 3 Process 进程	linux/lkd.md	/^## LKD Chapter 3 Process 进程$/;"	s
-LKD 读书笔记 Part 1	linux/lkd.md	/^# LKD 读书笔记 Part 1$/;"	c
+LKD Chapter 3 Process 进程	linux/lkd1.md	/^## LKD Chapter 3 Process 进程$/;"	s
+LKD 读书笔记 Part 1	linux/lkd1.md	/^# LKD 读书笔记 Part 1$/;"	c
 Leader 职责	raft/leader_election.md	/^### Leader 职责$/;"	S
 Leetcode 256 次周赛	lc_contest/weekly_256.md	/^# Leetcode 256 次周赛$/;"	c
 Leetcode 257 次周赛	lc_contest/weekly_257.md	/^# Leetcode 257 次周赛$/;"	c
-Linux Kernel Development Chapter 2	linux/lkd.md	/^## Linux Kernel Development Chapter 2$/;"	s
+Linux Kernel Development Chapter 2	linux/lkd1.md	/^## Linux Kernel Development Chapter 2$/;"	s
 Logic Foundation Ch5 常见 More Basic Tactics	lf/tactics.md	/^# Logic Foundation Ch5 常见 More Basic Tactics$/;"	c
 Logic in Coq	lf/conclusion.md	/^## Logic in Coq$/;"	s
 MATLAB 代码	etd/intro.md	/^## MATLAB 代码$/;"	s
@@ -98,7 +98,7 @@ Unfolding Definitions	lf/tactics.md	/^## Unfolding Definitions$/;"	s
 Untyped Lambda Calculus	tapl/untyped_lambda_calculus.md	/^# Untyped Lambda Calculus$/;"	c
 Using Tactics in Hypothesis	lf/tactics.md	/^## Using Tactics in Hypothesis$/;"	s
 Varying the Induction Hypothesis	lf/tactics.md	/^## Varying the Induction Hypothesis$/;"	s
-Vfork	linux/lkd.md	/^#### Vfork$/;"	t
+Vfork	linux/lkd1.md	/^#### Vfork$/;"	t
 Welcome to JohnWeston's Blog	README.md	/^## Welcome to JohnWeston's Blog$/;"	s
 What can we do?	paper/tap.md	/^## What can we do?$/;"	s
 While 循环规则	lf/hoare.md	/^### While 循环规则$/;"	S
@@ -130,15 +130,15 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 例子：除法	lf/hoare.md	/^#### 例子：除法$/;"	t
 修改内核版本	riscv/toolchain.md	/^### 修改内核版本$/;"	S
 全志自定义 Header	riscv/rt0.md	/^### 全志自定义 Header$/;"	S
-内核线程	linux/lkd.md	/^#### 内核线程$/;"	t
-内核编程的特殊性	linux/lkd.md	/^### 内核编程的特殊性$/;"	S
-内核配置	linux/lkd.md	/^### 内核配置$/;"	S
-内联函数	linux/lkd.md	/^#### 内联函数$/;"	t
+内核线程	linux/lkd1.md	/^#### 内核线程$/;"	t
+内核编程的特殊性	linux/lkd1.md	/^### 内核编程的特殊性$/;"	S
+内核配置	linux/lkd1.md	/^### 内核配置$/;"	S
+内联函数	linux/lkd1.md	/^#### 内联函数$/;"	t
 出现在假设中的存在量词	lf/conclusion.md	/^#### 出现在假设中的存在量词$/;"	t
 出现在目标中的存在量词	lf/conclusion.md	/^#### 出现在目标中的存在量词$/;"	t
-分支标注	linux/lkd.md	/^#### 分支标注$/;"	t
+分支标注	linux/lkd1.md	/^#### 分支标注$/;"	t
 分解误差	time_splitting/intro.md	/^## 分解误差$/;"	s
-分配进程描述符	linux/lkd.md	/^### 分配进程描述符$/;"	S
+分配进程描述符	linux/lkd1.md	/^### 分配进程描述符$/;"	S
 分页	os/mem_addr.md	/^### 分页$/;"	S
 利用 λ-演算 编程	tapl/untyped_lambda_calculus.md	/^## 利用 λ-演算 编程$/;"	s
 前置知识	pl/Superword_Level_Parallelism_2000_PLDI.md	/^## 前置知识$/;"	s
@@ -152,7 +152,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 堆栈展开函数	riscv/rvbt.md	/^### 堆栈展开函数$/;"	S
 多参数函数	tapl/untyped_lambda_calculus.md	/^### 多参数函数$/;"	S
 字符串参数检查	paper/two_worlds.md	/^### 字符串参数检查$/;"	S
-存储进程描述符	linux/lkd.md	/^### 存储进程描述符$/;"	S
+存储进程描述符	linux/lkd1.md	/^### 存储进程描述符$/;"	S
 完整实现	raft/leader_election.md	/^### 完整实现$/;"	S
 定时器中断	riscv/linux_d1.md	/^## 定时器中断$/;"	s
 定理的实例化	lf/conclusion.md	/^## 定理的实例化$/;"	s
@@ -163,7 +163,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 扩展可打包指令	pl/Superword_Level_Parallelism_2000_PLDI.md	/^### 扩展可打包指令$/;"	S
 拉取仓库	riscv/toolchain.md	/^### 拉取仓库$/;"	S
 拉取代码	riscv/toolchain.md	/^### 拉取代码$/;"	S
-无法使用 C 库	linux/lkd.md	/^#### 无法使用 C 库$/;"	t
+无法使用 C 库	linux/lkd1.md	/^#### 无法使用 C 库$/;"	t
 最基础的格式——ETD1	etd/intro.md	/^## 最基础的格式——ETD1$/;"	s
 最弱前提	lf/hoare.md	/^### 最弱前提$/;"	S
 本文中所用的仓库压缩包	riscv/toolchain.md	/^## 本文中所用的仓库压缩包$/;"	s
@@ -175,12 +175,12 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 注意	lc_contest/weekly_257.md	/^#### 注意$/;"	t
 清理结构体数据	paper/two_worlds.md	/^### 清理结构体数据$/;"	S
 清空 `.bss` 段和初始化 `.data` 段	riscv/rt0.md	/^### 清空 `.bss` 段和初始化 `.data` 段$/;"	S
-特殊配置命令	linux/lkd.md	/^#### 特殊配置命令$/;"	t
+特殊配置命令	linux/lkd1.md	/^#### 特殊配置命令$/;"	t
 疑问	pl/Superword_Level_Parallelism_2000_PLDI.md	/^## 疑问$/;"	s
 硬件层级 PMP 寄存器读写	riscv/pmp.md	/^## 硬件层级 PMP 寄存器读写$/;"	s
 算法过程	pl/Superword_Level_Parallelism_2000_PLDI.md	/^## 算法过程$/;"	s
 线性部分处理	time_splitting/intro.md	/^## 线性部分处理$/;"	s
-线程	linux/lkd.md	/^### 线程$/;"	S
+线程	linux/lkd1.md	/^### 线程$/;"	S
 练习：寻找不变量	lf/hoare.md	/^#### 练习：寻找不变量$/;"	t
 练习：阶乘	lf/hoare.md	/^#### 练习：阶乘$/;"	t
 编译 & 安装	riscv/toolchain.md	/^### 编译 & 安装$/;"	S
@@ -195,12 +195,13 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 调用栈维护【<del>好像又是SGX专享</del>】	paper/two_worlds.md	/^### 调用栈维护【<del>好像又是SGX专享<\/del>】$/;"	S
 进入时指针检查	paper/two_worlds.md	/^### 进入时指针检查$/;"	S
 进入时硬件状态检查【<del>SGX专享</del>】	paper/two_worlds.md	/^### 进入时硬件状态检查【<del>SGX专享<\/del>】$/;"	S
-进程上下文	linux/lkd.md	/^### 进程上下文$/;"	S
-进程创建	linux/lkd.md	/^### 进程创建$/;"	S
-进程描述符与任务结构体	linux/lkd.md	/^### 进程描述符与任务结构体$/;"	S
-进程树	linux/lkd.md	/^### 进程树$/;"	S
-进程状态	linux/lkd.md	/^### 进程状态$/;"	S
-进程终止	linux/lkd.md	/^### 进程终止$/;"	S
+进程上下文	linux/lkd1.md	/^### 进程上下文$/;"	S
+进程创建	linux/lkd1.md	/^### 进程创建$/;"	S
+进程描述符与任务结构体	linux/lkd1.md	/^### 进程描述符与任务结构体$/;"	S
+进程描述符的释放	linux/lkd1.md	/^#### 进程描述符的释放$/;"	t
+进程树	linux/lkd1.md	/^### 进程树$/;"	S
+进程状态	linux/lkd1.md	/^### 进程状态$/;"	S
+进程终止	linux/lkd1.md	/^### 进程终止$/;"	S
 退出时状态清理【<del>SGX-LKL 行不行</del>】	paper/two_worlds.md	/^### 退出时状态清理【<del>SGX-LKL 行不行<\/del>】$/;"	S
 递归	tapl/untyped_lambda_calculus.md	/^### 递归$/;"	S
 逻辑基础小结	lf/conclusion.md	/^## 逻辑基础小结$/;"	s
