@@ -1,0 +1,71 @@
+
+Hongyi Lu
+
+Shenzhen, Guangdong 518000
+8615625290103
+luhy2017@mail.sustech.edu.cn
+
+Education
+
+Expected in June 2025 Hong Kong University of Science And Technology Hong Kong, China
+Ph.D. Computer Science 
+
+June 2021 Southern University of Science And Technology Shenzhen, Guangdong, China
+Bachelor of Science Mathematics 
+
+Professional Summary
+
+Motivated student currently working towards degree in Computer Science. Extensive background in investigating system security research.
+
+Skills
+
+Proficient in RISC-V ISA, system software, bootloader
+System software expertise
+Familiar to compilers, Linux kernel
+
+Know software verification
+Academic Writing
+
+Professional Experience
+
+December 2021 to Current
+Southern University Of Science And Technology Shenzhen, Guangdong
+Research Assistant    
+Develop system software on RISC-V platform.
+Research security solutions on RISC-V.
+Perform verification for system software.
+December 2017 to June 2021
+Southern University Of Science And Technology Shenzhen, Guangdong
+Teacher Helper    
+
+Supported instructor with test administration, curriculum development and assignment grading.
+Recorded grades for coursework and tests in online reporting system.
+
+July 2020 to August 2020
+Tencent Holdings Shenzhen, Guangdong
+Intern    
+
+Created data visualization graphics, translating complex data sets into comprehensive visual representations.
+Developed database solutions in multiple SQL languages.
+
+Publications
+
+Raven: A Novel Kernel Debugging Tool on RISC-V
+Hongyi Lu; Fengwei Zhang
+To appear in The Design Automation Conference 2022.
+
+
+A Novel Memory Management for RISC-V Enclaves
+Haonan Li, Weijie Huang, Mingde Ren, Hongyi Lu, Zhenyu Ning, Heming Cui, and Fengwei Zhang
+In Proceedings of the Hardware and Architectural Support for Security and Privacy (HASP'21)
+
+
+BadUSB-C: Revisiting BadUSB with Type-C
+Hongyi Lu; Yechang Wu; Shuqing Li; You Lin; Chaozu Zhang; Fengwei Zhang
+In Proceedings of the 2021 IEEE Security and Privacy Workshops (SPW)
+DOI: 10.1109/SPW53761.2021.00053
+Publisher: IEEE
+
+
+
+
