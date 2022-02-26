@@ -104,7 +104,7 @@ Untyped Lambda Calculus	tapl/untyped_lambda_calculus.md	/^# Untyped Lambda Calcu
 Using Tactics in Hypothesis	lf/tactics.md	/^## Using Tactics in Hypothesis$/;"	s
 Varying the Induction Hypothesis	lf/tactics.md	/^## Varying the Induction Hypothesis$/;"	s
 Vfork	linux/lkd1.md	/^#### Vfork$/;"	t
-Welcome to JohnWeston's Blog	README.md	/^## Welcome to JohnWeston's Blog$/;"	s
+Welcome to jwnhy's Blog	README.md	/^# Welcome to jwnhy's Blog$/;"	c
 What can we do?	paper/tap.md	/^## What can we do?$/;"	s
 While 循环规则	lf/hoare.md	/^### While 循环规则$/;"	S
 [5854. 学生分数的最小差值](https://leetcode-cn.com/problems/minimum-difference-between-highest-and-lowest-of-k-scores/)	lc_contest/weekly_256.md	/^## [5854. 学生分数的最小差值](https:\/\/leetcode-cn.com\/problems\/minimum-difference-b/;"	s
