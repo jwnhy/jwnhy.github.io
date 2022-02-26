@@ -65,3 +65,90 @@ ps -eo state, uid, pid, ppid, rtprio, time, comm
 它总是选择已经占用最少的任务进行执行。
 
 > 与[这个问题](https://jwnhy.github.io/misc/ad_problem.html)十分类似。
+
+### CFS 调度实现
+
+CFS 算法分为下面几个部分。
+
+- 时间统计
+- 进程选择
+- 调度器入口
+- 休眠与唤醒
+
+#### 时间统计
+
+##### 调度对象结构体
+
+CFS 并没有时间片的概念，但它仍然需要记录每个进程运行的时间来确保它们只运行公平的时间。
+CFS 在 `<linux/sched.h>` 中引入了 `struct sched_entity`
+
+```c
+struct sched_entity {
+  struct load_weight load;
+  struct rb_node run_node;
+  struct list_head group_node;
+  unsigned int on_rq;
+  u64 exec_start;
+  u64 sum_exec_runtime;
+  u64 vruntime; // accounting the current running time
+  u64 prev_sum_exec_runtime;
+  u64 last_wakeup;
+  u64 avg_overlap;
+  u64 nr_migrations;
+  u64 start_runtime;
+  u64 avg_wakeup;
+  /* many stat variables elided, enabled only if CONFIG_SCHEDSTATS is set */
+}
+```
+
+该结构体直接嵌入 `task_struct` 中，成员名为 `se`。
+
+##### `vruntime`
+
+`vruntime` 指当前进程运行的时间经过 `nice` 值作为权重标准化之后的值。
+更新它的函数是定义在 `<linux/sched_fair.c>` 中的 `update_curr(struct cfs_rq *cfs_rq)`。
+它的步骤如下。
+
+1. 获取当前时间
+
+  ```c
+  u64 now = rq_of(cfs_rq)->clock;
+  ```
+
+2. 计算差值
+
+  ```c
+  delta_exec = (unsigned long) (now - curr -> exec_start);
+  ```
+
+3. 更新 `vruntime`
+
+  ```c
+  __update_curr(cfs_rq, curr, delta_exec);
+  ```
+
+4. 更新开始时间
+
+  ```c
+  curr->exec_start = now;
+  ```
+
+具体加权求值的方式在 `__update_curr` 中。
+
+```c
+static inline void
+__update_curr(struct cfs_rq *cfs_rq, struct sched_entity *curr,
+unsigned long delta_exec)
+{
+  unsigned long delta_exec_weighted;
+
+  schedstat_set(curr->exec_max, max((u64)delta_exec, curr->exec_max));
+
+  curr->sum_exec_runtime += delta_exec;
+  schedstat_add(cfs_rq, exec_clock, delta_exec);
+  delta_exec_weighted = calc_delta_fair(delta_exec, curr);
+
+  curr->vruntime += delta_exec_weighted;
+  update_min_vruntime(cfs_rq);
+}
+```

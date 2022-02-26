@@ -18,6 +18,7 @@ Assignment 赋值规则	lf/hoare.md	/^### Assignment 赋值规则$/;"	S
 Attacker Side	paper/tap.md	/^### Attacker Side$/;"	S
 Background	paper/two_worlds.md	/^## Background$/;"	s
 CFS 调度	linux/lkd2.md	/^### CFS 调度$/;"	S
+CFS 调度实现	linux/lkd2.md	/^### CFS 调度实现$/;"	S
 Candidate 职责	raft/leader_election.md	/^### Candidate 职责$/;"	S
 Coffer 引导 Linux 与 RISC-V 定时器的坑	riscv/linux_d1.md	/^# Coffer 引导 Linux 与 RISC-V 定时器的坑$/;"	c
 Coffer 移植哪吒 D1 开发板小记	riscv/rt0.md	/^# Coffer 移植哪吒 D1 开发板小记$/;"	c
@@ -116,6 +117,7 @@ While 循环规则	lf/hoare.md	/^### While 循环规则$/;"	S
 `PLIC` 权限设置	riscv/linux_d1.md	/^## `PLIC` 权限设置$/;"	s
 `destruct` on Compound Expressions	lf/tactics.md	/^## `destruct` on Compound Expressions$/;"	s
 `mcounteren` 寄存器设置	riscv/linux_d1.md	/^## `mcounteren` 寄存器设置$/;"	s
+`vruntime`	linux/lkd2.md	/^##### `vruntime`$/;"	T
 a-title	_layouts/default.html	/^      <a id="a-title" href="{{ '\/' | relative_url }}">$/;"	I
 downloads	_layouts/default.html	/^      <section id="downloads">$/;"	I
 gitalk-container	_layouts/default.html	/^    <div id="gitalk-container"><\/div>$/;"	I
@@ -170,6 +172,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 拉取代码	riscv/toolchain.md	/^### 拉取代码$/;"	S
 无法使用 C 库	linux/lkd1.md	/^#### 无法使用 C 库$/;"	t
 时间片	linux/lkd2.md	/^### 时间片$/;"	S
+时间统计	linux/lkd2.md	/^#### 时间统计$/;"	t
 最基础的格式——ETD1	etd/intro.md	/^## 最基础的格式——ETD1$/;"	s
 最弱前提	lf/hoare.md	/^### 最弱前提$/;"	S
 本文中所用的仓库压缩包	riscv/toolchain.md	/^## 本文中所用的仓库压缩包$/;"	s
@@ -198,6 +201,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 证明规则	lf/hoare.md	/^## 证明规则$/;"	s
 语句调度	pl/Superword_Level_Parallelism_2000_PLDI.md	/^### 语句调度$/;"	S
 语法	tapl/untyped_lambda_calculus.md	/^## 语法$/;"	s
+调度对象结构体	linux/lkd2.md	/^##### 调度对象结构体$/;"	T
 调用栈维护【<del>好像又是SGX专享</del>】	paper/two_worlds.md	/^### 调用栈维护【<del>好像又是SGX专享<\/del>】$/;"	S
 进入时指针检查	paper/two_worlds.md	/^### 进入时指针检查$/;"	S
 进入时硬件状态检查【<del>SGX专享</del>】	paper/two_worlds.md	/^### 进入时硬件状态检查【<del>SGX专享<\/del>】$/;"	S
