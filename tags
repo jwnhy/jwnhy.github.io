@@ -120,7 +120,7 @@ While 循环规则	lf/hoare.md	/^### While 循环规则$/;"	S
 `vruntime`	linux/lkd2.md	/^##### `vruntime`$/;"	T
 a-title	_layouts/default.html	/^      <a id="a-title" href="{{ '\/' | relative_url }}">$/;"	I
 downloads	_layouts/default.html	/^      <section id="downloads">$/;"	I
-gitalk-container	_layouts/default.html	/^    <div id="gitalk-container"><\/div>$/;"	I
+gitalk-container	_layouts/default.html	/^      <div id="gitalk-container"><\/div>$/;"	I
 main_content	_layouts/default.html	/^    <section id="main_content">$/;"	I
 rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.md	/^# rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具$/;"	c
 {{ site.description | default: site.github.project_tagline }}	_layouts/default.html	/^      <h2>{{ site.description | default: site.github.project_tagline }}<\/h2>$/;"	i
