@@ -37,3 +37,4 @@
   - [Hoare 逻辑](./lf/hoare.md)
 - Linux 内核
   - [LKD 读书笔记 I](./linux/lkd1.md)
+  - [LKD 读书笔记 II](./linux/lkd2.md)

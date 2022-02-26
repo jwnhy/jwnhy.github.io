@@ -57,4 +57,11 @@ ps -eo state, uid, pid, ppid, rtprio, time, comm
 
 ### CFS 调度
 
+一个理想的调度算法，在不考虑上下文切换的开销的情况下，会希望**所有**任务在很小的 $\epsilon$ 时间内都运行一遍。
+当然这在现实是不可能做到的，因为存在上下文开销。但是 CFS 会尝试接近这个理想模型，CFS 设置了一个 **targeted latency**。
+也就是上面说的 $\epsilon$，当存在 $n$ 个任务时，每个任务所占用的时间是 $\frac{\epsilon}{n}$。值得注意的是，
+如果 $n\rightarrow \infty$，会导致上下文切换的次数趋于无穷。因此 CFS 设置了一个最小粒度，默认为 `1 ms`。
+而 `nice` 值在 CFS 算法中被用来计算每个任务应当占用的时间权重，CFS 会不断试图接近**理想**的分配方案，
+它总是选择已经占用最少的任务进行执行。
 
+> 与[这个问题](https://jwnhy.github.io/misc/ad_problem.html)十分类似。
