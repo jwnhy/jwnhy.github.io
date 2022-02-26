@@ -118,13 +118,9 @@ While 循环规则	lf/hoare.md	/^### While 循环规则$/;"	S
 `destruct` on Compound Expressions	lf/tactics.md	/^## `destruct` on Compound Expressions$/;"	s
 `mcounteren` 寄存器设置	riscv/linux_d1.md	/^## `mcounteren` 寄存器设置$/;"	s
 `vruntime`	linux/lkd2.md	/^##### `vruntime`$/;"	T
-a-title	_layouts/default.html	/^      <a id="a-title" href="{{ '\/' | relative_url }}">$/;"	I
-downloads	_layouts/default.html	/^      <section id="downloads">$/;"	I
 gitalk-container	_layouts/default.html	/^      <div id="gitalk-container"><\/div>$/;"	I
-main_content	_layouts/default.html	/^    <section id="main_content">$/;"	I
 rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.md	/^# rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具$/;"	c
-{{ site.description | default: site.github.project_tagline }}	_layouts/default.html	/^      <h2>{{ site.description | default: site.github.project_tagline }}<\/h2>$/;"	i
-{{ site.title | default: site.github.repository_name }}	_layouts/default.html	/^        <h1>{{ site.title | default: site.github.repository_name }}<\/h1>$/;"	h
+{{ site.title | default: site.github.repository_name }}	_layouts/default.html	/^        <h1><a href="{{ "\/" | absolute_url }}">{{ site.title | default: site.github.repository_/;"	h
 一道有趣的面试题，广告推送问题	misc/ad_problem.md	/^# 一道有趣的面试题，广告推送问题$/;"	c
 丘奇数 Church Numeral	tapl/untyped_lambda_calculus.md	/^### 丘奇数 Church Numeral$/;"	S
 为什么我们需要内存寻址？	os/mem_addr.md	/^## 为什么我们需要内存寻址？$/;"	s
