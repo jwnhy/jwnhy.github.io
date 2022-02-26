@@ -1,4 +1,4 @@
-remote_theme: pages-themes/primer@v0.2.0
+remote_theme: pages-themes/minimal@v0.2.0
 google_analytics: UA-190454037-1
 markdown: kramdown
 kramdown:
