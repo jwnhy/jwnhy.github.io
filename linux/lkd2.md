@@ -160,6 +160,8 @@ CFS 做不到这一点，因此它采用了一种很简单的方法。
 
 > 每次挑选 `vruntime` 最小的进程。
 
+##### 红黑树
+
 CFS 使用红黑树 `rbtree` 来管理可运行的进程列表，能够快速的寻找到 `vruntime` 最小的进程。
 
 进程选择的代码如下，值得注意的是，Linux 并没有真的遍历整颗树，而是缓存了**最左节点**。
@@ -171,5 +173,165 @@ static struct sched_entity *__pick_next_entity(struct cfs_rq *cfs_rq)
   if (!left)
     return NULL;
   return rb_entry(left, struct sched_entity, run_node);
+}
+```
+
+##### 向树中添加节点
+
+每一次有进程被唤醒/创建时，都会向红黑树中添加进程并且缓存最左节点。
+
+```c
+static void
+enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+{
+  /*
+  * Update the normalized vruntime before updating min_vruntime
+  * through callig update_curr().
+  */
+  // 如果是刚创建的进程，将当前最小的 `vruntime` 加上
+  if (!(flags & ENQUEUE_WAKEUP) || (flags & ENQUEUE_MIGRATE))
+    se->vruntime += cfs_rq->min_vruntime;
+
+  /*
+  * Update run-time statistics of the ‘current’.
+  */
+  update_curr(cfs_rq);
+  account_entity_enqueue(cfs_rq, se);
+
+  if (flags & ENQUEUE_WAKEUP) {
+    place_entity(cfs_rq, se, 0);
+    enqueue_sleeper(cfs_rq, se);
+  }
+
+  update_stats_enqueue(cfs_rq, se);
+  check_spread(cfs_rq, se);
+  if (se != cfs_rq->curr)
+    __enqueue_entity(cfs_rq, se);
+}
+```
+
+真正向树中添加节点的是 `__enqueue_entity` 函数。
+
+```c
+static void __enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se)
+{
+  struct rb_node **link = &cfs_rq->tasks_timeline.rb_node;
+  struct rb_node *parent = NULL;
+  struct sched_entity *entry;
+  s64 key = entity_key(cfs_rq, se);
+  int leftmost = 1;
+  /*
+  * Find the right place in the rbtree:
+  */
+  while (*link) {
+    parent = *link;
+    entry = rb_entry(parent, struct sched_entity, run_node);
+    /*
+    * We dont care about collisions. Nodes with
+    * the same key stay together.
+    */
+    if (key < entity_key(cfs_rq, entry)) {
+      link = &parent->rb_left;
+    } else {
+      link = &parent->rb_right;
+    leftmost = 0;
+    }
+  }
+
+  /*
+  * Maintain a cache of leftmost tree entries (it is frequently
+  * used):
+  */
+
+  if (leftmost)
+    cfs_rq->rb_leftmost = &se->run_node;
+
+  // rbtree function to maintain its properties
+  rb_link_node(&se->run_node, parent, link);
+  rb_insert_color(&se->run_node, &cfs_rq->tasks_timeline);
+}
+```
+
+##### 向树中移除节点
+
+向红黑树中移除节点也类似，注意到它会先更新 `curr` 的时间统计数据再进行移除。
+
+```c
+static void
+dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int sleep)
+{
+  /*
+  * Update run-time statistics of the ‘current’.
+  */
+  update_curr(cfs_rq);
+
+  update_stats_dequeue(cfs_rq, se);
+  clear_buddies(cfs_rq, se);
+  if (se != cfs_rq->curr)
+    __dequeue_entity(cfs_rq, se);
+  account_entity_dequeue(cfs_rq, se);
+  update_min_vruntime(cfs_rq);
+
+  /*
+  * Normalize the entity after updating the min_vruntime because the
+  * update can refer to the ->curr item and we need to reflect this
+  * movement in our normalized position.
+  */
+  if (!sleep)
+    se->vruntime -= cfs_rq->min_vruntime;
+}
+```
+
+移除节点时，我们只需要注意移除的是否是我们缓存的节点，然后使用 `rbtree` 的接口即可。
+
+```c
+static void __dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se)
+{
+  if (cfs_rq->rb_leftmost == &se->run_node) {
+    struct rb_node *next_node;
+    next_node = rb_next(&se->run_node);
+    cfs_rq->rb_leftmost = next_node;
+  }
+  rb_erase(&se->run_node, &cfs_rq->tasks_timeline);
+}
+```
+
+##### 调度器入口
+
+`schedule()` 调度函数设计比较简单，它找到具有最高优先级且非空的调度器类，然后问它下一个应该执行的进程。
+
+具体过程定义在 `pick_next_task()` 中，值得注意的是，由于大部分时候 Linux 执行的都是普通任务。
+因此如果所有的进程都是普通进程，则直接调用 CFS 调度。
+后面的 `for` 循环找出第一个有可运行进程 `non-NULL` 的进程类。
+
+```c
+/*
+* Pick up the highest-prio task:
+*/
+static inline struct task_struct *
+pick_next_task(struct rq *rq)
+{
+  const struct sched_class *class;
+  struct task_struct *p;
+  /*
+  * Optimization: we know that if all tasks are in
+  * the fair class we can call that function directly:
+  */
+  if (likely(rq->nr_running == rq->cfs.nr_running)) {
+    p = fair_sched_class.pick_next_task(rq);
+    if (likely(p))
+    return p;
+  }
+  class = sched_class_highest;
+  for ( ; ; ) {
+    p = class->pick_next_task(rq);
+    if (p)
+    return p;
+    /*
+    * Will never be NULL as the idle class always
+    * returns a non-NULL p:
+    */
+    class = class->next;
+  }
 }
 ```
