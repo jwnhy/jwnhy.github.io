@@ -69,3 +69,16 @@ make modules_install INSTALL_MOD_PATH=./db410c-modules
 ```
 
 把这个文件夹搬到 `/lib/modules/` 即可，注意文件夹层级。
+
+- 细节
+插入 SD 卡会影响 `rootfs` 的编号导致启动失败。
+启动的时候有概率 `panic` 再启动一次即可。
+
+- 结果
+可以在 `/sys/bus/coresight/devices` 下看到 etm 组件。
+
+```bash
+root@linaro-developer:~# ls /sys/bus/coresight/devices/
+cti_cpu0  cti_cpu2  cti_sys0  etm0  etm2  funnel0  replicator0  tmc_etf0  tpiu0
+cti_cpu1  cti_cpu3  cti_sys1  etm1  etm3  funnel1  stm0         tmc_etr0
+```
