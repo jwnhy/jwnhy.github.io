@@ -38,3 +38,5 @@
 - Linux 内核
   - [LKD 读书笔记 I](./linux/lkd1.md)
   - [LKD 读书笔记 II](./linux/lkd2.md)
+- Arm 玩耍
+  - [DragonBoard ETM](./arm/etm_db410c.md)

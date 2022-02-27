@@ -43,6 +43,7 @@ Hoare 逻辑	lf/hoare.md	/^# Hoare 逻辑$/;"	c
 I/O 密集与计算密集	linux/lkd2.md	/^### I\/O 密集与计算密集$/;"	S
 Iago Attack 防御	paper/two_worlds.md	/^### Iago Attack 防御$/;"	S
 Imp	lf/conclusion.md	/^## Imp$/;"	s
+In kernel directory	arm/etm_db410c.md	/^# In kernel directory$/;"	c
 Inductive Proposition	lf/conclusion.md	/^## Inductive Proposition$/;"	s
 Integrity	paper/tap.md	/^### Integrity$/;"	S
 Intel x86 架构下的内存寻址	os/mem_addr.md	/^## Intel x86 架构下的内存寻址$/;"	s
@@ -123,6 +124,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 {{ site.title | jwnhy.github.io }}	_layouts/default.html	/^        <h1><a href="{{ "\/" | absolute_url }}">{{ site.title | jwnhy.github.io }}<\/a><\/h1>$/;"	h
 一道有趣的面试题，广告推送问题	misc/ad_problem.md	/^# 一道有趣的面试题，广告推送问题$/;"	c
 上下文切换	linux/lkd2.md	/^#### 上下文切换$/;"	t
+下面两句很重要，否则配置里不会有 arm 相关的内容	arm/etm_db410c.md	/^# 下面两句很重要，否则配置里不会有 arm 相关的内容$/;"	c
 丘奇数 Church Numeral	tapl/untyped_lambda_calculus.md	/^### 丘奇数 Church Numeral$/;"	S
 为什么我们需要内存寻址？	os/mem_addr.md	/^## 为什么我们需要内存寻址？$/;"	s
 二元组 Pair	tapl/untyped_lambda_calculus.md	/^### 二元组 Pair$/;"	S
@@ -136,6 +138,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 例子：除法	lf/hoare.md	/^#### 例子：除法$/;"	t
 修改内核版本	riscv/toolchain.md	/^### 修改内核版本$/;"	S
 全志自定义 Header	riscv/rt0.md	/^### 全志自定义 Header$/;"	S
+内核下载与配置	arm/etm_db410c.md	/^## 内核下载与配置$/;"	s
 内核抢占	linux/lkd2.md	/^##### 内核抢占$/;"	T
 内核线程	linux/lkd1.md	/^#### 内核线程$/;"	t
 内核编程的特殊性	linux/lkd1.md	/^### 内核编程的特殊性$/;"	S
@@ -156,6 +159,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 向树中添加节点	linux/lkd2.md	/^##### 向树中添加节点$/;"	T
 向树中移除节点	linux/lkd2.md	/^##### 向树中移除节点$/;"	T
 唤醒	linux/lkd2.md	/^##### 唤醒$/;"	T
+在 DragonBoard 410c 上激活 ETM Tracing	arm/etm_db410c.md	/^# 在 DragonBoard 410c 上激活 ETM Tracing$/;"	c
 基本信息	paper/tap.md	/^## 基本信息$/;"	s
 基本块（Basic Block）	pl/Superword_Level_Parallelism_2000_PLDI.md	/^### 基本块（Basic Block）$/;"	S
 基础知识——三种内存地址	os/mem_addr.md	/^## 基础知识——三种内存地址$/;"	s
@@ -192,6 +196,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 特殊配置命令	linux/lkd1.md	/^#### 特殊配置命令$/;"	t
 用户抢占	linux/lkd2.md	/^##### 用户抢占$/;"	T
 疑问	pl/Superword_Level_Parallelism_2000_PLDI.md	/^## 疑问$/;"	s
+相关教程	arm/etm_db410c.md	/^## 相关教程$/;"	s
 相关系统调用	linux/lkd2.md	/^#### 相关系统调用$/;"	t
 硬件层级 PMP 寄存器读写	riscv/pmp.md	/^## 硬件层级 PMP 寄存器读写$/;"	s
 算法过程	pl/Superword_Level_Parallelism_2000_PLDI.md	/^## 算法过程$/;"	s
@@ -212,6 +217,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 调度器入口	linux/lkd2.md	/^##### 调度器入口$/;"	T
 调度对象结构体	linux/lkd2.md	/^##### 调度对象结构体$/;"	T
 调用栈维护【<del>好像又是SGX专享</del>】	paper/two_worlds.md	/^### 调用栈维护【<del>好像又是SGX专享<\/del>】$/;"	S
+这里的 root 换成我们烧写的 rootfs，我默认是 mmcblk0p14，可以根据 Linux 启动日志判断。	arm/etm_db410c.md	/^# 这里的 root 换成我们烧写的 rootfs，我默认是 mmcblk0p14，可以根据 Linux 启/;"	c
 进入时指针检查	paper/two_worlds.md	/^### 进入时指针检查$/;"	S
 进入时硬件状态检查【<del>SGX专享</del>】	paper/two_worlds.md	/^### 进入时硬件状态检查【<del>SGX专享<\/del>】$/;"	S
 进程上下文	linux/lkd1.md	/^### 进程上下文$/;"	S
@@ -226,4 +232,5 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 退出时状态清理【<del>SGX-LKL 行不行</del>】	paper/two_worlds.md	/^### 退出时状态清理【<del>SGX-LKL 行不行<\/del>】$/;"	S
 递归	tapl/untyped_lambda_calculus.md	/^### 递归$/;"	S
 逻辑基础小结	lf/conclusion.md	/^## 逻辑基础小结$/;"	s
+重要，选择正式发行版	arm/etm_db410c.md	/^# 重要，选择正式发行版$/;"	c
 非线性部分处理	time_splitting/intro.md	/^## 非线性部分处理$/;"	s
