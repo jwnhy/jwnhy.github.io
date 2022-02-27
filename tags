@@ -122,9 +122,12 @@ gitalk-container	_layouts/default.html	/^      <div id="gitalk-container"><\/div
 rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.md	/^# rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具$/;"	c
 {{ site.title | jwnhy.github.io }}	_layouts/default.html	/^        <h1><a href="{{ "\/" | absolute_url }}">{{ site.title | jwnhy.github.io }}<\/a><\/h1>$/;"	h
 一道有趣的面试题，广告推送问题	misc/ad_problem.md	/^# 一道有趣的面试题，广告推送问题$/;"	c
+上下文切换	linux/lkd2.md	/^#### 上下文切换$/;"	t
 丘奇数 Church Numeral	tapl/untyped_lambda_calculus.md	/^### 丘奇数 Church Numeral$/;"	S
 为什么我们需要内存寻址？	os/mem_addr.md	/^## 为什么我们需要内存寻址？$/;"	s
 二元组 Pair	tapl/untyped_lambda_calculus.md	/^### 二元组 Pair$/;"	S
+休眠	linux/lkd2.md	/^##### 休眠$/;"	T
+休眠与唤醒	linux/lkd2.md	/^#### 休眠与唤醒$/;"	t
 传统 UNIX 分配的缺点	linux/lkd2.md	/^### 传统 UNIX 分配的缺点$/;"	S
 使用-定义链（Use-Define Chain）	pl/Superword_Level_Parallelism_2000_PLDI.md	/^### 使用-定义链（Use-Define Chain）$/;"	S
 例子：两数交换	lf/hoare.md	/^#### 例子：两数交换$/;"	t
@@ -133,6 +136,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 例子：除法	lf/hoare.md	/^#### 例子：除法$/;"	t
 修改内核版本	riscv/toolchain.md	/^### 修改内核版本$/;"	S
 全志自定义 Header	riscv/rt0.md	/^### 全志自定义 Header$/;"	S
+内核抢占	linux/lkd2.md	/^##### 内核抢占$/;"	T
 内核线程	linux/lkd1.md	/^#### 内核线程$/;"	t
 内核编程的特殊性	linux/lkd1.md	/^### 内核编程的特殊性$/;"	S
 内核配置	linux/lkd1.md	/^### 内核配置$/;"	S
@@ -151,6 +155,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 合并包	pl/Superword_Level_Parallelism_2000_PLDI.md	/^### 合并包$/;"	S
 向树中添加节点	linux/lkd2.md	/^##### 向树中添加节点$/;"	T
 向树中移除节点	linux/lkd2.md	/^##### 向树中移除节点$/;"	T
+唤醒	linux/lkd2.md	/^##### 唤醒$/;"	T
 基本信息	paper/tap.md	/^## 基本信息$/;"	s
 基本块（Basic Block）	pl/Superword_Level_Parallelism_2000_PLDI.md	/^### 基本块（Basic Block）$/;"	S
 基础知识——三种内存地址	os/mem_addr.md	/^## 基础知识——三种内存地址$/;"	s
@@ -166,6 +171,8 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 布尔值	tapl/untyped_lambda_calculus.md	/^### 布尔值$/;"	S
 形式化语法	tapl/untyped_lambda_calculus.md	/^## 形式化语法$/;"	s
 扩展可打包指令	pl/Superword_Level_Parallelism_2000_PLDI.md	/^### 扩展可打包指令$/;"	S
+抢占	linux/lkd2.md	/^#### 抢占$/;"	t
+抢占与上下文切换	linux/lkd2.md	/^### 抢占与上下文切换$/;"	S
 拉取仓库	riscv/toolchain.md	/^### 拉取仓库$/;"	S
 拉取代码	riscv/toolchain.md	/^### 拉取代码$/;"	S
 无法使用 C 库	linux/lkd1.md	/^#### 无法使用 C 库$/;"	t
@@ -183,7 +190,9 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 清理结构体数据	paper/two_worlds.md	/^### 清理结构体数据$/;"	S
 清空 `.bss` 段和初始化 `.data` 段	riscv/rt0.md	/^### 清空 `.bss` 段和初始化 `.data` 段$/;"	S
 特殊配置命令	linux/lkd1.md	/^#### 特殊配置命令$/;"	t
+用户抢占	linux/lkd2.md	/^##### 用户抢占$/;"	T
 疑问	pl/Superword_Level_Parallelism_2000_PLDI.md	/^## 疑问$/;"	s
+相关系统调用	linux/lkd2.md	/^#### 相关系统调用$/;"	t
 硬件层级 PMP 寄存器读写	riscv/pmp.md	/^## 硬件层级 PMP 寄存器读写$/;"	s
 算法过程	pl/Superword_Level_Parallelism_2000_PLDI.md	/^## 算法过程$/;"	s
 红黑树	linux/lkd2.md	/^##### 红黑树$/;"	T

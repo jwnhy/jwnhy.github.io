@@ -335,3 +335,101 @@ pick_next_task(struct rq *rq)
   }
 }
 ```
+
+#### 休眠与唤醒
+
+![image.png](https://ae04.alicdn.com/kf/H9eebfced6f4a462c86e1ee56e0d7a47bH.png)
+
+##### 休眠
+
+休眠在内核中有点复杂，因为可能发生**竞争**，既进入休眠时，条件恰好为真，导致出现无限休眠。
+因此推荐的内核休眠方式如下
+
+```c
+/* ‘q’ is the wait queue we wish to sleep on */
+DEFINE_WAIT(wait);
+
+add_wait_queue(q, &wait);
+while (!condition) { /* condition is the event that we are waiting for */
+  prepare_to_wait(&q, &wait, TASK_INTERRUPTIBLE);
+  if (signal_pending(current))
+    /* handle signal */
+    schedule();
+}
+finish_wait(&q, &wait);
+```
+
+1. 创建休眠项 `DEFINE_WAIT()`
+
+2. 添加到休眠队列中 `add_wait_queue()`，由别处调用该队列的 `wake_up()` 唤醒。
+
+3. 调用 `prepare_to_wait` 设置进程状态为 `TASK_INTERRUPTIBLE` 或 `TASK_UNINTERRUPTABLE`。
+
+4. 如果为 `TASK_INTERRUPTIBLE`，接收到信号处理完信号接着休眠。
+
+5. 当进程苏醒，查看条件是否为真，否阶接着睡。
+
+6. 如果条件为真，调用 `finish_wait` 结束休眠。
+
+`fs/notify/inotify/inotify_user.c` 中的 `inotify_read()` 是这个模式的一个例子。
+
+##### 唤醒
+
+唤醒通过 `wake_up()` 函数实现，其唤醒给定队列中的所有进程。
+调用 `try_to_wake_up()` 将进程状态设置为 `TASK_RUNNING`。
+调用 `enqueue_task()` 将进程加入红黑树，并且如果唤醒进程的优先级较高需要重新调度，则设置 `need_resched` 。
+
+### 抢占与上下文切换
+
+#### 上下文切换
+
+上下文切换由 `kernel/sched.c` 中的 `context_switch()` 函数实现，并由 `schedule` 调用，分为下面两步。
+
+- 调用 `<asm/mmu_context.h>` 中的 `switch_mm()` 切换虚拟地址映射。
+- 调用 `<asm/system.h>` 中的 `switch_to()` 切换处理器状态，包括栈指针，处理器寄存器等其他架构相关状态。
+
+#### 抢占
+
+内核必须知道何时调用 `schedule()` 进行进程切换，因为如果像**协程**一样依赖用户程序主动调用，会导致
+用户进程有能力一直运行下去。
+
+内核提供了 `need_resched` 来标志是否需要进行重新调度。有两个函数会设置这个标记。
+
+- `scheduler_tick()` 当一个进程应该被抢占时。
+- `try_to_wake_up()` 当一个优先级高于当前进程的进程被唤醒时。
+
+| 函数                     | 功能     |
+|-------------------------------------|
+| `set_tsk_need_resched`   | 设置标记 |
+| `clear_tsk_need_resched` | 清除标记 |
+| `need_resched`           | 返回标记 |
+
+##### 用户抢占
+
+用户抢占发生在内核态返回用户态时。当内核即将返回用户空间时，这时是一个**安全状态**。
+内核既可以继续运行当前进程，也可以选一个新进程运行。因此内核会检查 `need_resched` 来决定是否
+调用 `schedule()` 函数进行调度。
+
+以下两种情况会发生用户抢占。
+
+1. 当内核从 *系统调用* 返回用户态时。
+2. 当内核从 *中断处理* 返回用户态时。
+
+##### 内核抢占
+
+不同于其他 Unix 内核，Linux 内核支持内核抢占。
+
+为了能够安全的进行内核抢占，首先引入了 `preempt_count`。
+其会记录当前进程持有锁的数量，每次取得锁 `preempt_count++`，每次释放锁 `preempt_count--`。
+当 `need_resched = true && preempt_count == 0` 时，可以安全的进行抢占。
+
+内核抢占也可以通过显式调用 `schedule()` 函数实现。一般来说，内核抢占可以发生在下面这些情况下。
+
+1. 当一个中断处理函数退出，返回内核态时。
+2. 当内核代码变成可抢占的，即释放锁时。
+3. 当一个内核进程显式调用 `schedule()`。
+4. 当一个内核进程阻塞时，其会导致调用 `schedule()`。
+
+#### 相关系统调用
+
+![image.png](https://ae05.alicdn.com/kf/H43e1bffd24244f768203e71a169962c8S.png)
