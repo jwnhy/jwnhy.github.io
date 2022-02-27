@@ -120,7 +120,7 @@ While 循环规则	lf/hoare.md	/^### While 循环规则$/;"	S
 `vruntime`	linux/lkd2.md	/^##### `vruntime`$/;"	T
 gitalk-container	_layouts/default.html	/^      <div id="gitalk-container"><\/div>$/;"	I
 rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.md	/^# rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具$/;"	c
-{{ site.title | default: site.github.repository_name }}	_layouts/default.html	/^        <h1><a href="{{ "\/" | absolute_url }}">{{ site.title | default: site.github.repository_/;"	h
+{{ site.title | jwnhy.github.io }}	_layouts/default.html	/^        <h1><a href="{{ "\/" | absolute_url }}">{{ site.title | jwnhy.github.io }}<\/a><\/h1>$/;"	h
 一道有趣的面试题，广告推送问题	misc/ad_problem.md	/^# 一道有趣的面试题，广告推送问题$/;"	c
 丘奇数 Church Numeral	tapl/untyped_lambda_calculus.md	/^### 丘奇数 Church Numeral$/;"	S
 为什么我们需要内存寻址？	os/mem_addr.md	/^## 为什么我们需要内存寻址？$/;"	s
@@ -209,6 +209,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 进程树	linux/lkd1.md	/^### 进程树$/;"	S
 进程状态	linux/lkd1.md	/^### 进程状态$/;"	S
 进程终止	linux/lkd1.md	/^### 进程终止$/;"	S
+进程选择	linux/lkd2.md	/^#### 进程选择$/;"	t
 退出时状态清理【<del>SGX-LKL 行不行</del>】	paper/two_worlds.md	/^### 退出时状态清理【<del>SGX-LKL 行不行<\/del>】$/;"	S
 递归	tapl/untyped_lambda_calculus.md	/^### 递归$/;"	S
 逻辑基础小结	lf/conclusion.md	/^## 逻辑基础小结$/;"	s

@@ -109,25 +109,25 @@ struct sched_entity {
 更新它的函数是定义在 `<linux/sched_fair.c>` 中的 `update_curr(struct cfs_rq *cfs_rq)`。
 它的步骤如下。
 
-1. 获取当前时间
+- 获取当前时间
 
   ```c
   u64 now = rq_of(cfs_rq)->clock;
   ```
 
-2. 计算差值
+- 计算差值
 
   ```c
   delta_exec = (unsigned long) (now - curr -> exec_start);
   ```
 
-3. 更新 `vruntime`
+- 更新 `vruntime`
 
   ```c
   __update_curr(cfs_rq, curr, delta_exec);
   ```
 
-4. 更新开始时间
+- 更新开始时间
 
   ```c
   curr->exec_start = now;
@@ -150,5 +150,26 @@ unsigned long delta_exec)
 
   curr->vruntime += delta_exec_weighted;
   update_min_vruntime(cfs_rq);
+}
+```
+
+#### 进程选择
+
+之前讨论过，在一个理想的多任务系统中，每个进程的 `vruntime` 都应该是一样的。
+CFS 做不到这一点，因此它采用了一种很简单的方法。
+
+> 每次挑选 `vruntime` 最小的进程。
+
+CFS 使用红黑树 `rbtree` 来管理可运行的进程列表，能够快速的寻找到 `vruntime` 最小的进程。
+
+进程选择的代码如下，值得注意的是，Linux 并没有真的遍历整颗树，而是缓存了**最左节点**。
+
+```c
+static struct sched_entity *__pick_next_entity(struct cfs_rq *cfs_rq)
+{
+  struct rb_node *left = cfs_rq->rb_leftmost;
+  if (!left)
+    return NULL;
+  return rb_entry(left, struct sched_entity, run_node);
 }
 ```
