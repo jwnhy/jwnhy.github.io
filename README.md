@@ -40,3 +40,5 @@
   - [LKD 读书笔记 II](./linux/lkd2.md)
 - Arm 玩耍
   - [DragonBoard ETM](./arm/etm_db410c.md)
+  - [DragonBoard ETM En](./arm/etm_db410c_en.md)
+
