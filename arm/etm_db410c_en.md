@@ -75,7 +75,6 @@ make modules_install INSTALL_MOD_PATH=./db410c-modules
 Move the content in the folder into `/lib/modules`.
 
 - Details
-
     1. Insert SD Card will effect the name of `rootfs` and cause boot failure, remove it before booting.
     2. During my test, booting may fail, try boot again.
 
