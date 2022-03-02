@@ -407,7 +407,7 @@ end
 { Y = 2 ^ (m + 1) - 1 }
 ```
 
-### 最弱前提
+## 最弱前提
 
 最弱前提的非形式定义如下。
 
@@ -421,3 +421,59 @@ Definition is_wp P c Q :=
   { P } c { Q } /\
   forall P', { P' } c { Q } -> (P' ->> P).
 ```
+
+## Hoare 逻辑与理论模型
+
+Hoare 逻辑描述了所有可能的三元组，但与现实模型不同的地方在于，所有可以被三元组描述出来的程序中，
+只有一部分是**合法的**（valid）。
+
+因此我们需要定义出所有合法的三元组。
+
+```coq
+Definition valid (P : Assertion) (c : com) (Q : Assertion) : Prop :=
+  forall st st',
+    st =[ c ]=> st' ->
+    P st ->
+    Q st.
+```
+
+与此同时，如果将 Hoare 逻辑看成一组逻辑系统，我们也可以同样得到一组 **derivation rules**，来
+对 Hoare 三元组进行操作。
+
+![image.png](https://ae03.alicdn.com/kf/Hd4a52ae1a298494884f302746c63f54cT.png)
+
+形式化的定义如下。
+
+```coq
+Inductive derivable : Assertion -> com -> Assertion -> Type :=
+  | H_Skip : forall P,
+      derivable P <{skip}> P
+  | H_Asgn : forall Q V a,
+      derivable (Q [V |-> a]) <{V := a}> Q
+  | H_Seq  : forall P c Q d R,
+      derivable P c Q -> derivable Q d R -> derivable P <{c;d}> R
+  | H_If : forall P Q b c1 c2,
+    derivable (fun st => P st /\ bassn b st) c1 Q ->
+    derivable (fun st => P st /\ ~(bassn b st)) c2 Q ->
+    derivable P <{if b then c1 else c2 end}> Q
+  | H_While : forall P b c,
+    derivable (fun st => P st /\ bassn b st) c P ->
+    derivable P <{while b do c end}> (fun st => P st /\ ~ (bassn b st))
+  | H_Consequence  : forall (P Q P' Q' : Assertion) c,
+    derivable P' c Q' ->
+    (forall st, P st -> P' st) ->
+    (forall st, Q' st -> Q st) ->
+    derivable P c Q.
+```
+
+## 正确性与完备性
+
+对于一个逻辑系统有上面两个概念 **合法（valid）** 与 **可推导（derivable）**，
+
+- 前者指该系统中所有合法的语句，是基于状态的。
+- 后者则是指该系统所有能够推导出的语句，是基于过程和推导树的。
+
+我们怎样判断两种概念是一致的呢？这就涉及到下面的*正确*和*完备*两种性质。
+
+- 正确性：所有能够**推导**出的语句都是**合法**的。
+- 完备性：所有**合法**的语句都是可以**推导**出的。
