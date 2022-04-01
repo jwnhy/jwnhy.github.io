@@ -15,7 +15,7 @@ defaults:
       layout: "default"
       mathjax: true
 
-url: "https://johnwestonnull.github.io" # the base hostname & protocol for your site
+url: "https://jwnhy.github.io" # the base hostname & protocol for your site
 plugins:
   - jekyll-sitemap
   - jekyll-remote-theme
