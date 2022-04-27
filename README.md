@@ -41,4 +41,5 @@
 - Arm 玩耍
   - [DragonBoard ETM](./arm/etm_db410c.md)
   - [DragonBoard ETM En](./arm/etm_db410c_en.md)
-
+- RE4B
+  - [Chap 1](./re4b/chap1.md)

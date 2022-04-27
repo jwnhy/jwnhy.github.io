@@ -6,6 +6,8 @@
 !_TAG_PROGRAM_URL	https://ctags.io/	/official site/
 !_TAG_PROGRAM_VERSION	0.0.0	//
 $Outside \\neq \\neg Inside$	paper/two_worlds.md	/^### $Outside \\neq \\neg Inside\$$/;"	S
+48 [https://challenges.re/48/](https://challenges.re/48/)	re4b/chap1.md	/^### 48 [https:\/\/challenges.re\/48\/](https:\/\/challenges.re\/48\/)$/;"	S
+49 [https://challenges.re/49/](https://challenges.re/49/)	re4b/chap1.md	/^### 49 [https:\/\/challenges.re\/49\/](https:\/\/challenges.re\/49\/)$/;"	S
 A Formal Foundation for Secure Remote Execution of Enclaves	paper/tap.md	/^# A Formal Foundation for Secure Remote Execution of Enclaves$/;"	c
 A Tale of Two Worlds: Assessing the Vulnerability of Enclave Shielding Runtimes	paper/two_worlds.md	/^# A Tale of Two Worlds: Assessing the Vulnerability of Enclave Shielding Runtimes$/;"	c
 ABI 疏忽	paper/two_worlds.md	/^## ABI 疏忽$/;"	s
@@ -38,6 +40,7 @@ Description	lc_contest/weekly_257.md	/^### Description$/;"	S
 Enclave Side	paper/tap.md	/^### Enclave Side$/;"	S
 Example	etd/intro.md	/^#### Example$/;"	t
 Execution Representation	paper/tap.md	/^### Execution Representation$/;"	S
+Exercise 48 & 49	re4b/chap1.md	/^## Exercise 48 & 49$/;"	s
 Exponential Time Differencing	etd/intro.md	/^## Exponential Time Differencing$/;"	s
 Follower 职责	raft/leader_election.md	/^### Follower 职责$/;"	S
 Forking	linux/lkd1.md	/^#### Forking$/;"	t
@@ -71,6 +74,7 @@ MATLAB 程序（含傅立叶变换）	time_splitting/intro.md	/^## MATLAB 程序
 NA4 模式（Naturally aligned four bytes）	riscv/pmp.md	/^## NA4 模式（Naturally aligned four bytes）$/;"	s
 NAPOT 模式（Naturally aligned power of two）	riscv/pmp.md	/^## NAPOT 模式（Naturally aligned power of two）$/;"	s
 Notations	paper/tap.md	/^## Notations$/;"	s
+Note 函数序言与结语	re4b/chap1.md	/^## Note 函数序言与结语$/;"	s
 PMP 基础知识	riscv/pmp.md	/^## PMP 基础知识$/;"	s
 PMP 测试思路	riscv/pmp.md	/^## PMP 测试思路$/;"	s
 Part I: DWARF 信息与 rvbt 介绍	riscv/rvbt.md	/^## Part I: DWARF 信息与 rvbt 介绍$/;"	s
@@ -80,6 +84,7 @@ Part II: QEMU 虚拟机安装	riscv/toolchain.md	/^## Part II: QEMU 虚拟机安
 Part III: BusyBear 完整 Linux 虚拟环境	riscv/toolchain.md	/^## Part III: BusyBear 完整 Linux 虚拟环境$/;"	s
 Part III: 运行时栈帧解析与 DWARF 读取	riscv/rvbt.md	/^## Part III: 运行时栈帧解析与 DWARF 读取$/;"	s
 Proof Objects	lf/conclusion.md	/^## Proof Objects$/;"	s
+RE4B Chap 1 Notes	re4b/chap1.md	/^# RE4B Chap 1 Notes$/;"	c
 RISC-V PMP 测试与抽象	riscv/pmp.md	/^# RISC-V PMP 测试与抽象$/;"	c
 RISC-V 工具链 & QEMU 虚拟机	riscv/toolchain.md	/^# RISC-V 工具链 & QEMU 虚拟机$/;"	c
 RISC-V 架构下的内存寻址	os/mem_addr.md	/^## RISC-V 架构下的内存寻址$/;"	s
@@ -96,6 +101,8 @@ Secure Remote Execution	paper/tap.md	/^## Secure Remote Execution$/;"	s
 Sequencing 序列规则	lf/hoare.md	/^### Sequencing 序列规则$/;"	S
 Solution	lc_contest/weekly_256.md	/^### Solution$/;"	S
 Solution	lc_contest/weekly_257.md	/^### Solution$/;"	S
+Solution 48	re4b/chap1.md	/^### Solution 48$/;"	S
+Solution 49	re4b/chap1.md	/^### Solution 49$/;"	S
 Solution I	misc/ad_problem.md	/^## Solution I$/;"	s
 Solution I 排序 `O(nlog(n))`	lc_contest/weekly_257.md	/^### Solution I 排序 `O(nlog(n))`$/;"	S
 Solution II	misc/ad_problem.md	/^## Solution II$/;"	s
@@ -156,6 +163,8 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 内联函数	linux/lkd1.md	/^#### 内联函数$/;"	t
 出现在假设中的存在量词	lf/conclusion.md	/^#### 出现在假设中的存在量词$/;"	t
 出现在目标中的存在量词	lf/conclusion.md	/^#### 出现在目标中的存在量词$/;"	t
+函数序言	re4b/chap1.md	/^### 函数序言$/;"	S
+函数结语	re4b/chap1.md	/^### 函数结语$/;"	S
 分支标注	linux/lkd1.md	/^#### 分支标注$/;"	t
 分解误差	time_splitting/intro.md	/^## 分解误差$/;"	s
 分配进程描述符	linux/lkd1.md	/^### 分配进程描述符$/;"	S
