@@ -115,3 +115,140 @@ add esp, 12 ; 4 * 3 = 12 release arg space
 | ESP+4 | arg#1, arg_0 IDA |
 | ESP+8 | arg#2, arg_4 IDA |
 | ESP+C | arg#3, arg_8 IDA |
+
+## Note 函数参数
+
+对于 CPU 而言，函数参数的传递方式是 **不可知** 的，不论是寄存器传递还是栈传递都是可以接受的，
+完全以编译器决定。
+
+## Exercise 51, 52 & 53
+
+### 51 [https://challenges.re/51/](https://challenges.re/51/)
+
+```c
+#include <stdio.h>
+
+int main()
+{
+  printf ("%d, %d, %d\n");
+
+  return 0;
+};
+```
+
+### Solution 51
+
+msvc
+
+```asm
+$SG5198 DB        '%d, %d, %d', 0aH, 00H
+
+main    PROC
+$LN3:
+        sub     rsp, 40                             ; 00000028H
+        lea     rcx, OFFSET FLAT:$SG5198
+        call    printf
+        xor     eax, eax
+        add     rsp, 40                             ; 00000028H
+        ret     0
+main    ENDP
+```
+
+gcc
+
+```asm
+.LC0:
+        .string "%d, %d, %d\n"
+main:
+        push    rbp
+        mov     rbp, rsp
+        mov     edi, OFFSET FLAT:.LC0
+        mov     eax, 0
+        call    printf
+        mov     eax, 0
+        pop     rbp
+        ret
+```
+
+他们都输出了一些垃圾信息，是保存在栈上的本该交给 `main()` 的参数，例如 `argc` 和 `argv` 等。
+
+### 52 [https://challenges.re/52/](https://challenges.re/52/)
+
+```asm
+$SG3103 DB '%d', 0aH, 00H
+_main PROC
+  push 0
+  call DWORD PTR __imp___time64
+  push edx
+  push eax
+  push OFFSET $SG3103 ; '%d'
+  call DWORD PTR __imp__printf
+  add esp, 16
+  xor eax, eax
+  ret 0
+_main ENDP
+```
+
+### Solution 52
+
+1. 将 `0(NULL)` 作为参数传给函数 `time64()`。
+2. 将 `time64()` 的返回值 `eax` 与格式化字符串 `"%d"` 作为参数传给函数传给 `printf`
+3. 清空用于传参的栈空间，清空 `eax`，返回
+
+### 53 [https://challenges.re/53/](https://challenges.re/53/)
+
+```c
+#include <string.h>
+#include <stdio.h>
+
+void alter_string(char *s)
+{
+        strcpy (s, "Goodbye!");
+        printf ("Result: %s\n", s);
+};
+
+int main()
+{
+        alter_string ("Hello, world!\n");
+};
+```
+
+### Solution 53
+
+gcc 与 msvc 对于字符串常量的处理方式不同。
+gcc 将只读数据存储在 `.rodata` 段，在加载时其页表会被设为只读（触发栈错误）。
+msvc 将字符串存储在 `.data` 段，可读可写，因此不会触发段错误。
+
+## Note 全局变量 v.s. 局部变量
+
+全局变量存储在 `.bss` 段，会由操作系统清零，而局部变量存储在栈上，不会被清零。
+因此将全局变量改为未初始化的局部变量可能出现难以发觉的 bug 。
+
+## Note 结构体作为返回值
+
+当返回值不足以存入寄存器时，编译器会传入一个**隐藏参数**作为指向结构体的指针。
+
+```asm
+$T3853 = 8 ; size = 4
+_a$ = 12 ; size = 4
+?get_some_values@@YA?AUs@@H@Z PROC ; get_some_values
+mov ecx, DWORD PTR _a$[esp-4]     ; 函数序言被省略，直接使用 ESP 访问参数
+mov eax, DWORD PTR $T3853[esp-4]  ; 函数序言被省略，直接使用 ESP 访问自动生成的指针 $T3853
+lea edx, DWORD PTR [ecx+1]        ; 利用 lea 指令完成计算，edx = ecx + 1
+mov DWORD PTR [eax], edx          ; 将 edx 中的值放入 DWORD PTR [eax] 指向的地址
+lea edx, DWORD PTR [ecx+2]        ; 同上，利用 lea 指令完成计算
+add ecx, 3
+mov DWORD PTR [eax+4], edx
+mov DWORD PTR [eax+8], ecx
+ret 0
+?get_some_values@@YA?AUs@@H@Z ENDP ; get_some_values
+```
+
+## Note `lea` 指令用于计算
+
+`lea` 指令指 `Load Effective Address` 实际上就是直接计算 `[complicate formula]` 方括号内的内容。
+其可以用于计算所有能够放入地址计算方式的算数表达式，例如
+
+```asm
+lea ecx, [edx * edx+1] ; ecx = edx + 1
+```

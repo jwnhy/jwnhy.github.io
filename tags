@@ -8,6 +8,9 @@
 $Outside \\neq \\neg Inside$	paper/two_worlds.md	/^### $Outside \\neq \\neg Inside\$$/;"	S
 48 [https://challenges.re/48/](https://challenges.re/48/)	re4b/chap1.md	/^### 48 [https:\/\/challenges.re\/48\/](https:\/\/challenges.re\/48\/)$/;"	S
 49 [https://challenges.re/49/](https://challenges.re/49/)	re4b/chap1.md	/^### 49 [https:\/\/challenges.re\/49\/](https:\/\/challenges.re\/49\/)$/;"	S
+51 [https://challenges.re/51/](https://challenges.re/51/)	re4b/chap1.md	/^### 51 [https:\/\/challenges.re\/51\/](https:\/\/challenges.re\/51\/)$/;"	S
+52 [https://challenges.re/52/](https://challenges.re/52/)	re4b/chap1.md	/^### 52 [https:\/\/challenges.re\/52\/](https:\/\/challenges.re\/52\/)$/;"	S
+53 [https://challenges.re/53/](https://challenges.re/53/)	re4b/chap1.md	/^### 53 [https:\/\/challenges.re\/53\/](https:\/\/challenges.re\/53\/)$/;"	S
 A Formal Foundation for Secure Remote Execution of Enclaves	paper/tap.md	/^# A Formal Foundation for Secure Remote Execution of Enclaves$/;"	c
 A Tale of Two Worlds: Assessing the Vulnerability of Enclave Shielding Runtimes	paper/two_worlds.md	/^# A Tale of Two Worlds: Assessing the Vulnerability of Enclave Shielding Runtimes$/;"	c
 ABI 疏忽	paper/two_worlds.md	/^## ABI 疏忽$/;"	s
@@ -41,6 +44,7 @@ Enclave Side	paper/tap.md	/^### Enclave Side$/;"	S
 Example	etd/intro.md	/^#### Example$/;"	t
 Execution Representation	paper/tap.md	/^### Execution Representation$/;"	S
 Exercise 48 & 49	re4b/chap1.md	/^## Exercise 48 & 49$/;"	s
+Exercise 51, 52 & 53	re4b/chap1.md	/^## Exercise 51, 52 & 53$/;"	s
 Exponential Time Differencing	etd/intro.md	/^## Exponential Time Differencing$/;"	s
 Follower 职责	raft/leader_election.md	/^### Follower 职责$/;"	S
 Forking	linux/lkd1.md	/^#### Forking$/;"	t
@@ -74,8 +78,12 @@ MATLAB 程序（含傅立叶变换）	time_splitting/intro.md	/^## MATLAB 程序
 NA4 模式（Naturally aligned four bytes）	riscv/pmp.md	/^## NA4 模式（Naturally aligned four bytes）$/;"	s
 NAPOT 模式（Naturally aligned power of two）	riscv/pmp.md	/^## NAPOT 模式（Naturally aligned power of two）$/;"	s
 Notations	paper/tap.md	/^## Notations$/;"	s
+Note `lea` 指令用于计算	re4b/chap1.md	/^## Note `lea` 指令用于计算$/;"	s
+Note 全局变量 v.s. 局部变量	re4b/chap1.md	/^## Note 全局变量 v.s. 局部变量$/;"	s
+Note 函数参数	re4b/chap1.md	/^## Note 函数参数$/;"	s
 Note 函数序言与结语	re4b/chap1.md	/^## Note 函数序言与结语$/;"	s
 Note 栈的作用	re4b/chap1.md	/^## Note 栈的作用$/;"	s
+Note 结构体作为返回值	re4b/chap1.md	/^## Note 结构体作为返回值$/;"	s
 PMP 基础知识	riscv/pmp.md	/^## PMP 基础知识$/;"	s
 PMP 测试思路	riscv/pmp.md	/^## PMP 测试思路$/;"	s
 Part I: DWARF 信息与 rvbt 介绍	riscv/rvbt.md	/^## Part I: DWARF 信息与 rvbt 介绍$/;"	s
@@ -104,6 +112,9 @@ Solution	lc_contest/weekly_256.md	/^### Solution$/;"	S
 Solution	lc_contest/weekly_257.md	/^### Solution$/;"	S
 Solution 48	re4b/chap1.md	/^### Solution 48$/;"	S
 Solution 49	re4b/chap1.md	/^### Solution 49$/;"	S
+Solution 51	re4b/chap1.md	/^### Solution 51$/;"	S
+Solution 52	re4b/chap1.md	/^### Solution 52$/;"	S
+Solution 53	re4b/chap1.md	/^### Solution 53$/;"	S
 Solution I	misc/ad_problem.md	/^## Solution I$/;"	s
 Solution I 排序 `O(nlog(n))`	lc_contest/weekly_257.md	/^### Solution I 排序 `O(nlog(n))`$/;"	S
 Solution II	misc/ad_problem.md	/^## Solution II$/;"	s
