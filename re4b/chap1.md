@@ -69,3 +69,49 @@ ret 0
 1. 将栈顶恢复（栈基地址在 callee 调用过程中始终保持不变）
 2. 弹出栈基地址，恢复栈帧
 3. 返回上一层
+
+## Note 栈的作用
+
+### 储存函数返回地址
+
+在 x86 上，函数调用是由 `call/ret` 指令组合实现，其中 `call` 指令相当于
+
+1. `push <address after call>(pc+4)`
+2. `jmp <function>`
+
+在 Arm 上，存在一个 LR 寄存器，用于存储返回地址，但当函数调用多于一层时，仍然需要使用栈存储返回地址。
+
+### 传递函数参数
+
+```asm
+push arg3
+push arg2
+push arg1
+call f
+add esp, 12 ; 4 * 3 = 12 release arg space
+```
+
+栈在函数进入前的状态
+
+| stack | usage            |
+|-------|------------------|
+| ESP   | return address   |
+| ESP+4 | arg#1, arg_0 IDA |
+| ESP+8 | arg#2, arg_4 IDA |
+| ESP+C | arg#3, arg_8 IDA |
+
+函数参数也可以通过寄存器方式进行传递。
+
+> `alloc()` 函数，该函数直接在栈上分配空间（而非像 `malloc()` 在堆上）。
+
+### 常见栈结构
+
+| stack | usage            |
+|-------|------------------|
+| ESP-C | localvar#2, var_8|
+| ESP-8 | localvar#1, var_4|
+| ESP-4 | saved EBP        |
+| ESP   | return address   |
+| ESP+4 | arg#1, arg_0 IDA |
+| ESP+8 | arg#2, arg_4 IDA |
+| ESP+C | arg#3, arg_8 IDA |

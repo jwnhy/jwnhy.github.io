@@ -75,6 +75,7 @@ NA4 模式（Naturally aligned four bytes）	riscv/pmp.md	/^## NA4 模式（Natu
 NAPOT 模式（Naturally aligned power of two）	riscv/pmp.md	/^## NAPOT 模式（Naturally aligned power of two）$/;"	s
 Notations	paper/tap.md	/^## Notations$/;"	s
 Note 函数序言与结语	re4b/chap1.md	/^## Note 函数序言与结语$/;"	s
+Note 栈的作用	re4b/chap1.md	/^## Note 栈的作用$/;"	s
 PMP 基础知识	riscv/pmp.md	/^## PMP 基础知识$/;"	s
 PMP 测试思路	riscv/pmp.md	/^## PMP 测试思路$/;"	s
 Part I: DWARF 信息与 rvbt 介绍	riscv/rvbt.md	/^## Part I: DWARF 信息与 rvbt 介绍$/;"	s
@@ -148,12 +149,14 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 休眠	linux/lkd2.md	/^##### 休眠$/;"	T
 休眠与唤醒	linux/lkd2.md	/^#### 休眠与唤醒$/;"	t
 传统 UNIX 分配的缺点	linux/lkd2.md	/^### 传统 UNIX 分配的缺点$/;"	S
+传递函数参数	re4b/chap1.md	/^### 传递函数参数$/;"	S
 使用-定义链（Use-Define Chain）	pl/Superword_Level_Parallelism_2000_PLDI.md	/^### 使用-定义链（Use-Define Chain）$/;"	S
 例子：两数交换	lf/hoare.md	/^#### 例子：两数交换$/;"	t
 例子：幂级数	lf/hoare.md	/^#### 例子：幂级数$/;"	t
 例子：简单条件语句	lf/hoare.md	/^#### 例子：简单条件语句$/;"	t
 例子：除法	lf/hoare.md	/^#### 例子：除法$/;"	t
 修改内核版本	riscv/toolchain.md	/^### 修改内核版本$/;"	S
+储存函数返回地址	re4b/chap1.md	/^### 储存函数返回地址$/;"	S
 全志自定义 Header	riscv/rt0.md	/^### 全志自定义 Header$/;"	S
 内核下载与配置	arm/etm_db410c.md	/^## 内核下载与配置$/;"	s
 内核抢占	linux/lkd2.md	/^##### 内核抢占$/;"	T
@@ -192,6 +195,7 @@ rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.m
 寄存器初始化	riscv/rt0.md	/^### 寄存器初始化$/;"	S
 嵌入式程序初始化	riscv/rt0.md	/^## 嵌入式程序初始化$/;"	s
 布尔值	tapl/untyped_lambda_calculus.md	/^### 布尔值$/;"	S
+常见栈结构	re4b/chap1.md	/^### 常见栈结构$/;"	S
 形式化语法	tapl/untyped_lambda_calculus.md	/^## 形式化语法$/;"	s
 扩展可打包指令	pl/Superword_Level_Parallelism_2000_PLDI.md	/^### 扩展可打包指令$/;"	S
 抢占	linux/lkd2.md	/^#### 抢占$/;"	t
