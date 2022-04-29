@@ -11,6 +11,9 @@ $Outside \\neq \\neg Inside$	paper/two_worlds.md	/^### $Outside \\neq \\neg Insi
 51 [https://challenges.re/51/](https://challenges.re/51/)	re4b/chap1.md	/^### 51 [https:\/\/challenges.re\/51\/](https:\/\/challenges.re\/51\/)$/;"	S
 52 [https://challenges.re/52/](https://challenges.re/52/)	re4b/chap1.md	/^### 52 [https:\/\/challenges.re\/52\/](https:\/\/challenges.re\/52\/)$/;"	S
 53 [https://challenges.re/53/](https://challenges.re/53/)	re4b/chap1.md	/^### 53 [https:\/\/challenges.re\/53\/](https:\/\/challenges.re\/53\/)$/;"	S
+56 [https://challenges.re/56/](https://challenges.re/56/)	re4b/chap1.md	/^### 56 [https:\/\/challenges.re\/56\/](https:\/\/challenges.re\/56\/)$/;"	S
+57 [https://challenges.re/57/](https://challenges.re/57/)	re4b/chap1.md	/^### 57 [https:\/\/challenges.re\/57\/](https:\/\/challenges.re\/57\/)$/;"	S
+59 [https://challenges.re/59/](https://challenges.re/59/)	re4b/chap1.md	/^### 59 [https:\/\/challenges.re\/59\/](https:\/\/challenges.re\/59\/)$/;"	S
 A Formal Foundation for Secure Remote Execution of Enclaves	paper/tap.md	/^# A Formal Foundation for Secure Remote Execution of Enclaves$/;"	c
 A Tale of Two Worlds: Assessing the Vulnerability of Enclave Shielding Runtimes	paper/two_worlds.md	/^# A Tale of Two Worlds: Assessing the Vulnerability of Enclave Shielding Runtimes$/;"	c
 ABI 疏忽	paper/two_worlds.md	/^## ABI 疏忽$/;"	s
@@ -45,6 +48,8 @@ Example	etd/intro.md	/^#### Example$/;"	t
 Execution Representation	paper/tap.md	/^### Execution Representation$/;"	S
 Exercise 48 & 49	re4b/chap1.md	/^## Exercise 48 & 49$/;"	s
 Exercise 51, 52 & 53	re4b/chap1.md	/^## Exercise 51, 52 & 53$/;"	s
+Exercise 56 & 57	re4b/chap1.md	/^## Exercise 56 & 57$/;"	s
+Exercise 59	re4b/chap1.md	/^## Exercise 59$/;"	s
 Exponential Time Differencing	etd/intro.md	/^## Exponential Time Differencing$/;"	s
 Follower 职责	raft/leader_election.md	/^### Follower 职责$/;"	S
 Forking	linux/lkd1.md	/^#### Forking$/;"	t
@@ -79,9 +84,11 @@ NA4 模式（Naturally aligned four bytes）	riscv/pmp.md	/^## NA4 模式（Natu
 NAPOT 模式（Naturally aligned power of two）	riscv/pmp.md	/^## NAPOT 模式（Naturally aligned power of two）$/;"	s
 Notations	paper/tap.md	/^## Notations$/;"	s
 Note `lea` 指令用于计算	re4b/chap1.md	/^## Note `lea` 指令用于计算$/;"	s
+Note 一些新指令	re4b/chap1.md	/^## Note 一些新指令$/;"	s
 Note 全局变量 v.s. 局部变量	re4b/chap1.md	/^## Note 全局变量 v.s. 局部变量$/;"	s
 Note 函数参数	re4b/chap1.md	/^## Note 函数参数$/;"	s
 Note 函数序言与结语	re4b/chap1.md	/^## Note 函数序言与结语$/;"	s
+Note 循环语句	re4b/chap1.md	/^## Note 循环语句$/;"	s
 Note 条件跳转	re4b/chap1.md	/^## Note 条件跳转$/;"	s
 Note 栈的作用	re4b/chap1.md	/^## Note 栈的作用$/;"	s
 Note 结构体作为返回值	re4b/chap1.md	/^## Note 结构体作为返回值$/;"	s
@@ -116,6 +123,8 @@ Solution 49	re4b/chap1.md	/^### Solution 49$/;"	S
 Solution 51	re4b/chap1.md	/^### Solution 51$/;"	S
 Solution 52	re4b/chap1.md	/^### Solution 52$/;"	S
 Solution 53	re4b/chap1.md	/^### Solution 53$/;"	S
+Solution 56	re4b/chap1.md	/^### Solution 56$/;"	S
+Solution 59	re4b/chap1.md	/^### Solution 59$/;"	S
 Solution I	misc/ad_problem.md	/^## Solution I$/;"	s
 Solution I 排序 `O(nlog(n))`	lc_contest/weekly_257.md	/^### Solution I 排序 `O(nlog(n))`$/;"	S
 Solution II	misc/ad_problem.md	/^## Solution II$/;"	s
@@ -149,7 +158,9 @@ While 循环规则	lf/hoare.md	/^### While 循环规则$/;"	S
 `destruct` on Compound Expressions	lf/tactics.md	/^## `destruct` on Compound Expressions$/;"	s
 `mcounteren` 寄存器设置	riscv/linux_d1.md	/^## `mcounteren` 寄存器设置$/;"	s
 `vruntime`	linux/lkd2.md	/^##### `vruntime`$/;"	T
+d_max	re4b/fpu.c	/^double d_max (double a, double b)$/;"	f	typeref:typename:double
 gitalk-container	_layouts/default.html	/^      <div id="gitalk-container"><\/div>$/;"	I
+main	re4b/fpu.c	/^int main()$/;"	f	typeref:typename:int
 rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.md	/^# rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具$/;"	c
 {{ site.title | jwnhy.github.io }}	_layouts/default.html	/^        <h1><a href="{{ "\/" | absolute_url }}">{{ site.title | jwnhy.github.io }}<\/a><\/h1>$/;"	h
 一道有趣的面试题，广告推送问题	misc/ad_problem.md	/^# 一道有趣的面试题，广告推送问题$/;"	c
