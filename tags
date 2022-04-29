@@ -82,6 +82,7 @@ Note `lea` 指令用于计算	re4b/chap1.md	/^## Note `lea` 指令用于计算$/
 Note 全局变量 v.s. 局部变量	re4b/chap1.md	/^## Note 全局变量 v.s. 局部变量$/;"	s
 Note 函数参数	re4b/chap1.md	/^## Note 函数参数$/;"	s
 Note 函数序言与结语	re4b/chap1.md	/^## Note 函数序言与结语$/;"	s
+Note 条件跳转	re4b/chap1.md	/^## Note 条件跳转$/;"	s
 Note 栈的作用	re4b/chap1.md	/^## Note 栈的作用$/;"	s
 Note 结构体作为返回值	re4b/chap1.md	/^## Note 结构体作为返回值$/;"	s
 PMP 基础知识	riscv/pmp.md	/^## PMP 基础知识$/;"	s

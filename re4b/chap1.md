@@ -250,5 +250,37 @@ ret 0
 其可以用于计算所有能够放入地址计算方式的算数表达式，例如
 
 ```asm
-lea ecx, [edx * edx+1] ; ecx = edx + 1
+lea ecx, [edx * edx+1] ; ecx = edx * edx + 1
 ```
+
+## Note 条件跳转
+
+x86 与 Arm 上的条件跳转利用 Flag 寄存器来判断是否执行跳转，可以看成下面的两步组合。
+
+x86
+
+```asm
+cmp reg, ret/val
+Jcc true
+false:
+;...
+true:
+;...
+```
+
+Arm
+
+```asm
+cmp reg, ret/val
+Bcc true
+false:
+;...
+true:
+;...
+```
+
+而对于 MIPS，RISC-V 等架构，其提供了不同的指令来进行不同条件的跳转，`beq/bltz/...`。
+
+> `switch` 条件语句
+> 在 `case` 不多的情况下，`switch` 会生成多条条件跳转语句。
+> 在 `case` 较多的情况下，`switch` 会生成跳转表以减小二进制文件大小。
