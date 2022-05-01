@@ -1,6 +1,7 @@
 ---
 layout: default
-post_list: date
+post_list: "date"
+collection_list: true
 toc: false
 comment: true
 home_btn: true
@@ -8,7 +9,6 @@ btn_text: true
 footer: true
 title: Welcome to jwnhy's Blog
 author: ""
-encrypted_text: true
 permalink: /
 ---
 
