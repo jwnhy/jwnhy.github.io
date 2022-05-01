@@ -6,7 +6,6 @@ for i in range(1, 6):
 
 for k in buf:
     print(hex(k))
-exit();
 d = {}
 for i in range(1, 6):
     d[i] = {}
