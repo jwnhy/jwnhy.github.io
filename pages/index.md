@@ -17,6 +17,7 @@ permalink: /
 ## Who am I?
 
 Well, the title should be self-explanatory.
+
 Anyways, I am jwnhy, Here is my [resume](../resume.txt).
 
 ## What interests me?
