@@ -41,6 +41,7 @@ Consequence 结果规则	lf/hoare.md	/^### Consequence 结果规则$/;"	S
 Copy-on-Write	linux/lkd1.md	/^#### Copy-on-Write$/;"	t
 D1 SDK OpenSBI 打包位置	riscv/rt0.md	/^## D1 SDK OpenSBI 打包位置$/;"	s
 DWARF 符号读取 (基于 `addr2line` 与 `gimli` 库)	riscv/rvbt.md	/^### DWARF 符号读取 (基于 `addr2line` 与 `gimli` 库)$/;"	S
+Decompile	crackmes/f0rizen/sol.md	/^## Decompile$/;"	s
 Description	lc_contest/weekly_256.md	/^### Description$/;"	S
 Description	lc_contest/weekly_257.md	/^### Description$/;"	S
 Enclave Side	paper/tap.md	/^### Enclave Side$/;"	S
@@ -56,6 +57,7 @@ Forking	linux/lkd1.md	/^#### Forking$/;"	t
 Hoare 三元组	lf/hoare.md	/^## Hoare 三元组$/;"	s
 Hoare 逻辑	lf/hoare.md	/^# Hoare 逻辑$/;"	c
 Hoare 逻辑与理论模型	lf/hoare.md	/^## Hoare 逻辑与理论模型$/;"	s
+I dnk math, but I know bruteforce	crackmes/f0rizen/sol.md	/^## I dnk math, but I know bruteforce$/;"	s
 I/O 密集与计算密集	linux/lkd2.md	/^### I\/O 密集与计算密集$/;"	S
 Iago Attack 防御	paper/two_worlds.md	/^### Iago Attack 防御$/;"	S
 If not sure, find them in Linux booting log	arm/etm_db410c_en.md	/^# If not sure, find them in Linux booting log$/;"	c
@@ -145,6 +147,7 @@ Using Tactics in Hypothesis	lf/tactics.md	/^## Using Tactics in Hypothesis$/;"	s
 Varying the Induction Hypothesis	lf/tactics.md	/^## Varying the Induction Hypothesis$/;"	s
 Vfork	linux/lkd1.md	/^#### Vfork$/;"	t
 Welcome to jwnhy's Blog	README.md	/^# Welcome to jwnhy's Blog$/;"	c
+Werid Stack Behavior	crackmes/f0rizen/sol.md	/^## Werid Stack Behavior$/;"	s
 What can we do?	paper/tap.md	/^## What can we do?$/;"	s
 While 循环规则	lf/hoare.md	/^### While 循环规则$/;"	S
 [5854. 学生分数的最小差值](https://leetcode-cn.com/problems/minimum-difference-between-highest-and-lowest-of-k-scores/)	lc_contest/weekly_256.md	/^## [5854. 学生分数的最小差值](https:\/\/leetcode-cn.com\/problems\/minimum-difference-b/;"	s
@@ -154,14 +157,18 @@ While 循环规则	lf/hoare.md	/^### While 循环规则$/;"	S
 [5864. 游戏中弱角色的数量](https://leetcode-cn.com/problems/the-number-of-weak-characters-in-the-game/)	lc_contest/weekly_257.md	/^## [5864. 游戏中弱角色的数量](https:\/\/leetcode-cn.com\/problems\/the-number-of-weak-c/;"	s
 [5865. 访问完所有房间的第一天](https://leetcode-cn.com/problems/first-day-where-you-have-been-in-all-the-rooms/)	lc_contest/weekly_257.md	/^## [5865. 访问完所有房间的第一天](https:\/\/leetcode-cn.com\/problems\/first-day-wher/;"	s
 [PLDI 2020] Exploiting Superword Level Parallelism with Multimedia Instruction Sets	pl/Superword_Level_Parallelism_2000_PLDI.md	/^# [PLDI 2020] Exploiting Superword Level Parallelism with Multimedia Instruction Sets$/;"	c
+[f0rizen's Hash checker 0x01](https://crackmes.one/crackme/622db5be33c5d46c8bcc027f)	crackmes/f0rizen/sol.md	/^# [f0rizen's Hash checker 0x01](https:\/\/crackmes.one\/crackme\/622db5be33c5d46c8bcc027f)$/;"	c
 `PLIC` 权限设置	riscv/linux_d1.md	/^## `PLIC` 权限设置$/;"	s
 `destruct` on Compound Expressions	lf/tactics.md	/^## `destruct` on Compound Expressions$/;"	s
 `mcounteren` 寄存器设置	riscv/linux_d1.md	/^## `mcounteren` 寄存器设置$/;"	s
 `vruntime`	linux/lkd2.md	/^##### `vruntime`$/;"	T
-d_max	re4b/fpu.c	/^double d_max (double a, double b)$/;"	f	typeref:typename:double
+buf	crackmes/f0rizen/sol.py	/^buf = [1]$/;"	v
+d	crackmes/f0rizen/sol.py	/^d = {}$/;"	v
 gitalk-container	_layouts/default.html	/^      <div id="gitalk-container"><\/div>$/;"	I
-main	re4b/fpu.c	/^int main()$/;"	f	typeref:typename:int
+k	crackmes/f0rizen/sol.py	/^    k = str(l).zfill(6)$/;"	v
+main	crackmes/f0rizen/decompile.c	/^ulong main(ulong argc, int64_t argv)$/;"	f	typeref:typename:ulong
 rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具	riscv/rvbt.md	/^# rvbt: RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具$/;"	c
+s	crackmes/f0rizen/sol.py	/^    s = ord("0") + int(k[0])$/;"	v
 {{ site.title | jwnhy.github.io }}	_layouts/default.html	/^        <h1><a href="{{ "\/" | absolute_url }}">{{ site.title | jwnhy.github.io }}<\/a><\/h1>$/;"	h
 一道有趣的面试题，广告推送问题	misc/ad_problem.md	/^# 一道有趣的面试题，广告推送问题$/;"	c
 上下文切换	linux/lkd2.md	/^#### 上下文切换$/;"	t

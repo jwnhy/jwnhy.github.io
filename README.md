@@ -43,3 +43,5 @@
   - [DragonBoard ETM En](./arm/etm_db410c_en.md)
 - RE4B
   - [Chap 1](./re4b/chap1.md)
+- crackmes
+  - [f0rizen's Hash checker 0x01](./crackmes/f0rizen/sol.md)
