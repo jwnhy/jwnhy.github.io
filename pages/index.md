@@ -1,18 +1,15 @@
 ---
-layout: default
 post_list: "date"
 collection_list: true
-toc: false
+toc: true
 comment: true
 home_btn: true
 btn_text: true
 footer: true
 title: Welcome to jwnhy's Blog
-author: ""
+author: "jwnhy"
 permalink: /
 ---
-
-# Welcome to jwnhy's Blog
 
 ## Who am I?
 

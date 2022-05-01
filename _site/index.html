@@ -46,6 +46,7 @@
 <title>Welcome to jwnhy’s Blog | jwnhy Blog</title>
 <meta name="generator" content="Jekyll v4.2.2" />
 <meta property="og:title" content="Welcome to jwnhy’s Blog" />
+<meta name="author" content="jwnhy" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Be humble, be better." />
 <meta property="og:description" content="Be humble, be better." />
@@ -56,8 +57,9 @@
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Welcome to jwnhy’s Blog" />
 <meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@jwnhy" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","description":"Be humble, be better.","headline":"Welcome to jwnhy’s Blog","name":"jwnhy Blog","url":"http://localhost:4000/"}</script>
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"jwnhy"},"description":"Be humble, be better.","headline":"Welcome to jwnhy’s Blog","name":"jwnhy Blog","url":"http://localhost:4000/"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -559,15 +561,31 @@ setInterval(draw, 20);
             <!-- right header -->
             <span class="span_right">
               
-              <a class="site_title" href="http://localhost:4000"
-                >jwnhy Blog</a
-              >
+              <!-- scroll up -->
+              <a class="header_btn" onclick="scroll_percentage(-0.88)">
+                <i class="fa btn_icon fa-backward">
+                  
+                  <p class="btn_text">Prev</p>
+                  
+                </i>
+              </a>
+              <!-- scroll down -->
+              <a class="header_btn" onclick="scroll_percentage(0.88)">
+                <i class="fa btn_icon fa-forward">
+                  
+                  <p class="btn_text">Next</p>
+                  
+                </i>
+              </a>
+              <!-- popup table of content -->
+              <a class="header_btn popup_btn" onclick="toggle_toc()">
+                <i class="fa btn_icon fa-list">
+                  
+                  <p class="btn_text">Content</p>
+                  
+                </i>
+              </a>
               
-              <a class="site_owner"> - </a>
-              <a class="site_owner" href="https://github.com/jwnhy">
-                jwnhy</a
-              >
-               
             </span>
           </ul>
         </nav>
@@ -577,6 +595,16 @@ setInterval(draw, 20);
   </table>
 </div>
 <!-- table of content -->
+
+<div class="div_toc toc" id="popup_toc">
+  
+  <!-- generate toc -->
+  <ul id="ul_toc" class="ul_toc">
+  <li><a href="#who-am-i">Who am I?</a></li>
+  <li><a href="#what-interests-me">What interests me?</a></li>
+  <li><a href="#what-have-i-done">What have I done?</a></li>
+</ul>
+</div>
 
 <!-- toggle maximize -->
 
@@ -594,8 +622,29 @@ setInterval(draw, 20);
           itemscope
           itemtype="http://schema.org/BlogPosting"
         >
-          <h1 id="welcome-to-jwnhys-blog">Welcome to jwnhy’s Blog</h1>
+          <h1 id="Welcome to jwnhy's Blog">Welcome to jwnhy's Blog</h1>
+<div class="post_info">
+  <!-- author -->
+  
+  <span>
+    <i class="fa fa-user-secret"></i>
+    jwnhy
+  </span>
+  
+  <!-- date -->
+  
+  <span>
+    <i class="fa fa-calendar"></i>
+    
+  </span>
+  
+  <!-- category -->
+  
+</div>
+<!-- abstract -->
 
+
+<br />
 <h2 id="who-am-i">Who am I?</h2>
 
 <p>Well, the title should be self-explanatory.</p>
@@ -626,6 +675,7 @@ setInterval(draw, 20);
   <li><a href="www.pornhub.com">Pronhub</a> Community Translator</li>
   <li><a href="https://coq-zh.github.io/SF-zh/">Software Foundation</a> Translator</li>
 </ul>
+
  <div class="post_list">
 
 <!-- list of articles: sort by date (by default) -->
