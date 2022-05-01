@@ -1,0 +1,16 @@
+current directory: /home/john/Documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/http_parser.rb-0.8.0/ext/ruby_http_parser
+/usr/bin/ruby27 -I /usr/lib64/ruby/site_ruby/2.7.0 -r ./siteconf20220501-151135-i56map.rb extconf.rb
+creating Makefile
+
+current directory: /home/john/Documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/http_parser.rb-0.8.0/ext/ruby_http_parser
+make "DESTDIR=" clean
+
+current directory: /home/john/Documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/http_parser.rb-0.8.0/ext/ruby_http_parser
+make "DESTDIR="
+compiling ruby_http_parser.c
+compiling ryah_http_parser.c
+linking shared-object ruby_http_parser.so
+
+current directory: /home/john/Documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/http_parser.rb-0.8.0/ext/ruby_http_parser
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 ruby_http_parser.so ./.gem.20220501-151135-dpqm06

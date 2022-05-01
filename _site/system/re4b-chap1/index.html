@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <!-- multi-device width -->
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <!-- site description -->
+    
+    <meta content="Exercise 48 &amp; 49" name="description"/>
+    <!-- referer for 3rd-part images-->
+    <meta content="no-referrer" name="referrer"/>
+    <!-- title -->
+    <title>
+        
+            RE4B Chap 1 Notes
+        
+    </title>
+    <!-- icon -->
+    <link href="http://localhost:4000/src/assets/img/favicon.ico" rel="shortcut icon bookmark" type="image/x-icon"/>
+    <!-- global stylesheet -->
+    <link rel="stylesheet" href="http://localhost:4000/src/assets/css/main.css" type="text/css"/>
+    <!-- fa 5.9.0 -->
+    <link rel="stylesheet" href="http://localhost:4000/src/assets/css/fa.min.css" type="text/css"/>
+    <!-- global script -->
+    <script src="http://localhost:4000/src/assets/js/main.js" async></script>
+    <!-- mathjax 2.7.5 -->
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { 
+        linebreaks: { automatic: true }
+      },
+      SVG: { 
+        linebreaks: { automatic: true } 
+      }
+    });
+    </script>
+    <!-- mermaid 8.11.5-->
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.11.5/mermaid.min.js"></script>
+    
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>RE4B Chap 1 Notes | jwnhy Blog</title>
+<meta name="generator" content="Jekyll v4.2.2" />
+<meta property="og:title" content="RE4B Chap 1 Notes" />
+<meta name="author" content="jwnhy" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Exercise 48 &amp; 49" />
+<meta property="og:description" content="Exercise 48 &amp; 49" />
+<link rel="canonical" href="http://localhost:4000/system/re4b-chap1/" />
+<meta property="og:url" content="http://localhost:4000/system/re4b-chap1/" />
+<meta property="og:site_name" content="jwnhy Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-04-20T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="RE4B Chap 1 Notes" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@jwnhy" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jwnhy"},"dateModified":"2022-04-20T00:00:00+08:00","datePublished":"2022-04-20T00:00:00+08:00","description":"Exercise 48 &amp; 49","headline":"RE4B Chap 1 Notes","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/system/re4b-chap1/"},"url":"http://localhost:4000/system/re4b-chap1/"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+  <body class="page">
+    <!-- background animations -->
+<div class="div_bg">
+    <canvas id="c"></canvas>
+</div>
+<script>
+var c = document.getElementById("c");
+var ctx = c.getContext("2d");
+c.height = window.innerHeight;
+c.width = window.innerWidth;
+var txts = "ABCFGHKLMNPQRSVWXYZabcdefghijklmnopqrstuvwxyz@#$%&*+-;/[]<>~";
+txts = txts.split("");
+var font_size = 12;
+var columns = c.width / font_size;
+var drops = [];
+for (var x = 0; x < columns; x++) drops[x] = 1;
+
+function draw() {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillRect(0, 0, c.width, c.height);
+  ctx.fillStyle = "#490";
+  ctx.font = font_size + "px arial";
+  for (var i = 0; i < drops.length; i++) {
+    var text = txts[Math.floor(Math.random() * txts.length)];
+    ctx.fillText(text, i * font_size, drops[i] * font_size);
+    if (drops[i] * font_size > c.height || Math.random() > 0.98) drops[i] = 0;
+    drops[i]++;
+  }
+}
+setInterval(draw, 20);
+</script>
+    <!-- collection list, shown by click "archive" buttom in header -->
+<div class="collection_list_container"  id="the_collection_list">
+<div class="collection_list_background"  onclick="close_collection_list()"></div>
+<div class="collection_list" onload="none">
+    <div class="collection_list_header">
+        <!-- TODO: search post -->
+                                            <!-- <a class="search_btn">
+      <i class="fa fa-search"> Search</i>
+    </a>
+    &nbsp; -->
+        <table class="collection_list_header_title">
+            <tr>
+                <td>Archive:</td>
+                <td id="clh_title"></td>
+            </tr>
+        </table>
+        <div class="close_btn" onclick="close_collection_list()">
+            <a class="close_btn_icon">
+                <i class="fa fa-times"></i>
+            </a>
+        </div>
+    </div>
+    <div class="collection_name_list">
+        <table class="vertical_center_table">
+            <tr>
+                <td>
+                    <ul>
+                        <!-- show all collections -->
+                        <li>
+                            <a class="a_collection_label" onclick="show_collection('all')">All
+                            </a>
+                        </li>
+                        <!-- show a simple collection -->
+                        
+                            
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('system')">
+                                                
+                                                    system
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                            
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('misc')">
+                                                
+                                                    Misc
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('programming_language')">
+                                                
+                                                    Programming Language
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('posts')">
+                                                
+                                                    posts
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                            
+                        
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="posts_by_cate">
+        <!-- post list in all collections -->
+        <div class="post_list_in_1_collection" id="all">
+            <table class="vertical_center_table">
+                <tr>
+                    <td>
+                        <ul>
+                            
+                                
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    system
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/toolchain/">RISC-V 工具链 & QEMU 虚拟机</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/rvbt/">RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/rt0/">Coffer 移植哪吒 D1 开发板小记</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/pmp/">RISC-V PMP 测试与抽象</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/linux_d1/">Coffer 引导 Linux 与 RISC-V 定时器的坑</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/lkd1/">LKD 读书笔记 Part 1</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/lkd2/">LKD 读书笔记 Part 2</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/etm-db410c/">Activate CoreSight on DragonBoard 410c</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/re4b-chap1/">RE4B Chap 1 Notes</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/Hash-checker-0x01/">f0rizen's Hash checker 0x01</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    Misc
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/misc/ad_problem/">一道有趣的面试题，广告推送问题</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    Programming Language
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/programming_language/lf-tactics/">常见 More Basic Tactics</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/programming_language/lf-conclusion/">逻辑基础小结</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/programming_language/lf-hoare/">Hoare 逻辑</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    posts
+                                                
+                                            </p>
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                
+                            
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- post list in a collection -->
+        
+            <div class="post_list_in_1_collection" id="misc">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/misc/ad_problem/">一道有趣的面试题，广告推送问题</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="posts">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="programming_language">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/programming_language/lf-tactics/">常见 More Basic Tactics</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/programming_language/lf-conclusion/">逻辑基础小结</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/programming_language/lf-hoare/">Hoare 逻辑</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="system">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/toolchain/">RISC-V 工具链 & QEMU 虚拟机</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/rvbt/">RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/rt0/">Coffer 移植哪吒 D1 开发板小记</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/pmp/">RISC-V PMP 测试与抽象</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/linux_d1/">Coffer 引导 Linux 与 RISC-V 定时器的坑</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/lkd1/">LKD 读书笔记 Part 1</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/lkd2/">LKD 读书笔记 Part 2</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/etm-db410c/">Activate CoreSight on DragonBoard 410c</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/re4b-chap1/">RE4B Chap 1 Notes</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/Hash-checker-0x01/">f0rizen's Hash checker 0x01</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+    </div>
+</div>
+</div>
+    <div class="container" id="ctner">
+       <div class="header">
+  <table class="vertical_center_table">
+    <tr>
+      <td>
+        <nav class="nav_bar">
+          <ul>
+            <!-- left header -->
+            <li class="li_left">
+              <!-- open collection tree -->
+              
+              <a class="header_btn" onclick="open_collection_list()">
+                <i class="fa btn_icon fa-bars">
+                  
+                  <p class="btn_text">Archives</p>
+                  
+                </i>
+              </a>
+              
+              <!-- home -->
+              
+              <a class="header_btn" href="http://localhost:4000">
+                <i class="fa btn_icon fa-home">
+                  
+                  <p class="btn_text">Home</p>
+                  
+                </i>
+              </a>
+              
+              <!-- maximize -->
+              
+              <a class="header_btn" id="mxmz_btn" onclick="toggle_maximize()">
+                <i class="fa btn_icon fa-window-maximize">
+                  
+                  <p class="btn_text" id="mxmz_text">Maximize</p>
+                  
+                </i>
+              </a>
+              
+              <!-- access token -->
+              
+            </li>
+            <!-- right header -->
+            <span class="span_right">
+              
+              <!-- scroll up -->
+              <a class="header_btn" onclick="scroll_percentage(-0.88)">
+                <i class="fa btn_icon fa-backward">
+                  
+                  <p class="btn_text">Prev</p>
+                  
+                </i>
+              </a>
+              <!-- scroll down -->
+              <a class="header_btn" onclick="scroll_percentage(0.88)">
+                <i class="fa btn_icon fa-forward">
+                  
+                  <p class="btn_text">Next</p>
+                  
+                </i>
+              </a>
+              <!-- popup table of content -->
+              <a class="header_btn popup_btn" onclick="toggle_toc()">
+                <i class="fa btn_icon fa-list">
+                  
+                  <p class="btn_text">Content</p>
+                  
+                </i>
+              </a>
+              
+            </span>
+          </ul>
+        </nav>
+        <!-- <hr /> -->
+      </td>
+    </tr>
+  </table>
+</div>
+<!-- table of content -->
+
+<div class="div_toc toc" id="popup_toc">
+  
+  <!-- generate toc -->
+  <ul id="ul_toc" class="ul_toc">
+  <li><a href="#exercise-48--49">Exercise 48 &amp; 49</a>
+    <ul>
+      <li><a href="#48-httpschallengesre48">48 https://challenges.re/48/</a></li>
+      <li><a href="#solution-48">Solution 48</a></li>
+      <li><a href="#49-httpschallengesre49">49 https://challenges.re/49/</a></li>
+      <li><a href="#solution-49">Solution 49</a></li>
+    </ul>
+  </li>
+  <li><a href="#note-函数序言与结语">Note 函数序言与结语</a>
+    <ul>
+      <li><a href="#函数序言">函数序言</a></li>
+      <li><a href="#函数结语">函数结语</a></li>
+    </ul>
+  </li>
+  <li><a href="#note-栈的作用">Note 栈的作用</a>
+    <ul>
+      <li><a href="#储存函数返回地址">储存函数返回地址</a></li>
+      <li><a href="#传递函数参数">传递函数参数</a></li>
+      <li><a href="#常见栈结构">常见栈结构</a></li>
+    </ul>
+  </li>
+  <li><a href="#note-函数参数">Note 函数参数</a></li>
+  <li><a href="#exercise-51-52--53">Exercise 51, 52 &amp; 53</a>
+    <ul>
+      <li><a href="#51-httpschallengesre51">51 https://challenges.re/51/</a></li>
+      <li><a href="#solution-51">Solution 51</a></li>
+      <li><a href="#52-httpschallengesre52">52 https://challenges.re/52/</a></li>
+      <li><a href="#solution-52">Solution 52</a></li>
+      <li><a href="#53-httpschallengesre53">53 https://challenges.re/53/</a></li>
+      <li><a href="#solution-53">Solution 53</a></li>
+    </ul>
+  </li>
+  <li><a href="#note-全局变量-vs-局部变量">Note 全局变量 v.s. 局部变量</a></li>
+  <li><a href="#note-结构体作为返回值">Note 结构体作为返回值</a></li>
+  <li><a href="#note-lea-指令用于计算">Note lea 指令用于计算</a></li>
+  <li><a href="#note-条件跳转">Note 条件跳转</a></li>
+  <li><a href="#note-循环语句">Note 循环语句</a></li>
+  <li><a href="#exercise-56--57">Exercise 56 &amp; 57</a>
+    <ul>
+      <li><a href="#56-httpschallengesre56">56 https://challenges.re/56/</a></li>
+      <li><a href="#solution-56">Solution 56</a></li>
+      <li><a href="#57-httpschallengesre57">57 https://challenges.re/57/</a></li>
+    </ul>
+  </li>
+  <li><a href="#note-一些新指令">Note 一些新指令</a></li>
+  <li><a href="#exercise-59">Exercise 59</a>
+    <ul>
+      <li><a href="#59-httpschallengesre59">59 https://challenges.re/59/</a></li>
+      <li><a href="#solution-59">Solution 59</a></li>
+    </ul>
+  </li>
+</ul>
+</div>
+
+<!-- toggle maximize -->
+
+<script>
+  var ctner_state = 0;
+  var ctner = document.getElementById("ctner");
+</script>
+
+<!-- encrypt and decrypt -->
+
+
+      <div class="div_article" id="div_atcl">
+        <article
+          id="main_atcl"
+          itemscope
+          itemtype="http://schema.org/BlogPosting"
+        >
+          <h1 id="RE4B Chap 1 Notes">RE4B Chap 1 Notes</h1>
+<div class="post_info">
+  <!-- author -->
+  
+  <span>
+    <i class="fa fa-user-secret"></i>
+    jwnhy
+  </span>
+  
+  <!-- date -->
+  
+  <span>
+    <i class="fa fa-calendar"></i>
+    Apr 20, 2022
+  </span>
+  
+  <!-- category -->
+  
+</div>
+<!-- abstract -->
+
+
+<br />
+<h2 id="exercise-48--49">Exercise 48 &amp; 49</h2>
+
+<p>出现在 1.5.6 节</p>
+
+<h3 id="48-httpschallengesre48">48 <a href="https://challenges.re/48/">https://challenges.re/48/</a></h3>
+
+<pre><code class="language-asm">main:
+    push 0xFFFFFFFF
+    call MessageBeep
+    xor  eax,eax
+    retn
+</code></pre>
+
+<h3 id="solution-48">Solution 48</h3>
+
+<ol>
+  <li>向栈中压入 <code class="language-plaintext highlighter-rouge">0xFFFFFFFF</code></li>
+  <li>调用 <code class="language-plaintext highlighter-rouge">MessageBeep</code></li>
+  <li>清空 <code class="language-plaintext highlighter-rouge">eax</code> 返回值寄存器</li>
+  <li>返回上一层</li>
+</ol>
+
+<h3 id="49-httpschallengesre49">49 <a href="https://challenges.re/49/">https://challenges.re/49/</a></h3>
+
+<pre><code class="language-asm">main:
+        pushq   %rbp
+        movq    %rsp, %rbp
+        movl    $2, %edi
+        call    sleep
+        popq    %rbp
+        ret
+</code></pre>
+
+<h3 id="solution-49">Solution 49</h3>
+
+<ol>
+  <li>向栈中压入栈基地址 <code class="language-plaintext highlighter-rouge">rbp</code></li>
+  <li>将当前栈顶设为栈基地址</li>
+  <li>将 <code class="language-plaintext highlighter-rouge">2</code> 通过 <code class="language-plaintext highlighter-rouge">edi</code> 寄存器作为函数参数</li>
+  <li>调用 <code class="language-plaintext highlighter-rouge">sleep</code> 函数</li>
+  <li>弹出栈基地址 <code class="language-plaintext highlighter-rouge">rbp</code></li>
+</ol>
+
+<h2 id="note-函数序言与结语">Note 函数序言与结语</h2>
+
+<h3 id="函数序言">函数序言</h3>
+
+<pre><code class="language-asm">push ebp
+mov ebp, esp
+sub esp, X
+</code></pre>
+
+<ol>
+  <li>压入栈基地址，保存栈帧</li>
+  <li>将 callee 的栈基地址设为当前栈顶</li>
+  <li>在栈上为 callee 局部变量分配空间</li>
+</ol>
+
+<blockquote>
+  <p>栈基地址被用于访问当前函数的局部变量等，根据架构的不同也可被称为 <code class="language-plaintext highlighter-rouge">frame pointer</code>。
+<code class="language-plaintext highlighter-rouge">esp</code> 也可以用来访问局部变量，例如 <code class="language-plaintext highlighter-rouge">rust</code> 支持省略栈基地址。</p>
+</blockquote>
+
+<h3 id="函数结语">函数结语</h3>
+
+<pre><code class="language-asm">mov esp, ebp
+pop ebp
+ret 0
+</code></pre>
+
+<ol>
+  <li>将栈顶恢复（栈基地址在 callee 调用过程中始终保持不变）</li>
+  <li>弹出栈基地址，恢复栈帧</li>
+  <li>返回上一层</li>
+</ol>
+
+<h2 id="note-栈的作用">Note 栈的作用</h2>
+
+<h3 id="储存函数返回地址">储存函数返回地址</h3>
+
+<p>在 x86 上，函数调用是由 <code class="language-plaintext highlighter-rouge">call/ret</code> 指令组合实现，其中 <code class="language-plaintext highlighter-rouge">call</code> 指令相当于</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">push &lt;address after call&gt;(pc+4)</code></li>
+  <li><code class="language-plaintext highlighter-rouge">jmp &lt;function&gt;</code></li>
+</ol>
+
+<p>在 Arm 上，存在一个 LR 寄存器，用于存储返回地址，但当函数调用多于一层时，仍然需要使用栈存储返回地址。</p>
+
+<h3 id="传递函数参数">传递函数参数</h3>
+
+<pre><code class="language-asm">push arg3
+push arg2
+push arg1
+call f
+add esp, 12 ; 4 * 3 = 12 release arg space
+</code></pre>
+
+<p>栈在函数进入前的状态</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>stack</th>
+      <th>usage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ESP</td>
+      <td>return address</td>
+    </tr>
+    <tr>
+      <td>ESP+4</td>
+      <td>arg#1, arg_0 IDA</td>
+    </tr>
+    <tr>
+      <td>ESP+8</td>
+      <td>arg#2, arg_4 IDA</td>
+    </tr>
+    <tr>
+      <td>ESP+C</td>
+      <td>arg#3, arg_8 IDA</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>函数参数也可以通过寄存器方式进行传递。</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">alloc()</code> 函数，该函数直接在栈上分配空间（而非像 <code class="language-plaintext highlighter-rouge">malloc()</code> 在堆上）。</p>
+</blockquote>
+
+<h3 id="常见栈结构">常见栈结构</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>stack</th>
+      <th>usage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ESP-C</td>
+      <td>localvar#2, var_8</td>
+    </tr>
+    <tr>
+      <td>ESP-8</td>
+      <td>localvar#1, var_4</td>
+    </tr>
+    <tr>
+      <td>ESP-4</td>
+      <td>saved EBP</td>
+    </tr>
+    <tr>
+      <td>ESP</td>
+      <td>return address</td>
+    </tr>
+    <tr>
+      <td>ESP+4</td>
+      <td>arg#1, arg_0 IDA</td>
+    </tr>
+    <tr>
+      <td>ESP+8</td>
+      <td>arg#2, arg_4 IDA</td>
+    </tr>
+    <tr>
+      <td>ESP+C</td>
+      <td>arg#3, arg_8 IDA</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="note-函数参数">Note 函数参数</h2>
+
+<p>对于 CPU 而言，函数参数的传递方式是 <strong>不可知</strong> 的，不论是寄存器传递还是栈传递都是可以接受的，
+完全以编译器决定。</p>
+
+<h2 id="exercise-51-52--53">Exercise 51, 52 &amp; 53</h2>
+
+<h3 id="51-httpschallengesre51">51 <a href="https://challenges.re/51/">https://challenges.re/51/</a></h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">printf</span> <span class="p">(</span><span class="s">"%d, %d, %d</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="solution-51">Solution 51</h3>
+
+<p>msvc</p>
+
+<pre><code class="language-asm">$SG5198 DB        '%d, %d, %d', 0aH, 00H
+
+main    PROC
+$LN3:
+        sub     rsp, 40                             ; 00000028H
+        lea     rcx, OFFSET FLAT:$SG5198
+        call    printf
+        xor     eax, eax
+        add     rsp, 40                             ; 00000028H
+        ret     0
+main    ENDP
+</code></pre>
+
+<p>gcc</p>
+
+<pre><code class="language-asm">.LC0:
+        .string "%d, %d, %d\n"
+main:
+        push    rbp
+        mov     rbp, rsp
+        mov     edi, OFFSET FLAT:.LC0
+        mov     eax, 0
+        call    printf
+        mov     eax, 0
+        pop     rbp
+        ret
+</code></pre>
+
+<p>他们都输出了一些垃圾信息，是保存在栈上的本该交给 <code class="language-plaintext highlighter-rouge">main()</code> 的参数，例如 <code class="language-plaintext highlighter-rouge">argc</code> 和 <code class="language-plaintext highlighter-rouge">argv</code> 等。</p>
+
+<h3 id="52-httpschallengesre52">52 <a href="https://challenges.re/52/">https://challenges.re/52/</a></h3>
+
+<pre><code class="language-asm">$SG3103 DB '%d', 0aH, 00H
+_main PROC
+  push 0
+  call DWORD PTR __imp___time64
+  push edx
+  push eax
+  push OFFSET $SG3103 ; '%d'
+  call DWORD PTR __imp__printf
+  add esp, 16
+  xor eax, eax
+  ret 0
+_main ENDP
+</code></pre>
+
+<h3 id="solution-52">Solution 52</h3>
+
+<ol>
+  <li>将 <code class="language-plaintext highlighter-rouge">0(NULL)</code> 作为参数传给函数 <code class="language-plaintext highlighter-rouge">time64()</code>。</li>
+  <li>将 <code class="language-plaintext highlighter-rouge">time64()</code> 的返回值 <code class="language-plaintext highlighter-rouge">eax</code> 与格式化字符串 <code class="language-plaintext highlighter-rouge">"%d"</code> 作为参数传给函数传给 <code class="language-plaintext highlighter-rouge">printf</code></li>
+  <li>清空用于传参的栈空间，清空 <code class="language-plaintext highlighter-rouge">eax</code>，返回</li>
+</ol>
+
+<h3 id="53-httpschallengesre53">53 <a href="https://challenges.re/53/">https://challenges.re/53/</a></h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span>
+<span class="kt">void</span> <span class="nf">alter_string</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="n">strcpy</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s">"Goodbye!"</span><span class="p">);</span>
+        <span class="n">printf</span> <span class="p">(</span><span class="s">"Result: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="n">alter_string</span> <span class="p">(</span><span class="s">"Hello, world!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="solution-53">Solution 53</h3>
+
+<p>gcc 与 msvc 对于字符串常量的处理方式不同。
+gcc 将只读数据存储在 <code class="language-plaintext highlighter-rouge">.rodata</code> 段，在加载时其页表会被设为只读（触发栈错误）。
+msvc 将字符串存储在 <code class="language-plaintext highlighter-rouge">.data</code> 段，可读可写，因此不会触发段错误。</p>
+
+<h2 id="note-全局变量-vs-局部变量">Note 全局变量 v.s. 局部变量</h2>
+
+<p>全局变量存储在 <code class="language-plaintext highlighter-rouge">.bss</code> 段，会由操作系统清零，而局部变量存储在栈上，不会被清零。
+因此将全局变量改为未初始化的局部变量可能出现难以发觉的 bug 。</p>
+
+<h2 id="note-结构体作为返回值">Note 结构体作为返回值</h2>
+
+<p>当返回值不足以存入寄存器时，编译器会传入一个<strong>隐藏参数</strong>作为指向结构体的指针。</p>
+
+<pre><code class="language-asm">$T3853 = 8 ; size = 4
+_a$ = 12 ; size = 4
+?get_some_values@@YA?AUs@@H@Z PROC ; get_some_values
+mov ecx, DWORD PTR _a$[esp-4]     ; 函数序言被省略，直接使用 ESP 访问参数
+mov eax, DWORD PTR $T3853[esp-4]  ; 函数序言被省略，直接使用 ESP 访问自动生成的指针 $T3853
+lea edx, DWORD PTR [ecx+1]        ; 利用 lea 指令完成计算，edx = ecx + 1
+mov DWORD PTR [eax], edx          ; 将 edx 中的值放入 DWORD PTR [eax] 指向的地址
+lea edx, DWORD PTR [ecx+2]        ; 同上，利用 lea 指令完成计算
+add ecx, 3
+mov DWORD PTR [eax+4], edx
+mov DWORD PTR [eax+8], ecx
+ret 0
+?get_some_values@@YA?AUs@@H@Z ENDP ; get_some_values
+</code></pre>
+
+<h2 id="note-lea-指令用于计算">Note <code class="language-plaintext highlighter-rouge">lea</code> 指令用于计算</h2>
+
+<p><code class="language-plaintext highlighter-rouge">lea</code> 指令指 <code class="language-plaintext highlighter-rouge">Load Effective Address</code> 实际上就是直接计算 <code class="language-plaintext highlighter-rouge">[complicate formula]</code> 方括号内的内容。
+其可以用于计算所有能够放入地址计算方式的算数表达式，例如</p>
+
+<pre><code class="language-asm">lea ecx, [edx * edx+1] ; ecx = edx * edx + 1
+</code></pre>
+
+<h2 id="note-条件跳转">Note 条件跳转</h2>
+
+<p>x86 与 Arm 上的条件跳转利用 Flag 寄存器来判断是否执行跳转，可以看成下面的两步组合。</p>
+
+<p>x86</p>
+
+<pre><code class="language-asm">  cmp reg, ret/val
+  Jcc true
+false:
+  ;...
+true:
+  ;...
+</code></pre>
+
+<p>Arm</p>
+
+<pre><code class="language-asm">  cmp reg, ret/val
+  Bcc true
+false:
+  ;...
+true:
+  ;...
+</code></pre>
+
+<p>而对于 MIPS，RISC-V 等架构，其提供了不同的指令来进行不同条件的跳转，<code class="language-plaintext highlighter-rouge">beq/bltz/...</code>。</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">switch</code> 条件语句，
+在 <code class="language-plaintext highlighter-rouge">case</code> 不多的情况下，<code class="language-plaintext highlighter-rouge">switch</code> 会生成多条条件跳转语句。
+在 <code class="language-plaintext highlighter-rouge">case</code> 较多的情况下，<code class="language-plaintext highlighter-rouge">switch</code> 会生成跳转表以减小二进制文件大小。
+在 Fall-Through 的情况下，跳转表内会有多个<strong>相同</strong>的项指向同一个地址。</p>
+</blockquote>
+
+<h2 id="note-循环语句">Note 循环语句</h2>
+
+<p>伟大的 x86 提供了用于循环的 <code class="language-plaintext highlighter-rouge">loop</code> 指令，其检查寄存器 <code class="language-plaintext highlighter-rouge">ecx</code> 的值，如果不为 <code class="language-plaintext highlighter-rouge">0</code> 就减少 <code class="language-plaintext highlighter-rouge">ecx</code>
+并跳转到对应的 <code class="language-plaintext highlighter-rouge">&lt;label&gt;</code>，但因为过于不好用而不再有编译器生成这类指令。</p>
+
+<p>对于一般的 <code class="language-plaintext highlighter-rouge">for</code> 循环而言，下面是常见的结构。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="n">init</span><span class="p">;</span> <span class="n">condition</span><span class="p">;</span> <span class="n">action</span> <span class="n">per</span> <span class="n">iter</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">loop_body</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>其在<strong>开始</strong>就会检查条件来决定是否进入 <code class="language-plaintext highlighter-rouge">for</code> 循环，然而对编译器而言，通常会将检查的代码生成在<strong>最后</strong>。</p>
+
+<pre><code class="language-asm">  mov [counter], &lt;init_val&gt;
+  jmp check
+body:
+  ; loop body
+  add [counter] 1
+check:
+  cmp [counter], &lt;fini_val&gt;
+  jle body
+</code></pre>
+
+<blockquote>
+  <p>[counter] 可以被一个专属寄存器替代（如有空余寄存器）。
+当编译器确定第一次循环一定为真时，可能生成类似 <code class="language-plaintext highlighter-rouge">do-while</code> 结构的代码而非先检查的 <code class="language-plaintext highlighter-rouge">for</code> 结构。</p>
+</blockquote>
+
+<h2 id="exercise-56--57">Exercise 56 &amp; 57</h2>
+
+<h3 id="56-httpschallengesre56">56 <a href="https://challenges.re/56/">https://challenges.re/56/</a></h3>
+
+<pre><code class="language-asm">
+$SG2795  DB  '%d', 0aH, 00H
+
+_main  PROC
+  push  esi   ; 保存将被用到的寄存器 esi &amp; edi
+  push  edi   ; 
+  mov  edi, DWORD PTR __imp__printf ; 使用 edi 存储 printf 函数地址
+  mov  esi, 100                     ; 初始化 esi 作为 [counter]
+  npad  3 ; align next label        ; 对齐
+$LL3@main:
+  push  esi                         ; 压入第二个参数 100..1
+  push  OFFSET $SG2795 ; '%d'       ; 压入第一个参数 "%d"
+  call  edi                         ; 调用 printf
+  dec  esi                          ; 减小 esi，counter--
+  add  esp, 8                       ; 栈平衡，释放两个参数占用的空间
+  test  esi, esi                    ; 判断 esi 是否为 0
+  jg  SHORT $LL3@main               ; 条件检查
+  pop  edi                          ; 恢复保存的 edi
+  xor  eax, eax                     ; 设置返回值为 0
+  pop  esi                          ; 恢复保存的 esi
+  ret  0                            ; 返回
+_main  ENDP
+</code></pre>
+
+<h3 id="solution-56">Solution 56</h3>
+
+<p>输出 <code class="language-plaintext highlighter-rouge">100..1</code>，细节见代码注释。</p>
+
+<h3 id="57-httpschallengesre57">57 <a href="https://challenges.re/57/">https://challenges.re/57/</a></h3>
+
+<p>一个类似的例子只是输出变为 <code class="language-plaintext highlighter-rouge">1..100</code> 步长为 <code class="language-plaintext highlighter-rouge">3</code>。</p>
+
+<h2 id="note-一些新指令">Note 一些新指令</h2>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">test reg_1, reg_2</code> 将两个操作数进行 <code class="language-plaintext highlighter-rouge">and</code> 并设置相应的标志，可以用来判断寄存器是否为 <code class="language-plaintext highlighter-rouge">0</code></li>
+  <li><code class="language-plaintext highlighter-rouge">movsx reg_1, addr</code> 符号扩展移动</li>
+</ol>
+
+<h2 id="exercise-59">Exercise 59</h2>
+
+<h3 id="59-httpschallengesre59">59 <a href="https://challenges.re/59/">https://challenges.re/59/</a></h3>
+
+<pre><code class="language-asm">_a$ = 8
+_f  PROC
+  mov  ecx, DWORD PTR _a$[esp-4]  ; ecx = arg
+  lea  eax, DWORD PTR [ecx*8]     ; eax = ecx * 8
+  sub  eax, ecx                   ; eax = eax - ecx
+  ret  0
+_f  ENDP
+</code></pre>
+
+<h3 id="solution-59">Solution 59</h3>
+
+<p>返回传入参数 <code class="language-plaintext highlighter-rouge">arg</code> 的七倍，<code class="language-plaintext highlighter-rouge">arg * 7</code>。</p>
+
+ <div class="post_list">
+
+</div> 
+<!-- disqus -->
+<script id="dsq-count-scr" src="//project-vexed.disqus.com/count.js" async ></script>
+<div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://jwnhy.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+        </article>
+         <div class="footer">
+  <nav class="nav_bar">
+    <ul class="footer_owner_info">
+      <!-- email -->
+      
+      <a class="footer_btn" href="mailto://jwnhy0@gmail.com">
+        <i class="fa fa-envelope-square">
+          
+          <p>Email</p>
+          
+        </i>
+      </a>
+      
+      <!-- linkedin -->
+      
+      <!-- github -->
+      
+      <a class="footer_btn" href="https://github.com/jwnhy">
+        <i class="fa fa-github">
+          
+          <p>Github</p>
+          
+        </i>
+      </a>
+      
+      <!-- gitlab -->
+      
+      <!-- website -->
+      
+      <a class="footer_btn" href="">
+        <i class="fa fa-link">
+          
+          <p>Website</p>
+          
+        </i>
+      </a>
+      
+      <!-- twitter -->
+      
+      <a class="footer_btn" href="https://twitter.com/">
+        <i class="fa fa-twitter">
+          
+          <p>Twitter</p>
+          
+        </i>
+      </a>
+      
+      <!-- facebook -->
+      
+      <a class="footer_btn" href="https://www.facebook.com/">
+        <i class="fa fa-facebook">
+          
+          <p>Facebook</p>
+          
+        </i>
+      </a>
+      
+      <!-- instagram -->
+      
+      <!-- youtube -->
+      
+      <a
+        class="footer_btn"
+        href="https://www.youtube.com/user/"
+      >
+        <i class="fa fa-youtube">
+          
+          <p>Youtube</p>
+          
+        </i>
+      </a>
+      
+      <!-- steam -->
+      
+      <a
+        class="footer_btn"
+        href="https://steamcommunity.com/id/"
+      >
+        <i class="fa fa-steam">
+          
+          <p>Steam</p>
+          
+        </i>
+      </a>
+      
+      <!-- weibo -->
+      
+    </ul>
+    <!-- copyright -->
+    <ul class="footer_copyright">
+      <li class="copyright">© 2015 - 2020</li>
+      
+      <li>Designed by DeerRIDER, All Rights Reserved</li>
+      
+    </ul>
+  </nav>
+</div>
+ 
+      </div>
+    </div>
+  </body>
+  <script async src="http://localhost:4000/src/assets/js/init-mermaid.js"></script>
+</html>

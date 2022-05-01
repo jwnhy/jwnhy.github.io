@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <!-- multi-device width -->
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <!-- site description -->
+    
+    <meta content="LKD Chapter 3 进程调度" name="description"/>
+    <!-- referer for 3rd-part images-->
+    <meta content="no-referrer" name="referrer"/>
+    <!-- title -->
+    <title>
+        
+            LKD 读书笔记 Part 2
+        
+    </title>
+    <!-- icon -->
+    <link href="http://localhost:4000/src/assets/img/favicon.ico" rel="shortcut icon bookmark" type="image/x-icon"/>
+    <!-- global stylesheet -->
+    <link rel="stylesheet" href="http://localhost:4000/src/assets/css/main.css" type="text/css"/>
+    <!-- fa 5.9.0 -->
+    <link rel="stylesheet" href="http://localhost:4000/src/assets/css/fa.min.css" type="text/css"/>
+    <!-- global script -->
+    <script src="http://localhost:4000/src/assets/js/main.js" async></script>
+    <!-- mathjax 2.7.5 -->
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { 
+        linebreaks: { automatic: true }
+      },
+      SVG: { 
+        linebreaks: { automatic: true } 
+      }
+    });
+    </script>
+    <!-- mermaid 8.11.5-->
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.11.5/mermaid.min.js"></script>
+    
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>LKD 读书笔记 Part 2 | jwnhy Blog</title>
+<meta name="generator" content="Jekyll v4.2.2" />
+<meta property="og:title" content="LKD 读书笔记 Part 2" />
+<meta name="author" content="jwnhy" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="LKD Chapter 3 进程调度" />
+<meta property="og:description" content="LKD Chapter 3 进程调度" />
+<link rel="canonical" href="http://localhost:4000/system/lkd2/" />
+<meta property="og:url" content="http://localhost:4000/system/lkd2/" />
+<meta property="og:site_name" content="jwnhy Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-02-25T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="LKD 读书笔记 Part 2" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@jwnhy" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jwnhy"},"dateModified":"2022-02-25T00:00:00+08:00","datePublished":"2022-02-25T00:00:00+08:00","description":"LKD Chapter 3 进程调度","headline":"LKD 读书笔记 Part 2","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/system/lkd2/"},"url":"http://localhost:4000/system/lkd2/"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+  <body class="page">
+    <!-- background animations -->
+<div class="div_bg">
+    <canvas id="c"></canvas>
+</div>
+<script>
+var c = document.getElementById("c");
+var ctx = c.getContext("2d");
+c.height = window.innerHeight;
+c.width = window.innerWidth;
+var txts = "ABCFGHKLMNPQRSVWXYZabcdefghijklmnopqrstuvwxyz@#$%&*+-;/[]<>~";
+txts = txts.split("");
+var font_size = 12;
+var columns = c.width / font_size;
+var drops = [];
+for (var x = 0; x < columns; x++) drops[x] = 1;
+
+function draw() {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillRect(0, 0, c.width, c.height);
+  ctx.fillStyle = "#490";
+  ctx.font = font_size + "px arial";
+  for (var i = 0; i < drops.length; i++) {
+    var text = txts[Math.floor(Math.random() * txts.length)];
+    ctx.fillText(text, i * font_size, drops[i] * font_size);
+    if (drops[i] * font_size > c.height || Math.random() > 0.98) drops[i] = 0;
+    drops[i]++;
+  }
+}
+setInterval(draw, 20);
+</script>
+    <!-- collection list, shown by click "archive" buttom in header -->
+<div class="collection_list_container"  id="the_collection_list">
+<div class="collection_list_background"  onclick="close_collection_list()"></div>
+<div class="collection_list" onload="none">
+    <div class="collection_list_header">
+        <!-- TODO: search post -->
+                                            <!-- <a class="search_btn">
+      <i class="fa fa-search"> Search</i>
+    </a>
+    &nbsp; -->
+        <table class="collection_list_header_title">
+            <tr>
+                <td>Archive:</td>
+                <td id="clh_title"></td>
+            </tr>
+        </table>
+        <div class="close_btn" onclick="close_collection_list()">
+            <a class="close_btn_icon">
+                <i class="fa fa-times"></i>
+            </a>
+        </div>
+    </div>
+    <div class="collection_name_list">
+        <table class="vertical_center_table">
+            <tr>
+                <td>
+                    <ul>
+                        <!-- show all collections -->
+                        <li>
+                            <a class="a_collection_label" onclick="show_collection('all')">All
+                            </a>
+                        </li>
+                        <!-- show a simple collection -->
+                        
+                            
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('system')">
+                                                
+                                                    system
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                            
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('misc')">
+                                                
+                                                    Misc
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('programming_language')">
+                                                
+                                                    Programming Language
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('posts')">
+                                                
+                                                    posts
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                            
+                        
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="posts_by_cate">
+        <!-- post list in all collections -->
+        <div class="post_list_in_1_collection" id="all">
+            <table class="vertical_center_table">
+                <tr>
+                    <td>
+                        <ul>
+                            
+                                
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    system
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/toolchain/">RISC-V 工具链 & QEMU 虚拟机</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/rvbt/">RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/rt0/">Coffer 移植哪吒 D1 开发板小记</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/pmp/">RISC-V PMP 测试与抽象</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/linux_d1/">Coffer 引导 Linux 与 RISC-V 定时器的坑</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/lkd1/">LKD 读书笔记 Part 1</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/lkd2/">LKD 读书笔记 Part 2</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/etm-db410c/">Activate CoreSight on DragonBoard 410c</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/re4b-chap1/">RE4B Chap 1 Notes</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/Hash-checker-0x01/">f0rizen's Hash checker 0x01</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    Misc
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/misc/ad_problem/">一道有趣的面试题，广告推送问题</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    Programming Language
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/programming_language/lf-tactics/">常见 More Basic Tactics</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/programming_language/lf-conclusion/">逻辑基础小结</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/programming_language/lf-hoare/">Hoare 逻辑</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    posts
+                                                
+                                            </p>
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                
+                            
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- post list in a collection -->
+        
+            <div class="post_list_in_1_collection" id="misc">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/misc/ad_problem/">一道有趣的面试题，广告推送问题</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="posts">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="programming_language">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/programming_language/lf-tactics/">常见 More Basic Tactics</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/programming_language/lf-conclusion/">逻辑基础小结</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/programming_language/lf-hoare/">Hoare 逻辑</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="system">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/toolchain/">RISC-V 工具链 & QEMU 虚拟机</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/rvbt/">RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/rt0/">Coffer 移植哪吒 D1 开发板小记</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/pmp/">RISC-V PMP 测试与抽象</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/linux_d1/">Coffer 引导 Linux 与 RISC-V 定时器的坑</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/lkd1/">LKD 读书笔记 Part 1</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/lkd2/">LKD 读书笔记 Part 2</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/etm-db410c/">Activate CoreSight on DragonBoard 410c</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/re4b-chap1/">RE4B Chap 1 Notes</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/Hash-checker-0x01/">f0rizen's Hash checker 0x01</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+    </div>
+</div>
+</div>
+    <div class="container" id="ctner">
+       <div class="header">
+  <table class="vertical_center_table">
+    <tr>
+      <td>
+        <nav class="nav_bar">
+          <ul>
+            <!-- left header -->
+            <li class="li_left">
+              <!-- open collection tree -->
+              
+              <a class="header_btn" onclick="open_collection_list()">
+                <i class="fa btn_icon fa-bars">
+                  
+                  <p class="btn_text">Archives</p>
+                  
+                </i>
+              </a>
+              
+              <!-- home -->
+              
+              <a class="header_btn" href="http://localhost:4000">
+                <i class="fa btn_icon fa-home">
+                  
+                  <p class="btn_text">Home</p>
+                  
+                </i>
+              </a>
+              
+              <!-- maximize -->
+              
+              <a class="header_btn" id="mxmz_btn" onclick="toggle_maximize()">
+                <i class="fa btn_icon fa-window-maximize">
+                  
+                  <p class="btn_text" id="mxmz_text">Maximize</p>
+                  
+                </i>
+              </a>
+              
+              <!-- access token -->
+              
+            </li>
+            <!-- right header -->
+            <span class="span_right">
+              
+              <!-- scroll up -->
+              <a class="header_btn" onclick="scroll_percentage(-0.88)">
+                <i class="fa btn_icon fa-backward">
+                  
+                  <p class="btn_text">Prev</p>
+                  
+                </i>
+              </a>
+              <!-- scroll down -->
+              <a class="header_btn" onclick="scroll_percentage(0.88)">
+                <i class="fa btn_icon fa-forward">
+                  
+                  <p class="btn_text">Next</p>
+                  
+                </i>
+              </a>
+              <!-- popup table of content -->
+              <a class="header_btn popup_btn" onclick="toggle_toc()">
+                <i class="fa btn_icon fa-list">
+                  
+                  <p class="btn_text">Content</p>
+                  
+                </i>
+              </a>
+              
+            </span>
+          </ul>
+        </nav>
+        <!-- <hr /> -->
+      </td>
+    </tr>
+  </table>
+</div>
+<!-- table of content -->
+
+<div class="div_toc toc" id="popup_toc">
+  
+  <!-- generate toc -->
+  <ul id="ul_toc" class="ul_toc">
+  <li><a href="#lkd-chapter-3-进程调度">LKD Chapter 3 进程调度</a>
+    <ul>
+      <li><a href="#io-密集与计算密集">I/O 密集与计算密集</a></li>
+      <li><a href="#进程优先级">进程优先级</a></li>
+      <li><a href="#时间片">时间片</a></li>
+      <li><a href="#传统-unix-分配的缺点">传统 UNIX 分配的缺点</a></li>
+      <li><a href="#cfs-调度">CFS 调度</a></li>
+      <li><a href="#cfs-调度实现">CFS 调度实现</a></li>
+      <li><a href="#抢占与上下文切换">抢占与上下文切换</a></li>
+    </ul>
+  </li>
+</ul>
+</div>
+
+<!-- toggle maximize -->
+
+<script>
+  var ctner_state = 0;
+  var ctner = document.getElementById("ctner");
+</script>
+
+<!-- encrypt and decrypt -->
+
+
+      <div class="div_article" id="div_atcl">
+        <article
+          id="main_atcl"
+          itemscope
+          itemtype="http://schema.org/BlogPosting"
+        >
+          <h1 id="LKD 读书笔记 Part 2">LKD 读书笔记 Part 2</h1>
+<div class="post_info">
+  <!-- author -->
+  
+  <span>
+    <i class="fa fa-user-secret"></i>
+    jwnhy
+  </span>
+  
+  <!-- date -->
+  
+  <span>
+    <i class="fa fa-calendar"></i>
+    Feb 25, 2022
+  </span>
+  
+  <!-- category -->
+  
+</div>
+<!-- abstract -->
+
+
+<br />
+<h2 id="lkd-chapter-3-进程调度">LKD Chapter 3 进程调度</h2>
+
+<h3 id="io-密集与计算密集">I/O 密集与计算密集</h3>
+
+<p>进程分为 I/O 密集与计算密集。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>I/O 密集</th>
+      <th>计算密集</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>时间片</td>
+      <td>短</td>
+      <td>长</td>
+    </tr>
+    <tr>
+      <td>主任务</td>
+      <td>处理 I/O</td>
+      <td>计算</td>
+    </tr>
+    <tr>
+      <td>中断</td>
+      <td>密集</td>
+      <td>几乎没有</td>
+    </tr>
+    <tr>
+      <td>例子</td>
+      <td>文本编辑</td>
+      <td>MATLAB</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="进程优先级">进程优先级</h3>
+
+<p>Linux 中进程优先级分为两个值 <code class="language-plaintext highlighter-rouge">nice</code> 值与 <code class="language-plaintext highlighter-rouge">rtprio</code> 值。
+前者决定了普通进程的优先级，越大的 <code class="language-plaintext highlighter-rouge">nice</code> 代表进程优先级越低（对其他进程越 <code class="language-plaintext highlighter-rouge">nice</code>）。
+后者决定了实时进程的优先级，越大的 <code class="language-plaintext highlighter-rouge">rtprio</code> 代表进程优先级越高。</p>
+
+<p><code class="language-plaintext highlighter-rouge">nice</code> 的取值范围是 <code class="language-plaintext highlighter-rouge">-20～+19</code>，<code class="language-plaintext highlighter-rouge">rtprio</code> 的取值范围是 <code class="language-plaintext highlighter-rouge">0～99</code>。</p>
+
+<p>两者分开调度，实时进程总有比普通进程高的优先级。</p>
+
+<p>查看实时优先级</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ps <span class="nt">-eo</span> state, uid, pid, ppid, rtprio, <span class="nb">time</span>, <span class="nb">comm</span>
+</code></pre></div></div>
+
+<h3 id="时间片">时间片</h3>
+
+<p>与一般操作系统不同，Linux 不直接对进程分配时间片，而是使用 CFS 确保进程运行时间的<strong>占用比例</strong>。
+而 <code class="language-plaintext highlighter-rouge">nice</code> 值则是他们的占用比例的权重。
+例如，有一个文本编辑器和一个视频编码器在同时运行，有着相同的 <code class="language-plaintext highlighter-rouge">nice</code> 值。
+那么他们各自占用 <code class="language-plaintext highlighter-rouge">50%</code> 的处理器，而文本编辑器只需要在需要的时候才会响应，因此在 CFS 看来，
+它总是<strong>未完全使用</strong>自己的时间，因此总是会优先响应它，而视频编码器也可以在文本编辑器未运行的时候充分利用 CPU 资源。</p>
+
+<h3 id="传统-unix-分配的缺点">传统 UNIX 分配的缺点</h3>
+
+<p>传统 UNIX 分配的方式也是通过 <code class="language-plaintext highlighter-rouge">nice</code> 值决定进程优先级以及时间片的大小，但它有下面的缺点。</p>
+
+<ol>
+  <li>
+    <p>每一个 <code class="language-plaintext highlighter-rouge">nice</code> 值对应的绝对时间片难以确定。
+ 例如，有两个进程分别有 <code class="language-plaintext highlighter-rouge">0</code> 和 <code class="language-plaintext highlighter-rouge">+20</code> 的 <code class="language-plaintext highlighter-rouge">nice</code> 值，那么他们分配的时间是 <code class="language-plaintext highlighter-rouge">100 ms</code> 和 <code class="language-plaintext highlighter-rouge">5 ms</code>。
+ 但如果是同时有两个进程有 <code class="language-plaintext highlighter-rouge">0</code> 的 <code class="language-plaintext highlighter-rouge">nice</code> 值，那么他们分配的时间就会变成 <code class="language-plaintext highlighter-rouge">100 ms</code> 和 <code class="language-plaintext highlighter-rouge">100 ms</code>。
+ 相似的，如果同时有两个进程有 <code class="language-plaintext highlighter-rouge">+20</code> 的 <code class="language-plaintext highlighter-rouge">nice</code> 值，那么他们分配的时间就会变成 <code class="language-plaintext highlighter-rouge">5 ms</code> 和 <code class="language-plaintext highlighter-rouge">5 ms</code>。
+ 前者导致响应时间长，后者导致频繁的上下文切换。</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">nice</code> 值之间的差值不一致，<code class="language-plaintext highlighter-rouge">nice</code> 值为 <code class="language-plaintext highlighter-rouge">0</code> 和 <code class="language-plaintext highlighter-rouge">1</code> 的进程分配的时间片可能是 <code class="language-plaintext highlighter-rouge">100 ms</code> 和 <code class="language-plaintext highlighter-rouge">95 ms</code>。
+ 相差无几，但 <code class="language-plaintext highlighter-rouge">nice</code> 值为 <code class="language-plaintext highlighter-rouge">18</code> 和 <code class="language-plaintext highlighter-rouge">19</code> 的可能是 <code class="language-plaintext highlighter-rouge">10 ms</code> 和 <code class="language-plaintext highlighter-rouge">5 ms</code> ，相差一倍。</p>
+  </li>
+  <li>
+    <p>时间片必须是时钟的整数倍。</p>
+  </li>
+  <li>
+    <p>对于刚唤醒进程的处理，系统常常会使得<strong>刚唤醒</strong>的进程有更高的优先级，即使它们的时间片已经用光。
+这对交互式程序的体验有好处，但无疑影响了公平性。</p>
+  </li>
+</ol>
+
+<h3 id="cfs-调度">CFS 调度</h3>
+
+<p>一个理想的调度算法，在不考虑上下文切换的开销的情况下，会希望<strong>所有</strong>任务在很小的 $\epsilon$ 时间内都运行一遍。
+当然这在现实是不可能做到的，因为存在上下文开销。但是 CFS 会尝试接近这个理想模型，CFS 设置了一个 <strong>targeted latency</strong>。
+也就是上面说的 $\epsilon$，当存在 $n$ 个任务时，每个任务所占用的时间是 $\frac{\epsilon}{n}$。值得注意的是，
+如果 $n\rightarrow \infty$，会导致上下文切换的次数趋于无穷。因此 CFS 设置了一个最小粒度，默认为 <code class="language-plaintext highlighter-rouge">1 ms</code>。
+而 <code class="language-plaintext highlighter-rouge">nice</code> 值在 CFS 算法中被用来计算每个任务应当占用的时间权重，CFS 会不断试图接近<strong>理想</strong>的分配方案，
+它总是选择已经占用最少的任务进行执行。</p>
+
+<blockquote>
+  <p>与<a href="https://jwnhy.github.io/misc/ad_problem.html">这个问题</a>十分类似。</p>
+</blockquote>
+
+<h3 id="cfs-调度实现">CFS 调度实现</h3>
+
+<p>CFS 算法分为下面几个部分。</p>
+
+<ul>
+  <li>时间统计</li>
+  <li>进程选择</li>
+  <li>调度器入口</li>
+  <li>休眠与唤醒</li>
+</ul>
+
+<h4 id="时间统计">时间统计</h4>
+
+<h5 id="调度对象结构体">调度对象结构体</h5>
+
+<p>CFS 并没有时间片的概念，但它仍然需要记录每个进程运行的时间来确保它们只运行公平的时间。
+CFS 在 <code class="language-plaintext highlighter-rouge">&lt;linux/sched.h&gt;</code> 中引入了 <code class="language-plaintext highlighter-rouge">struct sched_entity</code></p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">sched_entity</span> <span class="p">{</span>
+  <span class="k">struct</span> <span class="n">load_weight</span> <span class="n">load</span><span class="p">;</span>
+  <span class="k">struct</span> <span class="n">rb_node</span> <span class="n">run_node</span><span class="p">;</span>
+  <span class="k">struct</span> <span class="n">list_head</span> <span class="n">group_node</span><span class="p">;</span>
+  <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">on_rq</span><span class="p">;</span>
+  <span class="n">u64</span> <span class="n">exec_start</span><span class="p">;</span>
+  <span class="n">u64</span> <span class="n">sum_exec_runtime</span><span class="p">;</span>
+  <span class="n">u64</span> <span class="n">vruntime</span><span class="p">;</span> <span class="c1">// accounting the current running time</span>
+  <span class="n">u64</span> <span class="n">prev_sum_exec_runtime</span><span class="p">;</span>
+  <span class="n">u64</span> <span class="n">last_wakeup</span><span class="p">;</span>
+  <span class="n">u64</span> <span class="n">avg_overlap</span><span class="p">;</span>
+  <span class="n">u64</span> <span class="n">nr_migrations</span><span class="p">;</span>
+  <span class="n">u64</span> <span class="n">start_runtime</span><span class="p">;</span>
+  <span class="n">u64</span> <span class="n">avg_wakeup</span><span class="p">;</span>
+  <span class="cm">/* many stat variables elided, enabled only if CONFIG_SCHEDSTATS is set */</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>该结构体直接嵌入 <code class="language-plaintext highlighter-rouge">task_struct</code> 中，成员名为 <code class="language-plaintext highlighter-rouge">se</code>。</p>
+
+<h5 id="vruntime"><code class="language-plaintext highlighter-rouge">vruntime</code></h5>
+
+<p><code class="language-plaintext highlighter-rouge">vruntime</code> 指当前进程运行的时间经过 <code class="language-plaintext highlighter-rouge">nice</code> 值作为权重标准化之后的值。
+更新它的函数是定义在 <code class="language-plaintext highlighter-rouge">&lt;linux/sched_fair.c&gt;</code> 中的 <code class="language-plaintext highlighter-rouge">update_curr(struct cfs_rq *cfs_rq)</code>。
+它的步骤如下。</p>
+
+<ul>
+  <li>
+    <p>获取当前时间</p>
+
+    <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">u64</span> <span class="n">now</span> <span class="o">=</span> <span class="n">rq_of</span><span class="p">(</span><span class="n">cfs_rq</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">clock</span><span class="p">;</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>计算差值</p>
+
+    <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">delta_exec</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">curr</span> <span class="o">-&gt;</span> <span class="n">exec_start</span><span class="p">);</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>更新 <code class="language-plaintext highlighter-rouge">vruntime</code></p>
+
+    <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">__update_curr</span><span class="p">(</span><span class="n">cfs_rq</span><span class="p">,</span> <span class="n">curr</span><span class="p">,</span> <span class="n">delta_exec</span><span class="p">);</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>更新开始时间</p>
+
+    <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">curr</span><span class="o">-&gt;</span><span class="n">exec_start</span> <span class="o">=</span> <span class="n">now</span><span class="p">;</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>具体加权求值的方式在 <code class="language-plaintext highlighter-rouge">__update_curr</code> 中。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span> <span class="kr">inline</span> <span class="kt">void</span>
+<span class="nf">__update_curr</span><span class="p">(</span><span class="k">struct</span> <span class="n">cfs_rq</span> <span class="o">*</span><span class="n">cfs_rq</span><span class="p">,</span> <span class="k">struct</span> <span class="n">sched_entity</span> <span class="o">*</span><span class="n">curr</span><span class="p">,</span>
+<span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">delta_exec</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">delta_exec_weighted</span><span class="p">;</span>
+
+  <span class="n">schedstat_set</span><span class="p">(</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">exec_max</span><span class="p">,</span> <span class="n">max</span><span class="p">((</span><span class="n">u64</span><span class="p">)</span><span class="n">delta_exec</span><span class="p">,</span> <span class="n">curr</span><span class="o">-&gt;</span><span class="n">exec_max</span><span class="p">));</span>
+
+  <span class="n">curr</span><span class="o">-&gt;</span><span class="n">sum_exec_runtime</span> <span class="o">+=</span> <span class="n">delta_exec</span><span class="p">;</span>
+  <span class="n">schedstat_add</span><span class="p">(</span><span class="n">cfs_rq</span><span class="p">,</span> <span class="n">exec_clock</span><span class="p">,</span> <span class="n">delta_exec</span><span class="p">);</span>
+  <span class="n">delta_exec_weighted</span> <span class="o">=</span> <span class="n">calc_delta_fair</span><span class="p">(</span><span class="n">delta_exec</span><span class="p">,</span> <span class="n">curr</span><span class="p">);</span>
+
+  <span class="n">curr</span><span class="o">-&gt;</span><span class="n">vruntime</span> <span class="o">+=</span> <span class="n">delta_exec_weighted</span><span class="p">;</span>
+  <span class="n">update_min_vruntime</span><span class="p">(</span><span class="n">cfs_rq</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="进程选择">进程选择</h4>
+
+<p>之前讨论过，在一个理想的多任务系统中，每个进程的 <code class="language-plaintext highlighter-rouge">vruntime</code> 都应该是一样的。
+CFS 做不到这一点，因此它采用了一种很简单的方法。</p>
+
+<blockquote>
+  <p>每次挑选 <code class="language-plaintext highlighter-rouge">vruntime</code> 最小的进程。</p>
+</blockquote>
+
+<h5 id="红黑树">红黑树</h5>
+
+<p>CFS 使用红黑树 <code class="language-plaintext highlighter-rouge">rbtree</code> 来管理可运行的进程列表，能够快速的寻找到 <code class="language-plaintext highlighter-rouge">vruntime</code> 最小的进程。</p>
+
+<p>进程选择的代码如下，值得注意的是，Linux 并没有真的遍历整颗树，而是缓存了<strong>最左节点</strong>。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span> <span class="k">struct</span> <span class="n">sched_entity</span> <span class="o">*</span><span class="nf">__pick_next_entity</span><span class="p">(</span><span class="k">struct</span> <span class="n">cfs_rq</span> <span class="o">*</span><span class="n">cfs_rq</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">struct</span> <span class="n">rb_node</span> <span class="o">*</span><span class="n">left</span> <span class="o">=</span> <span class="n">cfs_rq</span><span class="o">-&gt;</span><span class="n">rb_leftmost</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">left</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">rb_entry</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="k">struct</span> <span class="n">sched_entity</span><span class="p">,</span> <span class="n">run_node</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h5 id="向树中添加节点">向树中添加节点</h5>
+
+<p>每一次有进程被唤醒/创建时，都会向红黑树中添加进程并且缓存最左节点。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span> <span class="kt">void</span>
+<span class="nf">enqueue_entity</span><span class="p">(</span><span class="k">struct</span> <span class="n">cfs_rq</span> <span class="o">*</span><span class="n">cfs_rq</span><span class="p">,</span> <span class="k">struct</span> <span class="n">sched_entity</span> <span class="o">*</span><span class="n">se</span><span class="p">,</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="cm">/*
+  * Update the normalized vruntime before updating min_vruntime
+  * through callig update_curr().
+  */</span>
+  <span class="c1">// 如果是刚创建的进程，将当前最小的 `vruntime` 加上</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="n">ENQUEUE_WAKEUP</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="n">ENQUEUE_MIGRATE</span><span class="p">))</span>
+    <span class="n">se</span><span class="o">-&gt;</span><span class="n">vruntime</span> <span class="o">+=</span> <span class="n">cfs_rq</span><span class="o">-&gt;</span><span class="n">min_vruntime</span><span class="p">;</span>
+
+  <span class="cm">/*
+  * Update run-time statistics of the ‘current’.
+  */</span>
+  <span class="n">update_curr</span><span class="p">(</span><span class="n">cfs_rq</span><span class="p">);</span>
+  <span class="n">account_entity_enqueue</span><span class="p">(</span><span class="n">cfs_rq</span><span class="p">,</span> <span class="n">se</span><span class="p">);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="n">ENQUEUE_WAKEUP</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">place_entity</span><span class="p">(</span><span class="n">cfs_rq</span><span class="p">,</span> <span class="n">se</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="n">enqueue_sleeper</span><span class="p">(</span><span class="n">cfs_rq</span><span class="p">,</span> <span class="n">se</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="n">update_stats_enqueue</span><span class="p">(</span><span class="n">cfs_rq</span><span class="p">,</span> <span class="n">se</span><span class="p">);</span>
+  <span class="n">check_spread</span><span class="p">(</span><span class="n">cfs_rq</span><span class="p">,</span> <span class="n">se</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">se</span> <span class="o">!=</span> <span class="n">cfs_rq</span><span class="o">-&gt;</span><span class="n">curr</span><span class="p">)</span>
+    <span class="n">__enqueue_entity</span><span class="p">(</span><span class="n">cfs_rq</span><span class="p">,</span> <span class="n">se</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>真正向树中添加节点的是 <code class="language-plaintext highlighter-rouge">__enqueue_entity</code> 函数。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span> <span class="kt">void</span> <span class="nf">__enqueue_entity</span><span class="p">(</span><span class="k">struct</span> <span class="n">cfs_rq</span> <span class="o">*</span><span class="n">cfs_rq</span><span class="p">,</span> <span class="k">struct</span> <span class="n">sched_entity</span> <span class="o">*</span><span class="n">se</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">struct</span> <span class="n">rb_node</span> <span class="o">**</span><span class="n">link</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">cfs_rq</span><span class="o">-&gt;</span><span class="n">tasks_timeline</span><span class="p">.</span><span class="n">rb_node</span><span class="p">;</span>
+  <span class="k">struct</span> <span class="n">rb_node</span> <span class="o">*</span><span class="n">parent</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+  <span class="k">struct</span> <span class="n">sched_entity</span> <span class="o">*</span><span class="n">entry</span><span class="p">;</span>
+  <span class="n">s64</span> <span class="n">key</span> <span class="o">=</span> <span class="n">entity_key</span><span class="p">(</span><span class="n">cfs_rq</span><span class="p">,</span> <span class="n">se</span><span class="p">);</span>
+  <span class="kt">int</span> <span class="n">leftmost</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="cm">/*
+  * Find the right place in the rbtree:
+  */</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">link</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="o">*</span><span class="n">link</span><span class="p">;</span>
+    <span class="n">entry</span> <span class="o">=</span> <span class="n">rb_entry</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="k">struct</span> <span class="n">sched_entity</span><span class="p">,</span> <span class="n">run_node</span><span class="p">);</span>
+    <span class="cm">/*
+    * We dont care about collisions. Nodes with
+    * the same key stay together.
+    */</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">key</span> <span class="o">&lt;</span> <span class="n">entity_key</span><span class="p">(</span><span class="n">cfs_rq</span><span class="p">,</span> <span class="n">entry</span><span class="p">))</span> <span class="p">{</span>
+      <span class="n">link</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">parent</span><span class="o">-&gt;</span><span class="n">rb_left</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">link</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">parent</span><span class="o">-&gt;</span><span class="n">rb_right</span><span class="p">;</span>
+    <span class="n">leftmost</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="cm">/*
+  * Maintain a cache of leftmost tree entries (it is frequently
+  * used):
+  */</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">leftmost</span><span class="p">)</span>
+    <span class="n">cfs_rq</span><span class="o">-&gt;</span><span class="n">rb_leftmost</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">se</span><span class="o">-&gt;</span><span class="n">run_node</span><span class="p">;</span>
+
+  <span class="c1">// rbtree function to maintain its properties</span>
+  <span class="n">rb_link_node</span><span class="p">(</span><span class="o">&amp;</span><span class="n">se</span><span class="o">-&gt;</span><span class="n">run_node</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">link</span><span class="p">);</span>
+  <span class="n">rb_insert_color</span><span class="p">(</span><span class="o">&amp;</span><span class="n">se</span><span class="o">-&gt;</span><span class="n">run_node</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cfs_rq</span><span class="o">-&gt;</span><span class="n">tasks_timeline</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h5 id="向树中移除节点">向树中移除节点</h5>
+
+<p>向红黑树中移除节点也类似，注意到它会先更新 <code class="language-plaintext highlighter-rouge">curr</code> 的时间统计数据再进行移除。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span> <span class="kt">void</span>
+<span class="nf">dequeue_entity</span><span class="p">(</span><span class="k">struct</span> <span class="n">cfs_rq</span> <span class="o">*</span><span class="n">cfs_rq</span><span class="p">,</span> <span class="k">struct</span> <span class="n">sched_entity</span> <span class="o">*</span><span class="n">se</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sleep</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="cm">/*
+  * Update run-time statistics of the ‘current’.
+  */</span>
+  <span class="n">update_curr</span><span class="p">(</span><span class="n">cfs_rq</span><span class="p">);</span>
+
+  <span class="n">update_stats_dequeue</span><span class="p">(</span><span class="n">cfs_rq</span><span class="p">,</span> <span class="n">se</span><span class="p">);</span>
+  <span class="n">clear_buddies</span><span class="p">(</span><span class="n">cfs_rq</span><span class="p">,</span> <span class="n">se</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">se</span> <span class="o">!=</span> <span class="n">cfs_rq</span><span class="o">-&gt;</span><span class="n">curr</span><span class="p">)</span>
+    <span class="n">__dequeue_entity</span><span class="p">(</span><span class="n">cfs_rq</span><span class="p">,</span> <span class="n">se</span><span class="p">);</span>
+  <span class="n">account_entity_dequeue</span><span class="p">(</span><span class="n">cfs_rq</span><span class="p">,</span> <span class="n">se</span><span class="p">);</span>
+  <span class="n">update_min_vruntime</span><span class="p">(</span><span class="n">cfs_rq</span><span class="p">);</span>
+
+  <span class="cm">/*
+  * Normalize the entity after updating the min_vruntime because the
+  * update can refer to the -&gt;curr item and we need to reflect this
+  * movement in our normalized position.
+  */</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">sleep</span><span class="p">)</span>
+    <span class="n">se</span><span class="o">-&gt;</span><span class="n">vruntime</span> <span class="o">-=</span> <span class="n">cfs_rq</span><span class="o">-&gt;</span><span class="n">min_vruntime</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>移除节点时，我们只需要注意移除的是否是我们缓存的节点，然后使用 <code class="language-plaintext highlighter-rouge">rbtree</code> 的接口即可。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span> <span class="kt">void</span> <span class="nf">__dequeue_entity</span><span class="p">(</span><span class="k">struct</span> <span class="n">cfs_rq</span> <span class="o">*</span><span class="n">cfs_rq</span><span class="p">,</span> <span class="k">struct</span> <span class="n">sched_entity</span> <span class="o">*</span><span class="n">se</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">cfs_rq</span><span class="o">-&gt;</span><span class="n">rb_leftmost</span> <span class="o">==</span> <span class="o">&amp;</span><span class="n">se</span><span class="o">-&gt;</span><span class="n">run_node</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">struct</span> <span class="n">rb_node</span> <span class="o">*</span><span class="n">next_node</span><span class="p">;</span>
+    <span class="n">next_node</span> <span class="o">=</span> <span class="n">rb_next</span><span class="p">(</span><span class="o">&amp;</span><span class="n">se</span><span class="o">-&gt;</span><span class="n">run_node</span><span class="p">);</span>
+    <span class="n">cfs_rq</span><span class="o">-&gt;</span><span class="n">rb_leftmost</span> <span class="o">=</span> <span class="n">next_node</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">rb_erase</span><span class="p">(</span><span class="o">&amp;</span><span class="n">se</span><span class="o">-&gt;</span><span class="n">run_node</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cfs_rq</span><span class="o">-&gt;</span><span class="n">tasks_timeline</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h5 id="调度器入口">调度器入口</h5>
+
+<p><code class="language-plaintext highlighter-rouge">schedule()</code> 调度函数设计比较简单，它找到具有最高优先级且非空的调度器类，然后问它下一个应该执行的进程。</p>
+
+<p>具体过程定义在 <code class="language-plaintext highlighter-rouge">pick_next_task()</code> 中，值得注意的是，由于大部分时候 Linux 执行的都是普通任务。
+因此如果所有的进程都是普通进程，则直接调用 CFS 调度。
+后面的 <code class="language-plaintext highlighter-rouge">for</code> 循环找出第一个有可运行进程 <code class="language-plaintext highlighter-rouge">non-NULL</code> 的进程类。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/*
+* Pick up the highest-prio task:
+*/</span>
+<span class="k">static</span> <span class="kr">inline</span> <span class="k">struct</span> <span class="n">task_struct</span> <span class="o">*</span>
+<span class="nf">pick_next_task</span><span class="p">(</span><span class="k">struct</span> <span class="n">rq</span> <span class="o">*</span><span class="n">rq</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">const</span> <span class="k">struct</span> <span class="n">sched_class</span> <span class="o">*</span><span class="n">class</span><span class="p">;</span>
+  <span class="k">struct</span> <span class="n">task_struct</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+  <span class="cm">/*
+  * Optimization: we know that if all tasks are in
+  * the fair class we can call that function directly:
+  */</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">likely</span><span class="p">(</span><span class="n">rq</span><span class="o">-&gt;</span><span class="n">nr_running</span> <span class="o">==</span> <span class="n">rq</span><span class="o">-&gt;</span><span class="n">cfs</span><span class="p">.</span><span class="n">nr_running</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">fair_sched_class</span><span class="p">.</span><span class="n">pick_next_task</span><span class="p">(</span><span class="n">rq</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">likely</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">p</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">class</span> <span class="o">=</span> <span class="n">sched_class_highest</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span> <span class="p">;</span> <span class="p">;</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">class</span><span class="o">-&gt;</span><span class="n">pick_next_task</span><span class="p">(</span><span class="n">rq</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p</span><span class="p">;</span>
+    <span class="cm">/*
+    * Will never be NULL as the idle class always
+    * returns a non-NULL p:
+    */</span>
+    <span class="n">class</span> <span class="o">=</span> <span class="n">class</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="休眠与唤醒">休眠与唤醒</h4>
+
+<p><img src="https://ae04.alicdn.com/kf/H9eebfced6f4a462c86e1ee56e0d7a47bH.png" alt="image.png" /></p>
+
+<h5 id="休眠">休眠</h5>
+
+<p>休眠在内核中有点复杂，因为可能发生<strong>竞争</strong>，既进入休眠时，条件恰好为真，导致出现无限休眠。
+因此推荐的内核休眠方式如下</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* ‘q’ is the wait queue we wish to sleep on */</span>
+<span class="n">DEFINE_WAIT</span><span class="p">(</span><span class="n">wait</span><span class="p">);</span>
+
+<span class="n">add_wait_queue</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">wait</span><span class="p">);</span>
+<span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">condition</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* condition is the event that we are waiting for */</span>
+  <span class="n">prepare_to_wait</span><span class="p">(</span><span class="o">&amp;</span><span class="n">q</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">wait</span><span class="p">,</span> <span class="n">TASK_INTERRUPTIBLE</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">signal_pending</span><span class="p">(</span><span class="n">current</span><span class="p">))</span>
+    <span class="cm">/* handle signal */</span>
+    <span class="n">schedule</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="n">finish_wait</span><span class="p">(</span><span class="o">&amp;</span><span class="n">q</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">wait</span><span class="p">);</span>
+</code></pre></div></div>
+
+<ol>
+  <li>
+    <p>创建休眠项 <code class="language-plaintext highlighter-rouge">DEFINE_WAIT()</code></p>
+  </li>
+  <li>
+    <p>添加到休眠队列中 <code class="language-plaintext highlighter-rouge">add_wait_queue()</code>，由别处调用该队列的 <code class="language-plaintext highlighter-rouge">wake_up()</code> 唤醒。</p>
+  </li>
+  <li>
+    <p>调用 <code class="language-plaintext highlighter-rouge">prepare_to_wait</code> 设置进程状态为 <code class="language-plaintext highlighter-rouge">TASK_INTERRUPTIBLE</code> 或 <code class="language-plaintext highlighter-rouge">TASK_UNINTERRUPTABLE</code>。</p>
+  </li>
+  <li>
+    <p>如果为 <code class="language-plaintext highlighter-rouge">TASK_INTERRUPTIBLE</code>，接收到信号处理完信号接着休眠。</p>
+  </li>
+  <li>
+    <p>当进程苏醒，查看条件是否为真，否阶接着睡。</p>
+  </li>
+  <li>
+    <p>如果条件为真，调用 <code class="language-plaintext highlighter-rouge">finish_wait</code> 结束休眠。</p>
+  </li>
+</ol>
+
+<p><code class="language-plaintext highlighter-rouge">fs/notify/inotify/inotify_user.c</code> 中的 <code class="language-plaintext highlighter-rouge">inotify_read()</code> 是这个模式的一个例子。</p>
+
+<h5 id="唤醒">唤醒</h5>
+
+<p>唤醒通过 <code class="language-plaintext highlighter-rouge">wake_up()</code> 函数实现，其唤醒给定队列中的所有进程。
+调用 <code class="language-plaintext highlighter-rouge">try_to_wake_up()</code> 将进程状态设置为 <code class="language-plaintext highlighter-rouge">TASK_RUNNING</code>。
+调用 <code class="language-plaintext highlighter-rouge">enqueue_task()</code> 将进程加入红黑树，并且如果唤醒进程的优先级较高需要重新调度，则设置 <code class="language-plaintext highlighter-rouge">need_resched</code> 。</p>
+
+<h3 id="抢占与上下文切换">抢占与上下文切换</h3>
+
+<h4 id="上下文切换">上下文切换</h4>
+
+<p>上下文切换由 <code class="language-plaintext highlighter-rouge">kernel/sched.c</code> 中的 <code class="language-plaintext highlighter-rouge">context_switch()</code> 函数实现，并由 <code class="language-plaintext highlighter-rouge">schedule</code> 调用，分为下面两步。</p>
+
+<ul>
+  <li>调用 <code class="language-plaintext highlighter-rouge">&lt;asm/mmu_context.h&gt;</code> 中的 <code class="language-plaintext highlighter-rouge">switch_mm()</code> 切换虚拟地址映射。</li>
+  <li>调用 <code class="language-plaintext highlighter-rouge">&lt;asm/system.h&gt;</code> 中的 <code class="language-plaintext highlighter-rouge">switch_to()</code> 切换处理器状态，包括栈指针，处理器寄存器等其他架构相关状态。</li>
+</ul>
+
+<h4 id="抢占">抢占</h4>
+
+<p>内核必须知道何时调用 <code class="language-plaintext highlighter-rouge">schedule()</code> 进行进程切换，因为如果像<strong>协程</strong>一样依赖用户程序主动调用，会导致
+用户进程有能力一直运行下去。</p>
+
+<p>内核提供了 <code class="language-plaintext highlighter-rouge">need_resched</code> 来标志是否需要进行重新调度。有两个函数会设置这个标记。</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">scheduler_tick()</code> 当一个进程应该被抢占时。</li>
+  <li><code class="language-plaintext highlighter-rouge">try_to_wake_up()</code> 当一个优先级高于当前进程的进程被唤醒时。</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>函数</th>
+      <th>功能</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">set_tsk_need_resched</code></td>
+      <td>设置标记</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">clear_tsk_need_resched</code></td>
+      <td>清除标记</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">need_resched</code></td>
+      <td>返回标记</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="用户抢占">用户抢占</h5>
+
+<p>用户抢占发生在内核态返回用户态时。当内核即将返回用户空间时，这时是一个<strong>安全状态</strong>。
+内核既可以继续运行当前进程，也可以选一个新进程运行。因此内核会检查 <code class="language-plaintext highlighter-rouge">need_resched</code> 来决定是否
+调用 <code class="language-plaintext highlighter-rouge">schedule()</code> 函数进行调度。</p>
+
+<p>以下两种情况会发生用户抢占。</p>
+
+<ol>
+  <li>当内核从 <em>系统调用</em> 返回用户态时。</li>
+  <li>当内核从 <em>中断处理</em> 返回用户态时。</li>
+</ol>
+
+<h5 id="内核抢占">内核抢占</h5>
+
+<p>不同于其他 Unix 内核，Linux 内核支持内核抢占。</p>
+
+<p>为了能够安全的进行内核抢占，首先引入了 <code class="language-plaintext highlighter-rouge">preempt_count</code>。
+其会记录当前进程持有锁的数量，每次取得锁 <code class="language-plaintext highlighter-rouge">preempt_count++</code>，每次释放锁 <code class="language-plaintext highlighter-rouge">preempt_count--</code>。
+当 <code class="language-plaintext highlighter-rouge">need_resched = true &amp;&amp; preempt_count == 0</code> 时，可以安全的进行抢占。</p>
+
+<p>内核抢占也可以通过显式调用 <code class="language-plaintext highlighter-rouge">schedule()</code> 函数实现。一般来说，内核抢占可以发生在下面这些情况下。</p>
+
+<ol>
+  <li>当一个中断处理函数退出，返回内核态时。</li>
+  <li>当内核代码变成可抢占的，即释放锁时。</li>
+  <li>当一个内核进程显式调用 <code class="language-plaintext highlighter-rouge">schedule()</code>。</li>
+  <li>当一个内核进程阻塞时，其会导致调用 <code class="language-plaintext highlighter-rouge">schedule()</code>。</li>
+</ol>
+
+<h4 id="相关系统调用">相关系统调用</h4>
+
+<p><img src="https://ae05.alicdn.com/kf/H43e1bffd24244f768203e71a169962c8S.png" alt="image.png" /></p>
+
+ <div class="post_list">
+
+</div> 
+<!-- disqus -->
+<script id="dsq-count-scr" src="//project-vexed.disqus.com/count.js" async ></script>
+<div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://jwnhy.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+        </article>
+         <div class="footer">
+  <nav class="nav_bar">
+    <ul class="footer_owner_info">
+      <!-- email -->
+      
+      <a class="footer_btn" href="mailto://jwnhy0@gmail.com">
+        <i class="fa fa-envelope-square">
+          
+          <p>Email</p>
+          
+        </i>
+      </a>
+      
+      <!-- linkedin -->
+      
+      <!-- github -->
+      
+      <a class="footer_btn" href="https://github.com/jwnhy">
+        <i class="fa fa-github">
+          
+          <p>Github</p>
+          
+        </i>
+      </a>
+      
+      <!-- gitlab -->
+      
+      <!-- website -->
+      
+      <a class="footer_btn" href="">
+        <i class="fa fa-link">
+          
+          <p>Website</p>
+          
+        </i>
+      </a>
+      
+      <!-- twitter -->
+      
+      <a class="footer_btn" href="https://twitter.com/">
+        <i class="fa fa-twitter">
+          
+          <p>Twitter</p>
+          
+        </i>
+      </a>
+      
+      <!-- facebook -->
+      
+      <a class="footer_btn" href="https://www.facebook.com/">
+        <i class="fa fa-facebook">
+          
+          <p>Facebook</p>
+          
+        </i>
+      </a>
+      
+      <!-- instagram -->
+      
+      <!-- youtube -->
+      
+      <a
+        class="footer_btn"
+        href="https://www.youtube.com/user/"
+      >
+        <i class="fa fa-youtube">
+          
+          <p>Youtube</p>
+          
+        </i>
+      </a>
+      
+      <!-- steam -->
+      
+      <a
+        class="footer_btn"
+        href="https://steamcommunity.com/id/"
+      >
+        <i class="fa fa-steam">
+          
+          <p>Steam</p>
+          
+        </i>
+      </a>
+      
+      <!-- weibo -->
+      
+    </ul>
+    <!-- copyright -->
+    <ul class="footer_copyright">
+      <li class="copyright">© 2015 - 2020</li>
+      
+      <li>Designed by DeerRIDER, All Rights Reserved</li>
+      
+    </ul>
+  </nav>
+</div>
+ 
+      </div>
+    </div>
+  </body>
+  <script async src="http://localhost:4000/src/assets/js/init-mermaid.js"></script>
+</html>

@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <!-- multi-device width -->
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <!-- site description -->
+    
+    <meta content="本文主要关注 RISC-V 工具链的搭建以及相应的 QEMU Linux 虚拟机的配置启动上。" name="description"/>
+    <!-- referer for 3rd-part images-->
+    <meta content="no-referrer" name="referrer"/>
+    <!-- title -->
+    <title>
+        
+            RISC-V 工具链 &amp; QEMU 虚拟机
+        
+    </title>
+    <!-- icon -->
+    <link href="http://localhost:4000/src/assets/img/favicon.ico" rel="shortcut icon bookmark" type="image/x-icon"/>
+    <!-- global stylesheet -->
+    <link rel="stylesheet" href="http://localhost:4000/src/assets/css/main.css" type="text/css"/>
+    <!-- fa 5.9.0 -->
+    <link rel="stylesheet" href="http://localhost:4000/src/assets/css/fa.min.css" type="text/css"/>
+    <!-- global script -->
+    <script src="http://localhost:4000/src/assets/js/main.js" async></script>
+    <!-- mathjax 2.7.5 -->
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { 
+        linebreaks: { automatic: true }
+      },
+      SVG: { 
+        linebreaks: { automatic: true } 
+      }
+    });
+    </script>
+    <!-- mermaid 8.11.5-->
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.11.5/mermaid.min.js"></script>
+    
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>RISC-V 工具链 &amp; QEMU 虚拟机 | jwnhy Blog</title>
+<meta name="generator" content="Jekyll v4.2.2" />
+<meta property="og:title" content="RISC-V 工具链 &amp; QEMU 虚拟机" />
+<meta name="author" content="jwnhy" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="本文主要关注 RISC-V 工具链的搭建以及相应的 QEMU Linux 虚拟机的配置启动上。" />
+<meta property="og:description" content="本文主要关注 RISC-V 工具链的搭建以及相应的 QEMU Linux 虚拟机的配置启动上。" />
+<link rel="canonical" href="http://localhost:4000/system/toolchain/" />
+<meta property="og:url" content="http://localhost:4000/system/toolchain/" />
+<meta property="og:site_name" content="jwnhy Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-03-23T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="RISC-V 工具链 &amp; QEMU 虚拟机" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@jwnhy" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jwnhy"},"dateModified":"2021-03-23T00:00:00+08:00","datePublished":"2021-03-23T00:00:00+08:00","description":"本文主要关注 RISC-V 工具链的搭建以及相应的 QEMU Linux 虚拟机的配置启动上。","headline":"RISC-V 工具链 &amp; QEMU 虚拟机","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/system/toolchain/"},"url":"http://localhost:4000/system/toolchain/"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+  <body class="page">
+    <!-- background animations -->
+<div class="div_bg">
+    <canvas id="c"></canvas>
+</div>
+<script>
+var c = document.getElementById("c");
+var ctx = c.getContext("2d");
+c.height = window.innerHeight;
+c.width = window.innerWidth;
+var txts = "ABCFGHKLMNPQRSVWXYZabcdefghijklmnopqrstuvwxyz@#$%&*+-;/[]<>~";
+txts = txts.split("");
+var font_size = 12;
+var columns = c.width / font_size;
+var drops = [];
+for (var x = 0; x < columns; x++) drops[x] = 1;
+
+function draw() {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillRect(0, 0, c.width, c.height);
+  ctx.fillStyle = "#490";
+  ctx.font = font_size + "px arial";
+  for (var i = 0; i < drops.length; i++) {
+    var text = txts[Math.floor(Math.random() * txts.length)];
+    ctx.fillText(text, i * font_size, drops[i] * font_size);
+    if (drops[i] * font_size > c.height || Math.random() > 0.98) drops[i] = 0;
+    drops[i]++;
+  }
+}
+setInterval(draw, 20);
+</script>
+    <!-- collection list, shown by click "archive" buttom in header -->
+<div class="collection_list_container"  id="the_collection_list">
+<div class="collection_list_background"  onclick="close_collection_list()"></div>
+<div class="collection_list" onload="none">
+    <div class="collection_list_header">
+        <!-- TODO: search post -->
+                                            <!-- <a class="search_btn">
+      <i class="fa fa-search"> Search</i>
+    </a>
+    &nbsp; -->
+        <table class="collection_list_header_title">
+            <tr>
+                <td>Archive:</td>
+                <td id="clh_title"></td>
+            </tr>
+        </table>
+        <div class="close_btn" onclick="close_collection_list()">
+            <a class="close_btn_icon">
+                <i class="fa fa-times"></i>
+            </a>
+        </div>
+    </div>
+    <div class="collection_name_list">
+        <table class="vertical_center_table">
+            <tr>
+                <td>
+                    <ul>
+                        <!-- show all collections -->
+                        <li>
+                            <a class="a_collection_label" onclick="show_collection('all')">All
+                            </a>
+                        </li>
+                        <!-- show a simple collection -->
+                        
+                            
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('system')">
+                                                
+                                                    system
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                            
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('misc')">
+                                                
+                                                    Misc
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('programming_language')">
+                                                
+                                                    Programming Language
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('posts')">
+                                                
+                                                    posts
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                            
+                        
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="posts_by_cate">
+        <!-- post list in all collections -->
+        <div class="post_list_in_1_collection" id="all">
+            <table class="vertical_center_table">
+                <tr>
+                    <td>
+                        <ul>
+                            
+                                
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    system
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/toolchain/">RISC-V 工具链 & QEMU 虚拟机</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/rvbt/">RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/rt0/">Coffer 移植哪吒 D1 开发板小记</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/pmp/">RISC-V PMP 测试与抽象</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/linux_d1/">Coffer 引导 Linux 与 RISC-V 定时器的坑</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/lkd1/">LKD 读书笔记 Part 1</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/lkd2/">LKD 读书笔记 Part 2</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/etm-db410c/">Activate CoreSight on DragonBoard 410c</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/re4b-chap1/">RE4B Chap 1 Notes</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/Hash-checker-0x01/">f0rizen's Hash checker 0x01</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    Misc
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/misc/ad_problem/">一道有趣的面试题，广告推送问题</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    Programming Language
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/programming_language/lf-tactics/">常见 More Basic Tactics</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/programming_language/lf-conclusion/">逻辑基础小结</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/programming_language/lf-hoare/">Hoare 逻辑</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    posts
+                                                
+                                            </p>
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                
+                            
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- post list in a collection -->
+        
+            <div class="post_list_in_1_collection" id="misc">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/misc/ad_problem/">一道有趣的面试题，广告推送问题</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="posts">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="programming_language">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/programming_language/lf-tactics/">常见 More Basic Tactics</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/programming_language/lf-conclusion/">逻辑基础小结</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/programming_language/lf-hoare/">Hoare 逻辑</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="system">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/toolchain/">RISC-V 工具链 & QEMU 虚拟机</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/rvbt/">RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/rt0/">Coffer 移植哪吒 D1 开发板小记</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/pmp/">RISC-V PMP 测试与抽象</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/linux_d1/">Coffer 引导 Linux 与 RISC-V 定时器的坑</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/lkd1/">LKD 读书笔记 Part 1</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/lkd2/">LKD 读书笔记 Part 2</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/etm-db410c/">Activate CoreSight on DragonBoard 410c</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/re4b-chap1/">RE4B Chap 1 Notes</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/Hash-checker-0x01/">f0rizen's Hash checker 0x01</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+    </div>
+</div>
+</div>
+    <div class="container" id="ctner">
+       <div class="header">
+  <table class="vertical_center_table">
+    <tr>
+      <td>
+        <nav class="nav_bar">
+          <ul>
+            <!-- left header -->
+            <li class="li_left">
+              <!-- open collection tree -->
+              
+              <a class="header_btn" onclick="open_collection_list()">
+                <i class="fa btn_icon fa-bars">
+                  
+                  <p class="btn_text">Archives</p>
+                  
+                </i>
+              </a>
+              
+              <!-- home -->
+              
+              <a class="header_btn" href="http://localhost:4000">
+                <i class="fa btn_icon fa-home">
+                  
+                  <p class="btn_text">Home</p>
+                  
+                </i>
+              </a>
+              
+              <!-- maximize -->
+              
+              <a class="header_btn" id="mxmz_btn" onclick="toggle_maximize()">
+                <i class="fa btn_icon fa-window-maximize">
+                  
+                  <p class="btn_text" id="mxmz_text">Maximize</p>
+                  
+                </i>
+              </a>
+              
+              <!-- access token -->
+              
+            </li>
+            <!-- right header -->
+            <span class="span_right">
+              
+              <!-- scroll up -->
+              <a class="header_btn" onclick="scroll_percentage(-0.88)">
+                <i class="fa btn_icon fa-backward">
+                  
+                  <p class="btn_text">Prev</p>
+                  
+                </i>
+              </a>
+              <!-- scroll down -->
+              <a class="header_btn" onclick="scroll_percentage(0.88)">
+                <i class="fa btn_icon fa-forward">
+                  
+                  <p class="btn_text">Next</p>
+                  
+                </i>
+              </a>
+              <!-- popup table of content -->
+              <a class="header_btn popup_btn" onclick="toggle_toc()">
+                <i class="fa btn_icon fa-list">
+                  
+                  <p class="btn_text">Content</p>
+                  
+                </i>
+              </a>
+              
+            </span>
+          </ul>
+        </nav>
+        <!-- <hr /> -->
+      </td>
+    </tr>
+  </table>
+</div>
+<!-- table of content -->
+
+<div class="div_toc toc" id="popup_toc">
+  
+  <!-- generate toc -->
+  <ul id="ul_toc" class="ul_toc">
+  <li><a href="#本文中所用的仓库压缩包">本文中所用的仓库压缩包</a></li>
+  <li><a href="#part-i-risc-v-工具链获取--安装">Part I: RISC-V 工具链获取 &amp; 安装</a>
+    <ul>
+      <li><a href="#拉取代码">拉取代码</a></li>
+      <li><a href="#前置需求安装">前置需求安装</a></li>
+      <li><a href="#编译--安装">编译 &amp; 安装</a></li>
+    </ul>
+  </li>
+  <li><a href="#part-ii-qemu-虚拟机安装">Part II: QEMU 虚拟机安装</a></li>
+  <li><a href="#part-iii-busybear-完整-linux-虚拟环境">Part III: BusyBear 完整 Linux 虚拟环境</a>
+    <ul>
+      <li><a href="#拉取仓库">拉取仓库</a></li>
+      <li><a href="#修改内核版本">修改内核版本</a></li>
+      <li><a href="#编译执行">编译执行</a></li>
+    </ul>
+  </li>
+</ul>
+</div>
+
+<!-- toggle maximize -->
+
+<script>
+  var ctner_state = 0;
+  var ctner = document.getElementById("ctner");
+</script>
+
+<!-- encrypt and decrypt -->
+
+
+      <div class="div_article" id="div_atcl">
+        <article
+          id="main_atcl"
+          itemscope
+          itemtype="http://schema.org/BlogPosting"
+        >
+          <h1 id="RISC-V 工具链 & QEMU 虚拟机">RISC-V 工具链 & QEMU 虚拟机</h1>
+<div class="post_info">
+  <!-- author -->
+  
+  <span>
+    <i class="fa fa-user-secret"></i>
+    jwnhy
+  </span>
+  
+  <!-- date -->
+  
+  <span>
+    <i class="fa fa-calendar"></i>
+    Mar 23, 2021
+  </span>
+  
+  <!-- category -->
+  
+</div>
+<!-- abstract -->
+
+
+<br />
+<p>本文主要关注 RISC-V 工具链的搭建以及相应的 QEMU Linux 虚拟机的配置启动上。</p>
+
+<h2 id="本文中所用的仓库压缩包">本文中所用的仓库压缩包</h2>
+
+<p>链接：https://pan.baidu.com/s/1u_w6qAWxj8wBXI7aWVIiag</p>
+
+<p>提取码：knau</p>
+
+<p>压缩包内三个文件夹分别对应工具链，QEMU 和 BusyBear，内部子仓库以及相应配置均已修改好，直接 make 即可。</p>
+
+<h2 id="part-i-risc-v-工具链获取--安装">Part I: RISC-V 工具链获取 &amp; 安装</h2>
+
+<h3 id="拉取代码">拉取代码</h3>
+
+<p>首先克隆主仓库</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/riscv/riscv-gnu-toolchain.git
+</code></pre></div></div>
+
+<p>由于 RISC-V 工具链的仓库使用了 <code class="language-plaintext highlighter-rouge">git submodule</code> 的形式，因此仓库内含有对多个子仓库的引用，主要如下。</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">riscv-binutils-gdb</code></li>
+  <li><code class="language-plaintext highlighter-rouge">riscv-dejagnu</code></li>
+  <li><code class="language-plaintext highlighter-rouge">riscv-gcc</code></li>
+  <li><code class="language-plaintext highlighter-rouge">riscv-gdb</code></li>
+  <li><code class="language-plaintext highlighter-rouge">riscv-glibc</code></li>
+  <li><code class="language-plaintext highlighter-rouge">riscv-newlib</code></li>
+</ul>
+
+<p>因此在子仓库无法拉取的时候，可以直接在主仓库内执行</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/riscv/riscv-binutils-gdb.git <span class="c"># 这里以 riscv-binutils-gdb 举例</span>
+</code></pre></div></div>
+
+<p>如果你因为国内网络环境导致无法下载，我这里提供了完整的包（不确保更新）</p>
+
+<h3 id="前置需求安装">前置需求安装</h3>
+
+<p>如果是 Ubuntu，执行</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get <span class="nb">install </span>autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
+</code></pre></div></div>
+
+<p>如果是 Fedora/CentOS/RHEL OS</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>yum <span class="nb">install </span>autoconf automake python3 libmpc-devel mpfr-devel gmp-devel gawk  bison flex texinfo patchutils gcc gcc-c++ zlib-devel expat-devel
+</code></pre></div></div>
+
+<p>如果是 Arch 系，我相信你有足够的背景知识安装。</p>
+
+<h3 id="编译--安装">编译 &amp; 安装</h3>
+
+<p>如果只是单纯需要运行 Linux，只编译 <code class="language-plaintext highlighter-rouge">linux</code> 编译目标即可，虽然建议两个都编译。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./configure <span class="nt">--prefix</span><span class="o">=</span>/opt/riscv <span class="nt">--enable-multilib</span> <span class="c"># 安装目录为 /opt/riscv (需要 root 权限) &amp; 启动 32 位支持</span>
+<span class="nb">sudo </span>make linux <span class="c"># 安装 linux 交叉编译器，sudo 是由于需要安装到 /opt 下</span>
+<span class="nb">sudo </span>make       <span class="c"># 安装 newlib 交叉编译器，sudo 同理</span>
+</code></pre></div></div>
+
+<h2 id="part-ii-qemu-虚拟机安装">Part II: QEMU 虚拟机安装</h2>
+
+<p>QEMU 安装比较简单，直接执行下面命令即可，我同样附了安装包。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/riscv/riscv-qemu.git
+<span class="nb">cd </span>riscv-qemu
+git checkout v5.0.0
+./configure <span class="nt">--target-list</span><span class="o">=</span>riscv64-softmmu,riscv32-softmmu
+make
+</code></pre></div></div>
+
+<blockquote>
+  <p>Remark: 使用系统包管理器安装的可能不支持 <code class="language-plaintext highlighter-rouge">softmmu</code> 会导致运行是出现 memory_overlap 问题，编译安装可以解决。</p>
+</blockquote>
+
+<h2 id="part-iii-busybear-完整-linux-虚拟环境">Part III: BusyBear 完整 Linux 虚拟环境</h2>
+
+<p>我们如果需要一个 Linux 虚拟环境，至少需要下面几个东西</p>
+
+<ul>
+  <li>Linux 内核</li>
+  <li><code class="language-plaintext highlighter-rouge">rootfs</code> 镜像</li>
+  <li>BusyBox 工具箱</li>
+</ul>
+
+<p>但这些工具的准备是十分的 teadious 的，不过有人准备好了一整套的环境，即 <code class="language-plaintext highlighter-rouge">BusyBear</code>。</p>
+
+<h3 id="拉取仓库">拉取仓库</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone <span class="nt">--recursive</span> https://github.com/michaeljclark/busybear-linux.git
+</code></pre></div></div>
+
+<h3 id="修改内核版本">修改内核版本</h3>
+
+<p>如果你使用的是最新的工具链（例如上面安装的 gcc），那么编译时会出现 <code class="language-plaintext highlighter-rouge">redefined symbol</code> 的问题，此时需要修改 <code class="language-plaintext highlighter-rouge">BusyBear</code> 所使用的内核版本，将其从 <code class="language-plaintext highlighter-rouge">v5.0</code> 改到 <code class="language-plaintext highlighter-rouge">v5.10</code></p>
+
+<p>在 <code class="language-plaintext highlighter-rouge">conf/busybear.conf</code> 下，注意第三行的修改。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">BUSYBOX_VERSION</span><span class="o">=</span>1.30.1
+<span class="nv">DROPBEAR_VERSION</span><span class="o">=</span>2018.76
+<span class="nv">LINUX_KERNEL_VERSION</span><span class="o">=</span>5.10
+
+<span class="nv">ARCH</span><span class="o">=</span>riscv64
+<span class="nv">ABI</span><span class="o">=</span>lp64d
+<span class="nv">CROSS_COMPILE</span><span class="o">=</span>riscv64-unknown-linux-gnu-
+
+<span class="nv">IMAGE_FILE</span><span class="o">=</span>busybear.bin
+<span class="nv">IMAGE_SIZE</span><span class="o">=</span>100
+<span class="nv">ROOT_PASSWORD</span><span class="o">=</span>busybear
+</code></pre></div></div>
+
+<h3 id="编译执行">编译执行</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>busybear-linux
+make
+</code></pre></div></div>
+
+<p>如果一切顺利，此时执行</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scripts/start-qemu.sh
+</code></pre></div></div>
+
+<p>你就能看到 Linux 的启动界面了</p>
+
+ <div class="post_list">
+
+</div> 
+<!-- disqus -->
+<script id="dsq-count-scr" src="//project-vexed.disqus.com/count.js" async ></script>
+<div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://jwnhy.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+        </article>
+         <div class="footer">
+  <nav class="nav_bar">
+    <ul class="footer_owner_info">
+      <!-- email -->
+      
+      <a class="footer_btn" href="mailto://jwnhy0@gmail.com">
+        <i class="fa fa-envelope-square">
+          
+          <p>Email</p>
+          
+        </i>
+      </a>
+      
+      <!-- linkedin -->
+      
+      <!-- github -->
+      
+      <a class="footer_btn" href="https://github.com/jwnhy">
+        <i class="fa fa-github">
+          
+          <p>Github</p>
+          
+        </i>
+      </a>
+      
+      <!-- gitlab -->
+      
+      <!-- website -->
+      
+      <a class="footer_btn" href="">
+        <i class="fa fa-link">
+          
+          <p>Website</p>
+          
+        </i>
+      </a>
+      
+      <!-- twitter -->
+      
+      <a class="footer_btn" href="https://twitter.com/">
+        <i class="fa fa-twitter">
+          
+          <p>Twitter</p>
+          
+        </i>
+      </a>
+      
+      <!-- facebook -->
+      
+      <a class="footer_btn" href="https://www.facebook.com/">
+        <i class="fa fa-facebook">
+          
+          <p>Facebook</p>
+          
+        </i>
+      </a>
+      
+      <!-- instagram -->
+      
+      <!-- youtube -->
+      
+      <a
+        class="footer_btn"
+        href="https://www.youtube.com/user/"
+      >
+        <i class="fa fa-youtube">
+          
+          <p>Youtube</p>
+          
+        </i>
+      </a>
+      
+      <!-- steam -->
+      
+      <a
+        class="footer_btn"
+        href="https://steamcommunity.com/id/"
+      >
+        <i class="fa fa-steam">
+          
+          <p>Steam</p>
+          
+        </i>
+      </a>
+      
+      <!-- weibo -->
+      
+    </ul>
+    <!-- copyright -->
+    <ul class="footer_copyright">
+      <li class="copyright">© 2015 - 2020</li>
+      
+      <li>Designed by DeerRIDER, All Rights Reserved</li>
+      
+    </ul>
+  </nav>
+</div>
+ 
+      </div>
+    </div>
+  </body>
+  <script async src="http://localhost:4000/src/assets/js/init-mermaid.js"></script>
+</html>

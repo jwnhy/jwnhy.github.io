@@ -1,0 +1,93 @@
+Hongyi Lu | jwnhy
+
+================================================================================
+
+Shenzhen, Guangdong 518000
+8615625290103
+jwnhy0 [ at ] gmail.com
+luhy2017 [ at ] mail.sustech.edu.cn
+
+Education
+--------------------------------------------------------------------------------
+Expected in June 2026 Hong Kong University of Science And Technology 
+Hong Kong, China
+Ph.D. Computer Science 
+
+June 2021 Southern University of Science And Technology
+Shenzhen, Guangdong, China
+Bachelor of Science Mathematics 
+
+Professional Summary
+--------------------------------------------------------------------------------
+Motivated student currently working towards degree in Computer Science. 
+Extensive background in investigating system security research.
+
+Skills
+--------------------------------------------------------------------------------
+- Proficient in RISC-V ISA, system software, bootloader
+- System software expertise
+- Familiar to compilers, Linux kernel
+- Know software verification
+- Academic Writing
+- ITELS: L8 R8.5 W7 S6.5
+
+Professional Experience
+--------------------------------------------------------------------------------
+December 2021 to Current
+Southern University Of Science And Technology Shenzhen, Guangdong
+Research Assistant    
+> Develop system software on RISC-V platform.
+> Research security solutions on RISC-V.
+> Perform verification for system software.
+
+December 2017 to June 2021
+Southern University Of Science And Technology Shenzhen, Guangdong
+Teacher Helper    
+> Supported instructor with test administration, curriculum development 
+> and assignment grading.
+> Recorded grades for coursework and tests in online reporting system.
+
+July 2020 to August 2020
+Tencent Holdings Shenzhen, Guangdong
+Intern    
+> Created data visualization graphics, translating complex data sets 
+> into comprehensive visual representations.
+> Developed database solutions in multiple SQL languages.
+
+Publications
+--------------------------------------------------------------------------------
+Raven: A Novel Kernel Debugging Tool on RISC-V
+Hongyi Lu; Fengwei Zhang
+To appear in The Design Automation Conference (DAC' 22).
+https://compass.sustech.edu.cn/paper/raven-dac22.pdf
+
+A Novel Memory Management for RISC-V Enclaves
+Haonan Li, Weijie Huang, Mingde Ren, Hongyi Lu, 
+Zhenyu Ning, Heming Cui, and Fengwei Zhang
+In Proceedings of the Hardware and Architectural Support for Security and Privacy
+(HASP' 21)
+
+BadUSB-C: Revisiting BadUSB with Type-C
+Hongyi Lu; Yechang Wu; Shuqing Li; You Lin; Chaozu Zhang; Fengwei Zhang
+In Proceedings of the 2021 IEEE Security and Privacy Workshops (WOOT' 21) 
+https://compass.sustech.edu.cn/paper/badusbc-woot21.pdf
+
+MISC
+--------------------------------------------------------------------------------
+Software Foundation Translator
+Pornhub Community Translator
+
+--------------------------------------------------------------------------------
+                        __                  
+ __                    /\ \                 
+/\_\  __  __  __    ___\ \ \___   __  __    
+\/\ \/\ \/\ \/\ \ /' _ `\ \  _ `\/\ \/\ \   
+ \ \ \ \ \_/ \_/ \/\ \/\ \ \ \ \ \ \ \_\ \  
+ _\ \ \ \___x___/'\ \_\ \_\ \_\ \_\/`____ \ 
+/\ \_\ \/__//__/   \/_/\/_/\/_/\/_/`/___/> \
+\ \____/                              /\___/
+ \/___/                               \/__/
+
+
+
+

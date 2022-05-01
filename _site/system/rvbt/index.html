@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <!-- multi-device width -->
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <!-- site description -->
+    
+    <meta content="本文主要介绍如何在 RISC-V 与 Rust 开发环境下为裸金属目标 (Baremetal) 提供堆栈追踪能力。" name="description"/>
+    <!-- referer for 3rd-part images-->
+    <meta content="no-referrer" name="referrer"/>
+    <!-- title -->
+    <title>
+        
+            RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具
+        
+    </title>
+    <!-- icon -->
+    <link href="http://localhost:4000/src/assets/img/favicon.ico" rel="shortcut icon bookmark" type="image/x-icon"/>
+    <!-- global stylesheet -->
+    <link rel="stylesheet" href="http://localhost:4000/src/assets/css/main.css" type="text/css"/>
+    <!-- fa 5.9.0 -->
+    <link rel="stylesheet" href="http://localhost:4000/src/assets/css/fa.min.css" type="text/css"/>
+    <!-- global script -->
+    <script src="http://localhost:4000/src/assets/js/main.js" async></script>
+    <!-- mathjax 2.7.5 -->
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { 
+        linebreaks: { automatic: true }
+      },
+      SVG: { 
+        linebreaks: { automatic: true } 
+      }
+    });
+    </script>
+    <!-- mermaid 8.11.5-->
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.11.5/mermaid.min.js"></script>
+    
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具 | jwnhy Blog</title>
+<meta name="generator" content="Jekyll v4.2.2" />
+<meta property="og:title" content="RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具" />
+<meta name="author" content="jwnhy" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="本文主要介绍如何在 RISC-V 与 Rust 开发环境下为裸金属目标 (Baremetal) 提供堆栈追踪能力。" />
+<meta property="og:description" content="本文主要介绍如何在 RISC-V 与 Rust 开发环境下为裸金属目标 (Baremetal) 提供堆栈追踪能力。" />
+<link rel="canonical" href="http://localhost:4000/system/rvbt/" />
+<meta property="og:url" content="http://localhost:4000/system/rvbt/" />
+<meta property="og:site_name" content="jwnhy Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-05-13T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@jwnhy" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jwnhy"},"dateModified":"2021-05-13T00:00:00+08:00","datePublished":"2021-05-13T00:00:00+08:00","description":"本文主要介绍如何在 RISC-V 与 Rust 开发环境下为裸金属目标 (Baremetal) 提供堆栈追踪能力。","headline":"RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/system/rvbt/"},"url":"http://localhost:4000/system/rvbt/"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+  <body class="page">
+    <!-- background animations -->
+<div class="div_bg">
+    <canvas id="c"></canvas>
+</div>
+<script>
+var c = document.getElementById("c");
+var ctx = c.getContext("2d");
+c.height = window.innerHeight;
+c.width = window.innerWidth;
+var txts = "ABCFGHKLMNPQRSVWXYZabcdefghijklmnopqrstuvwxyz@#$%&*+-;/[]<>~";
+txts = txts.split("");
+var font_size = 12;
+var columns = c.width / font_size;
+var drops = [];
+for (var x = 0; x < columns; x++) drops[x] = 1;
+
+function draw() {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillRect(0, 0, c.width, c.height);
+  ctx.fillStyle = "#490";
+  ctx.font = font_size + "px arial";
+  for (var i = 0; i < drops.length; i++) {
+    var text = txts[Math.floor(Math.random() * txts.length)];
+    ctx.fillText(text, i * font_size, drops[i] * font_size);
+    if (drops[i] * font_size > c.height || Math.random() > 0.98) drops[i] = 0;
+    drops[i]++;
+  }
+}
+setInterval(draw, 20);
+</script>
+    <!-- collection list, shown by click "archive" buttom in header -->
+<div class="collection_list_container"  id="the_collection_list">
+<div class="collection_list_background"  onclick="close_collection_list()"></div>
+<div class="collection_list" onload="none">
+    <div class="collection_list_header">
+        <!-- TODO: search post -->
+                                            <!-- <a class="search_btn">
+      <i class="fa fa-search"> Search</i>
+    </a>
+    &nbsp; -->
+        <table class="collection_list_header_title">
+            <tr>
+                <td>Archive:</td>
+                <td id="clh_title"></td>
+            </tr>
+        </table>
+        <div class="close_btn" onclick="close_collection_list()">
+            <a class="close_btn_icon">
+                <i class="fa fa-times"></i>
+            </a>
+        </div>
+    </div>
+    <div class="collection_name_list">
+        <table class="vertical_center_table">
+            <tr>
+                <td>
+                    <ul>
+                        <!-- show all collections -->
+                        <li>
+                            <a class="a_collection_label" onclick="show_collection('all')">All
+                            </a>
+                        </li>
+                        <!-- show a simple collection -->
+                        
+                            
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('system')">
+                                                
+                                                    system
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                            
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('misc')">
+                                                
+                                                    Misc
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('programming_language')">
+                                                
+                                                    Programming Language
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('posts')">
+                                                
+                                                    posts
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                            
+                        
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="posts_by_cate">
+        <!-- post list in all collections -->
+        <div class="post_list_in_1_collection" id="all">
+            <table class="vertical_center_table">
+                <tr>
+                    <td>
+                        <ul>
+                            
+                                
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    system
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/toolchain/">RISC-V 工具链 & QEMU 虚拟机</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/rvbt/">RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/rt0/">Coffer 移植哪吒 D1 开发板小记</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/pmp/">RISC-V PMP 测试与抽象</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/linux_d1/">Coffer 引导 Linux 与 RISC-V 定时器的坑</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/lkd1/">LKD 读书笔记 Part 1</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/lkd2/">LKD 读书笔记 Part 2</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/etm-db410c/">Activate CoreSight on DragonBoard 410c</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/re4b-chap1/">RE4B Chap 1 Notes</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/Hash-checker-0x01/">f0rizen's Hash checker 0x01</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    Misc
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/misc/ad_problem/">一道有趣的面试题，广告推送问题</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    Programming Language
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/programming_language/lf-tactics/">常见 More Basic Tactics</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/programming_language/lf-conclusion/">逻辑基础小结</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/programming_language/lf-hoare/">Hoare 逻辑</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    posts
+                                                
+                                            </p>
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                
+                            
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- post list in a collection -->
+        
+            <div class="post_list_in_1_collection" id="misc">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/misc/ad_problem/">一道有趣的面试题，广告推送问题</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="posts">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="programming_language">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/programming_language/lf-tactics/">常见 More Basic Tactics</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/programming_language/lf-conclusion/">逻辑基础小结</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/programming_language/lf-hoare/">Hoare 逻辑</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="system">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/toolchain/">RISC-V 工具链 & QEMU 虚拟机</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/rvbt/">RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/rt0/">Coffer 移植哪吒 D1 开发板小记</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/pmp/">RISC-V PMP 测试与抽象</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/linux_d1/">Coffer 引导 Linux 与 RISC-V 定时器的坑</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/lkd1/">LKD 读书笔记 Part 1</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/lkd2/">LKD 读书笔记 Part 2</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/etm-db410c/">Activate CoreSight on DragonBoard 410c</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/re4b-chap1/">RE4B Chap 1 Notes</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/Hash-checker-0x01/">f0rizen's Hash checker 0x01</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+    </div>
+</div>
+</div>
+    <div class="container" id="ctner">
+       <div class="header">
+  <table class="vertical_center_table">
+    <tr>
+      <td>
+        <nav class="nav_bar">
+          <ul>
+            <!-- left header -->
+            <li class="li_left">
+              <!-- open collection tree -->
+              
+              <a class="header_btn" onclick="open_collection_list()">
+                <i class="fa btn_icon fa-bars">
+                  
+                  <p class="btn_text">Archives</p>
+                  
+                </i>
+              </a>
+              
+              <!-- home -->
+              
+              <a class="header_btn" href="http://localhost:4000">
+                <i class="fa btn_icon fa-home">
+                  
+                  <p class="btn_text">Home</p>
+                  
+                </i>
+              </a>
+              
+              <!-- maximize -->
+              
+              <a class="header_btn" id="mxmz_btn" onclick="toggle_maximize()">
+                <i class="fa btn_icon fa-window-maximize">
+                  
+                  <p class="btn_text" id="mxmz_text">Maximize</p>
+                  
+                </i>
+              </a>
+              
+              <!-- access token -->
+              
+            </li>
+            <!-- right header -->
+            <span class="span_right">
+              
+              <!-- scroll up -->
+              <a class="header_btn" onclick="scroll_percentage(-0.88)">
+                <i class="fa btn_icon fa-backward">
+                  
+                  <p class="btn_text">Prev</p>
+                  
+                </i>
+              </a>
+              <!-- scroll down -->
+              <a class="header_btn" onclick="scroll_percentage(0.88)">
+                <i class="fa btn_icon fa-forward">
+                  
+                  <p class="btn_text">Next</p>
+                  
+                </i>
+              </a>
+              <!-- popup table of content -->
+              <a class="header_btn popup_btn" onclick="toggle_toc()">
+                <i class="fa btn_icon fa-list">
+                  
+                  <p class="btn_text">Content</p>
+                  
+                </i>
+              </a>
+              
+            </span>
+          </ul>
+        </nav>
+        <!-- <hr /> -->
+      </td>
+    </tr>
+  </table>
+</div>
+<!-- table of content -->
+
+<div class="div_toc toc" id="popup_toc">
+  
+  <!-- generate toc -->
+  <ul id="ul_toc" class="ul_toc">
+  <li><a href="#part-i-dwarf-信息与-rvbt-介绍">Part I: DWARF 信息与 rvbt 介绍</a></li>
+  <li><a href="#part-ii-dwarf-运行时加载">Part II: DWARF 运行时加载</a></li>
+  <li><a href="#part-iii-运行时栈帧解析与-dwarf-读取">Part III: 运行时栈帧解析与 DWARF 读取</a>
+    <ul>
+      <li><a href="#堆栈展开函数">堆栈展开函数</a></li>
+      <li><a href="#dwarf-符号读取-基于-addr2line-与-gimli-库">DWARF 符号读取 (基于 addr2line 与 gimli 库)</a></li>
+    </ul>
+  </li>
+</ul>
+</div>
+
+<!-- toggle maximize -->
+
+<script>
+  var ctner_state = 0;
+  var ctner = document.getElementById("ctner");
+</script>
+
+<!-- encrypt and decrypt -->
+
+
+      <div class="div_article" id="div_atcl">
+        <article
+          id="main_atcl"
+          itemscope
+          itemtype="http://schema.org/BlogPosting"
+        >
+          <h1 id="RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具">RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具</h1>
+<div class="post_info">
+  <!-- author -->
+  
+  <span>
+    <i class="fa fa-user-secret"></i>
+    jwnhy
+  </span>
+  
+  <!-- date -->
+  
+  <span>
+    <i class="fa fa-calendar"></i>
+    May 13, 2021
+  </span>
+  
+  <!-- category -->
+  
+</div>
+<!-- abstract -->
+
+
+<br />
+<p>本文主要介绍如何在 RISC-V 与 Rust 开发环境下为裸金属目标 (Baremetal) 提供堆栈追踪能力。</p>
+
+<p>完整的工具 rvbt 在整理完代码后会开源公布在Github上。</p>
+
+<h2 id="part-i-dwarf-信息与-rvbt-介绍">Part I: DWARF 信息与 rvbt 介绍</h2>
+
+<p>在 <code class="language-plaintext highlighter-rouge">gcc</code> 等编译器编译源代码时，如果加上 <code class="language-plaintext highlighter-rouge">-g</code> 标识，则会对应源代码生成对应的调试信息。
+即 DWARF (Debugging With Arbitrary Record Formats)。
+但该类信息通常只由 <code class="language-plaintext highlighter-rouge">gdb</code> 等调试器在调试时读取，而不会真正地在运行时被加载到内存里。
+而裸金属机器在一些情况下可能不能很方便的接入 <code class="language-plaintext highlighter-rouge">gdb</code> 等调试器，例如 FPGA。
+rvbt 正是为该种情况而设计的，运行在 RISC-V Machine Mode 权限级别下的 Backtrace 工具。</p>
+
+<p>关于 DWARF 可以参考:</p>
+
+<ul>
+  <li><a href="https://hanfeng.ink/post/gdb_debug_info/">调试器工作原理：第三部分 调试信息</a></li>
+  <li><a href="https://eli.thegreenplace.net/2011/02/07/how-debuggers-work-part-3-debugging-information">How debuggers work: Part 3 - Debugging information</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/DWARF">Wikipedia/DWARF</a></li>
+</ul>
+
+<p>这里我们只需要将 DWARF 信息从原有的 ELF 文件中读取出来，作为我们自己的段插入二进制文件中。
+并在运行时解析它们，在程序出现异常时解析并输出栈帧即可。</p>
+
+<h2 id="part-ii-dwarf-运行时加载">Part II: DWARF 运行时加载</h2>
+
+<p>尽管调试信息在编译时已经整合进入了二进制文件，但我们如果像下面这样直接在代码中链接对应的符号是无法工作的。</p>
+
+<pre><code class="language-linkscript">/* THIS DOES NOT WORK */
+SECTIONS
+{
+  /*...*/
+  .debug_abbrev : {
+    __my_debug_abbrev_start = .;
+    KEEP (*(.debug_abbrev)) *(.debug_abbrev)
+    __my_debug_abbrev_end = .;
+  }
+  /*...*/
+}
+</code></pre>
+
+<div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">extern</span> <span class="s">"C"</span> <span class="p">{</span>
+  <span class="k">fn</span> <span class="nf">__my_debug_abbrev_start</span><span class="p">();</span>
+  <span class="k">fn</span> <span class="nf">__my_debug_abbrev_end</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>在链接阶段，你会收到下面的错误信息：</p>
+
+<blockquote>
+  <p>xxx relocation at 0xdeadbeef for symbol <code class="language-plaintext highlighter-rouge">__my_debug_abbrev_start</code> out of range</p>
+</blockquote>
+
+<p>这是因为在编译阶段，类似于 <code class="language-plaintext highlighter-rouge">auipc</code> 等基于当前 <code class="language-plaintext highlighter-rouge">pc</code> 寄存器寻址的命令的操作数都会为 0, 在链接阶段再由链接器填入。
+而 <code class="language-plaintext highlighter-rouge">extern "C"</code> 引用的符号正是以此机制链入的，而上面的 DWARF 段距离 <code class="language-plaintext highlighter-rouge">pc</code> 的距离过远，该寻址手段最多只支持 <code class="language-plaintext highlighter-rouge">+-2M</code> 范围内的寻址。
+而调试信息由于运行时不需要，通常都会被编译器放置在较远的位置，因此当链接器发现需要链接的符号过远而无法链接时就会报上面的错误。</p>
+
+<p><strong>解决方案: 将调试信息复制一份置入自定义段，让自定义段距离 <code class="language-plaintext highlighter-rouge">.rodata</code> 段足够近即可。</strong></p>
+
+<p>遗憾的是，根据下面的描述 <a href="https://stackoverflow.com/questions/31125217/how-to-make-duplicate-sections-in-elf-file">StackOverflow</a>，链接脚本并不支持<strong>复制</strong>这种操作。</p>
+
+<blockquote>
+  <p>If a file name matches more than one wildcard pattern, or
+if a file name appears explicitly and is also matched by a wildcard pattern,
+the linker will use the first match in the linker script.</p>
+</blockquote>
+
+<p>链接脚本在任何时候只会根据优先匹配原则将一段放入一块区域中。 但我们可以利用 <code class="language-plaintext highlighter-rouge">objcopy</code> 来实现对段的操作。</p>
+
+<p>为了完成复制段的操作，我们首先需要在链接脚本中留出足够的空间，可以利用下面的方法。</p>
+
+<pre><code class="language-linkscript">  .rvbt_addr : {
+    _rvbt_addr_start = .;
+    . += _debug_addr_end - _debug_addr_start;
+    _rvbt_addr_end = .;
+  }
+</code></pre>
+
+<p>然后我们先将 <code class="language-plaintext highlighter-rouge">.debug_{section}</code> 的段全部导出到临时文件中，再重新导入进我们将在运行时读取的段 <code class="language-plaintext highlighter-rouge">.rvbt_{section}</code>。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>copy-debug:
+  <span class="k">for </span>sec <span class="k">in</span> <span class="s1">'abbrev'</span> <span class="s1">'addr'</span> <span class="s1">'aranges'</span> <span class="s1">'info'</span> <span class="s1">'line'</span> <span class="s1">'line_str'</span> <span class="s1">'ranges'</span> <span class="s1">'rnglists'</span> <span class="s1">'str'</span> <span class="s1">'str_offsets'</span><span class="p">;</span> <span class="k">do</span> <span class="se">\</span>
+    <span class="c"># dump needed section</span>
+    rust-objcopy  <span class="nt">--dump-section</span> .debug_<span class="nv">$sec</span><span class="o">=</span>tmp_<span class="nv">$sec</span><span class="p">;</span> <span class="se">\</span>
+    <span class="c"># update</span>
+    riscv64-unknown-elf-objcopy  <span class="nt">--update-section</span> .rvbt_<span class="nv">$sec</span><span class="o">=</span>tmp_<span class="nv">$sec</span><span class="p">;</span> <span class="se">\</span>
+  <span class="k">done
+  </span><span class="nb">rm </span>tmp<span class="k">*</span><span class="p">;</span> 
+</code></pre></div></div>
+
+<p>这样完成后的 ELF 中就可以直接访问到链接脚本中定义的符号了。</p>
+
+<h2 id="part-iii-运行时栈帧解析与-dwarf-读取">Part III: 运行时栈帧解析与 DWARF 读取</h2>
+
+<p>首先需要启用编译标识 <code class="language-plaintext highlighter-rouge">"-Cforce-frame-pointers=yes"</code> 强制启用 <code class="language-plaintext highlighter-rouge">fp</code> 寄存器记录栈帧
+，以防止 <code class="language-plaintext highlighter-rouge">llvm</code> 优化导致 <code class="language-plaintext highlighter-rouge">fp</code> 为空。当然这样会导致效率下降，但是调试也不需要太在意这个。</p>
+
+<h3 id="堆栈展开函数">堆栈展开函数</h3>
+
+<div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">#[cfg(target_arch=</span><span class="s">"riscv64"</span><span class="nd">)]</span>
+<span class="k">const</span> <span class="n">XLEN</span><span class="p">:</span> <span class="nb">u64</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+<span class="nd">#[cfg(target_arch=</span><span class="s">"riscv32"</span><span class="nd">)]</span>
+<span class="k">const</span> <span class="n">XLEN</span><span class="p">:</span> <span class="nb">u64</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
+<span class="nd">#[inline(always)]</span>
+<span class="k">pub</span> <span class="k">fn</span> <span class="nf">trace_from</span><span class="p">(</span><span class="k">mut</span> <span class="n">curframe</span><span class="p">:</span> <span class="n">Frame</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="o">&amp;</span><span class="k">dyn</span> <span class="nf">Fn</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Frame</span><span class="p">)</span> <span class="k">-&gt;</span> <span class="nb">bool</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">loop</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="n">keep_going</span> <span class="o">=</span> <span class="nf">action</span><span class="p">(</span><span class="o">&amp;</span><span class="n">curframe</span><span class="p">);</span>
+        <span class="k">if</span> <span class="n">keep_going</span> <span class="p">{</span>
+            <span class="k">unsafe</span> <span class="p">{</span>
+                <span class="n">curframe</span><span class="py">.ra</span> <span class="o">=</span> <span class="o">*</span><span class="p">((</span><span class="n">curframe</span><span class="py">.fp</span> <span class="o">+</span> <span class="n">XLEN</span><span class="p">)</span> <span class="k">as</span> <span class="o">*</span><span class="k">mut</span> <span class="nb">u64</span><span class="p">);</span>
+                <span class="n">curframe</span><span class="py">.sp</span> <span class="o">=</span> <span class="n">curframe</span><span class="py">.fp</span><span class="p">;</span>
+                <span class="n">curframe</span><span class="py">.fp</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="n">curframe</span><span class="py">.fp</span> <span class="k">as</span> <span class="o">*</span><span class="k">mut</span> <span class="nb">u64</span><span class="p">);</span>
+                <span class="k">if</span> <span class="n">curframe</span><span class="py">.ra</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">||</span> <span class="n">curframe</span><span class="py">.fp</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">#[inline(always)]</span>
+<span class="k">pub</span> <span class="k">fn</span> <span class="nf">trace</span><span class="p">(</span><span class="n">action</span><span class="p">:</span> <span class="o">&amp;</span><span class="k">dyn</span> <span class="nf">Fn</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Frame</span><span class="p">)</span> <span class="k">-&gt;</span> <span class="nb">bool</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">ra</span><span class="p">):</span> <span class="p">(</span><span class="nb">u64</span><span class="p">,</span> <span class="nb">u64</span><span class="p">,</span> <span class="nb">u64</span><span class="p">);</span>
+    <span class="k">unsafe</span> <span class="p">{</span>
+        <span class="nd">asm!</span><span class="p">(</span><span class="s">"
+        mv {0}, s0
+        mv {1}, x2
+        mv {2}, x1
+        "</span><span class="p">,</span> <span class="nf">out</span><span class="p">(</span><span class="n">reg</span><span class="p">)</span> <span class="n">fp</span><span class="p">,</span> <span class="nf">out</span><span class="p">(</span><span class="n">reg</span><span class="p">)</span> <span class="n">sp</span><span class="p">,</span> <span class="nf">out</span><span class="p">(</span><span class="n">reg</span><span class="p">)</span> <span class="n">ra</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">let</span> <span class="n">curframe</span> <span class="o">=</span> <span class="nn">Frame</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">ra</span><span class="p">);</span>
+    <span class="nf">trace_from</span><span class="p">(</span><span class="n">curframe</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="dwarf-符号读取-基于-addr2line-与-gimli-库">DWARF 符号读取 (基于 <code class="language-plaintext highlighter-rouge">addr2line</code> 与 <code class="language-plaintext highlighter-rouge">gimli</code> 库)</h3>
+
+<div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">#[inline(always)]</span>
+<span class="k">pub</span> <span class="k">fn</span> <span class="nf">resolve</span><span class="p">(</span><span class="n">addr</span><span class="p">:</span> <span class="nb">u64</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="o">&amp;</span><span class="k">dyn</span> <span class="nf">Fn</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Symbol</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nd">if_chain!</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="nf">Some</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span> <span class="o">=</span> <span class="n">DEBUG_CTX</span><span class="nf">.lock</span><span class="p">()</span><span class="nf">.as_ref</span><span class="p">();</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="nf">Ok</span><span class="p">(</span><span class="k">mut</span> <span class="n">frame_iter</span><span class="p">)</span> <span class="o">=</span> <span class="n">ctx</span><span class="nf">.find_frames</span><span class="p">(</span><span class="n">addr</span><span class="p">);</span>
+        <span class="n">then</span> <span class="p">{</span>
+            <span class="k">while</span> <span class="k">let</span> <span class="nf">Ok</span><span class="p">(</span><span class="nf">Some</span><span class="p">(</span><span class="n">frame</span><span class="p">))</span> <span class="o">=</span> <span class="n">frame_iter</span><span class="nf">.next</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">let</span> <span class="n">name</span> <span class="o">=</span> <span class="k">match</span> <span class="n">frame</span><span class="py">.function</span> <span class="p">{</span>
+                    <span class="nf">Some</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="k">=&gt;</span> <span class="p">{</span>
+                        <span class="n">func</span><span class="nf">.demangle</span><span class="p">()</span><span class="nf">.ok</span><span class="p">()</span><span class="nf">.map_or</span><span class="p">(</span><span class="s">""</span><span class="nf">.to_string</span><span class="p">(),</span> <span class="p">|</span><span class="n">s</span><span class="p">|</span> <span class="n">s</span><span class="nf">.to_string</span><span class="p">())</span>
+                    <span class="p">},</span>
+                    <span class="nb">None</span> <span class="k">=&gt;</span> <span class="s">""</span><span class="nf">.to_string</span><span class="p">()</span>
+                <span class="p">};</span>
+                <span class="k">let</span> <span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span> <span class="o">=</span> <span class="k">match</span> <span class="n">frame</span><span class="py">.location</span> <span class="p">{</span>
+                    <span class="nf">Some</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span> <span class="k">=&gt;</span> <span class="p">{</span>
+                        <span class="p">(</span><span class="n">loc</span><span class="py">.file</span><span class="nf">.unwrap_or</span><span class="p">(</span><span class="s">"??"</span><span class="p">),</span> <span class="n">loc</span><span class="py">.line</span><span class="nf">.unwrap_or</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+                    <span class="p">},</span>
+                    <span class="nb">None</span> <span class="k">=&gt;</span> <span class="p">(</span><span class="s">"??"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="p">};</span>
+                <span class="nf">action</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Symbol</span><span class="p">{</span><span class="n">name</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="n">file</span><span class="nf">.to_string</span><span class="p">(),</span> <span class="n">line</span><span class="p">})</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nd">println!</span><span class="p">(</span><span class="s">"[ERROR] debug context not initialized or frame not found"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+ <div class="post_list">
+
+</div> 
+<!-- disqus -->
+<script id="dsq-count-scr" src="//project-vexed.disqus.com/count.js" async ></script>
+<div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://jwnhy.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+        </article>
+         <div class="footer">
+  <nav class="nav_bar">
+    <ul class="footer_owner_info">
+      <!-- email -->
+      
+      <a class="footer_btn" href="mailto://jwnhy0@gmail.com">
+        <i class="fa fa-envelope-square">
+          
+          <p>Email</p>
+          
+        </i>
+      </a>
+      
+      <!-- linkedin -->
+      
+      <!-- github -->
+      
+      <a class="footer_btn" href="https://github.com/jwnhy">
+        <i class="fa fa-github">
+          
+          <p>Github</p>
+          
+        </i>
+      </a>
+      
+      <!-- gitlab -->
+      
+      <!-- website -->
+      
+      <a class="footer_btn" href="">
+        <i class="fa fa-link">
+          
+          <p>Website</p>
+          
+        </i>
+      </a>
+      
+      <!-- twitter -->
+      
+      <a class="footer_btn" href="https://twitter.com/">
+        <i class="fa fa-twitter">
+          
+          <p>Twitter</p>
+          
+        </i>
+      </a>
+      
+      <!-- facebook -->
+      
+      <a class="footer_btn" href="https://www.facebook.com/">
+        <i class="fa fa-facebook">
+          
+          <p>Facebook</p>
+          
+        </i>
+      </a>
+      
+      <!-- instagram -->
+      
+      <!-- youtube -->
+      
+      <a
+        class="footer_btn"
+        href="https://www.youtube.com/user/"
+      >
+        <i class="fa fa-youtube">
+          
+          <p>Youtube</p>
+          
+        </i>
+      </a>
+      
+      <!-- steam -->
+      
+      <a
+        class="footer_btn"
+        href="https://steamcommunity.com/id/"
+      >
+        <i class="fa fa-steam">
+          
+          <p>Steam</p>
+          
+        </i>
+      </a>
+      
+      <!-- weibo -->
+      
+    </ul>
+    <!-- copyright -->
+    <ul class="footer_copyright">
+      <li class="copyright">© 2015 - 2020</li>
+      
+      <li>Designed by DeerRIDER, All Rights Reserved</li>
+      
+    </ul>
+  </nav>
+</div>
+ 
+      </div>
+    </div>
+  </body>
+  <script async src="http://localhost:4000/src/assets/js/init-mermaid.js"></script>
+</html>
