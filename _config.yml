@@ -1,8 +1,8 @@
 # 1. Site Settings
 title               : jwnhy Blog
 owner               : "jwnhy"
-url                : "https://akiritsu.github.io"
-baseurl            : "/"
+url                : "https://jwnhy.github.io"
+baseurl            : ""
 permalink           : /:title/
 description         : "Be humble, be better."
 markdown            : kramdown

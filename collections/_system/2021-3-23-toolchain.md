@@ -1,4 +1,6 @@
-# RISC-V 工具链 & QEMU 虚拟机
+---
+title: RISC-V 工具链 & QEMU 虚拟机
+---
 
 本文主要关注 RISC-V 工具链的搭建以及相应的 QEMU Linux 虚拟机的配置启动上。
 

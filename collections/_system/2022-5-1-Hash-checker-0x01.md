@@ -1,4 +1,6 @@
-# [f0rizen's Hash checker 0x01](https://crackmes.one/crackme/622db5be33c5d46c8bcc027f)
+---
+title: f0rizen's Hash checker 0x01
+---
 
 ## Decompile
 

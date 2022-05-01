@@ -1,4 +1,6 @@
-## 逻辑基础小结
+---
+title: 逻辑基础小结
+---
 
 从第一次了解到 Software Foundation 开始，已经过去了好几个年头，而我终于把它的第一卷 Logic Foundation 读完了。
 
