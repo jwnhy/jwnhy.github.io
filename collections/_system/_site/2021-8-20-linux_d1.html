@@ -1,0 +1,74 @@
+<p>最近尝试用 Coffer 为哪吒 D1 引导 RISC-V Linux 遇到了下面一些问题，记录一下。</p>
+
+<h2 id="mcounteren-寄存器设置"><code class="language-plaintext highlighter-rouge">mcounteren</code> 寄存器设置</h2>
+
+<p><code class="language-plaintext highlighter-rouge">mcounteren</code> 是与硬件性能监视器相关的寄存器，在刚开始移植时我只顾及了与异常、中断等相关的寄存器例如 <code class="language-plaintext highlighter-rouge">mstatus</code> 与 <code class="language-plaintext highlighter-rouge">mideleg</code> 等。而忽视了性能监视器相关的寄存器。</p>
+
+<p>实际上，uboot 与 Linux 都需要这个寄存器被正确的设置，因为该寄存器除了 28 个<code class="language-plaintext highlighter-rouge">HPMn</code> 寄存器位管理各类事件发生的情况之外
+，还有三个比特位分别管理 <code class="language-plaintext highlighter-rouge">cycle</code>、<code class="language-plaintext highlighter-rouge">time</code> 与 <code class="language-plaintext highlighter-rouge">instret</code> 能否被低权限访问， <code class="language-plaintext highlighter-rouge">CY</code>、<code class="language-plaintext highlighter-rouge">TM</code>、<code class="language-plaintext highlighter-rouge">IR</code>。</p>
+
+<p>目前不考虑安全性等机制的情况下，直接将其设置成全部可以访问即可。
+如果需要固件虚拟结果，可以阻止访问，在出现 illegal instruction 异常时，模拟该条指令的结果。</p>
+
+<h2 id="plic-权限设置"><code class="language-plaintext highlighter-rouge">PLIC</code> 权限设置</h2>
+
+<p>在解决了 <code class="language-plaintext highlighter-rouge">mcounteren</code> 的权限设置后，可以正常进入 uboot，但在启动过程中会出现两个 load access fault。
+检查全志提供的 Tina 中的 OpenSBI 代码，发现 PLIC 权限管理寄存器设置，如果未被正常设置，在低权限访问 PLIC 所在区域时会触发权限异常。</p>
+
+<p>需要正确设置 PLIC 寄存器。</p>
+
+<div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c1">// I Love Allwinner</span>
+  <span class="nf">write_volatile</span><span class="p">(</span><span class="mi">0x101F_FFFC</span> <span class="k">as</span> <span class="o">*</span><span class="k">mut</span> <span class="nb">u32</span><span class="p">,</span> <span class="mi">0x1</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="定时器中断">定时器中断</h2>
+
+<p>尽管 SBI 标准提供了很多功能，但 Linux 目前只依赖了 SBI v0.1 中的 legacy 标准中的 <code class="language-plaintext highlighter-rouge">set_timer</code> SBI 调用用于提供系统时钟。</p>
+
+<p>不知道为什么，尽管配置了正确的 <code class="language-plaintext highlighter-rouge">mideleg</code>，仍然会出现定时器中断打到 machine mode 的情况，需要对其进行处理。</p>
+
+<blockquote>
+  <p>原因是 RISC-V 在默认情况下，所有的异常/中断均为 machine mode 处理，但为了提升性能，可以将一部分委托给低权限处理。
+在这种情况下，只有同权限/更低权限的异常/中断可以被委托，例如发生在 supervisor 的异常可以被 supervisor 的异常处理函数处理。
+而 RISC-V 目前并没有 <code class="language-plaintext highlighter-rouge">stimer</code> 寄存器，所有定时器异常均为 machine mode 异常，无法被委托。
+只能以下列顺序传递。</p>
+</blockquote>
+
+<hr />
+
+<ol>
+  <li>machine mode 接收到中断，清除 <code class="language-plaintext highlighter-rouge">mie.MTIE</code> (防止再次触发)，设置 <code class="language-plaintext highlighter-rouge">mip.STIP</code> (触发 supervisor timer 中断)。</li>
+  <li>在 <code class="language-plaintext highlighter-rouge">mideleg</code> 被正确配置的情况下，supervisor timer 中断被 <code class="language-plaintext highlighter-rouge">stvec</code> 中的中断处理函数处理。</li>
+  <li><code class="language-plaintext highlighter-rouge">stvec</code> 处理完业务，调用 <code class="language-plaintext highlighter-rouge">set_timer</code> 约定下次定时器中断。</li>
+  <li><code class="language-plaintext highlighter-rouge">set_timer</code> 清理 <code class="language-plaintext highlighter-rouge">mip.STIP</code>，设置<code class="language-plaintext highlighter-rouge">mie.MTIE</code> 启用定时器中断。</li>
+</ol>
+
+<blockquote>
+  <p>PS: <code class="language-plaintext highlighter-rouge">mip.MTIP</code> 机器中断位为只读位，只能通过写入 <code class="language-plaintext highlighter-rouge">mtimecmp</code> 寄存器进行清理。 因此若希望清理 <code class="language-plaintext highlighter-rouge">mip.MTIP</code> 而不希望约定下次定时器中断时，
+可以向其中写入一个较大的值。</p>
+</blockquote>
+
+<div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">pub</span><span class="p">(</span><span class="k">crate</span><span class="p">)</span> <span class="k">fn</span> <span class="nf">set_timer</span><span class="p">(</span><span class="n">stime_value</span><span class="p">:</span> <span class="nb">u64</span><span class="p">)</span> <span class="k">-&gt;</span> <span class="n">SbiRet</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="k">let</span> <span class="nf">Some</span><span class="p">(</span><span class="n">timer</span><span class="p">)</span> <span class="o">=</span> <span class="n">TIMER</span><span class="nf">.lock</span><span class="p">()</span><span class="nf">.as_mut</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">timer</span><span class="nf">.set_timer</span><span class="p">(</span><span class="n">stime_value</span><span class="p">);</span>
+        <span class="k">unsafe</span> <span class="p">{</span>
+            <span class="c1">// clear pending stimer</span>
+            <span class="nn">mip</span><span class="p">::</span><span class="nf">clear_stimer</span><span class="p">();</span>
+            <span class="c1">// set mtimer for next event</span>
+            <span class="nn">mie</span><span class="p">::</span><span class="nf">set_mtimer</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nn">SbiRet</span><span class="p">::</span><span class="nf">ok</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nn">SbiRet</span><span class="p">::</span><span class="nf">not_supported</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">pub</span><span class="p">(</span><span class="k">crate</span><span class="p">)</span> <span class="k">fn</span> <span class="nf">process_timer</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">unsafe</span> <span class="p">{</span>
+        <span class="c1">// close mtimer</span>
+        <span class="nn">mie</span><span class="p">::</span><span class="nf">clear_mtimer</span><span class="p">();</span>
+        <span class="c1">// transfer to stimer</span>
+        <span class="nn">mip</span><span class="p">::</span><span class="nf">set_stimer</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
