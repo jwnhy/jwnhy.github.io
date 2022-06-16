@@ -27,7 +27,7 @@ Anyways, I am jwnhy, Here is my [resume](../resume.txt).
 ## What have I done?
 
 - [A Kernel Debugger called Raven](./papers/raven-dac22.pdf)
-- [An Exciting Attack abusing USB-C](./papers/badusbc-woot21.pdf)
+- [An Exciting Attack abusing USB-C](./papers/badusbc-woot21.pdf) with [CVE-2021-22325](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-22325)
 - [A Memory Management Scheme on RISC-V](./papers/ashman-hasp21.pdf)
 - [A Video to ASCII Player](https://github.com/jwnhy/video2ascii)
 
