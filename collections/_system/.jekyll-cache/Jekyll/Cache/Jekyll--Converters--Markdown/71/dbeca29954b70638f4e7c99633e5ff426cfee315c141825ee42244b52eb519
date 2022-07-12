@@ -1,0 +1,131 @@
+I"7E<h2 id="decompile">Decompile</h2>
+
+<p>Dump the binary into Radare2 and decompile it, we get</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ulong</span> <span class="nf">main</span><span class="p">(</span><span class="n">ulong</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">int64_t</span> <span class="n">argv</span><span class="p">)</span>
+
+<span class="p">{</span>
+    <span class="n">canary</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="n">in_FS_OFFSET</span> <span class="o">+</span> <span class="mh">0x28</span><span class="p">);</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">argv</span><span class="p">;</span>
+    <span class="n">var_74h</span><span class="p">.</span><span class="n">_0_4_</span> <span class="o">=</span> <span class="n">argc</span><span class="p">;</span>
+
+    <span class="cm">/* Check it's pure numeric &amp; length = 6 */</span>
+
+    <span class="cm">/* Begining of Useful Code */</span>
+    <span class="n">var_5ch</span><span class="p">.</span><span class="n">_0_4_</span> <span class="o">=</span> <span class="n">sym</span><span class="p">.</span><span class="n">imp</span><span class="p">.</span><span class="n">strlen</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="mi">8</span><span class="p">));</span>   <span class="cm">/* slen = strlen(argv[1]) */</span>
+    <span class="n">var_50h</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="mi">8</span><span class="p">);</span>                         <span class="cm">/* s = argv[1] a.k.a our input */</span>
+    <span class="n">var_48h</span> <span class="o">=</span> <span class="n">var_5ch</span> <span class="o">+</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>                     <span class="cm">/* temp = slen - 1 */</span>
+    <span class="n">uVar4</span> <span class="o">=</span> <span class="p">(</span><span class="n">var_5ch</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">+</span> <span class="mh">0xfU</span><span class="p">)</span> <span class="o">/</span> <span class="mh">0x10</span><span class="p">;</span>        <span class="cm">/* halflen = slen / 2 */</span>
+    <span class="n">iVar1</span> <span class="o">=</span> <span class="n">uVar4</span> <span class="o">*</span> <span class="o">-</span><span class="mh">0x10</span><span class="p">;</span>                      <span class="cm">/* probably a decompiler issue */</span>
+    <span class="n">var_40h</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">main</span><span class="o">::</span><span class="n">s</span> <span class="o">+</span> <span class="n">uVar4</span> <span class="o">*</span> <span class="o">-</span><span class="mi">2</span><span class="p">;</span>            <span class="cm">/* long buf[6] */</span>
+    <span class="o">*</span><span class="n">var_40h</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>                               <span class="cm">/* buf[0] = 1 */</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">var_60h</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">var_60h</span> <span class="o">&lt;</span> <span class="n">var_5ch</span><span class="p">;</span> <span class="n">var_60h</span> <span class="o">=</span> <span class="n">var_60h</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="cm">/* buf[i] = (buf[i-1] * 0x83) % 0x3b9aca09 */</span>
+        <span class="n">var_40h</span><span class="p">[</span><span class="n">var_60h</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">var_40h</span><span class="p">[</span><span class="n">var_60h</span> <span class="o">+</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mh">0x83</span><span class="p">)</span> <span class="o">%</span> <span class="mh">0x3b9aca09</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="cm">/* at this point buffer look like */</span>
+    <span class="cm">/* buf = { 0x1, 0x83, 0x4309, 0x224d9b, 0x118db651, 0x228a4e1d } */</span>
+
+    <span class="n">stack0xffffffffffffffa0</span> <span class="o">=</span> <span class="o">*</span><span class="n">var_50h</span><span class="p">;</span>         <span class="cm">/* sum = argv[1][0] */</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">var_64h</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">var_64h</span> <span class="o">&lt;</span> <span class="n">var_5ch</span><span class="p">;</span> <span class="n">var_64h</span> <span class="o">=</span> <span class="n">var_64h</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="cm">/* sum = sum + ((input[i] % 0x3b9aca09) * buf[i]) % 0x3b9aca09 */</span>
+        <span class="n">stack0xffffffffffffffa0</span> <span class="o">=</span>
+             <span class="n">stack0xffffffffffffffa0</span> <span class="o">+</span> <span class="p">((</span><span class="n">var_50h</span><span class="p">[</span><span class="n">var_64h</span><span class="p">]</span> <span class="o">%</span> <span class="mh">0x3b9aca09</span><span class="p">)</span> <span class="o">*</span> <span class="n">var_40h</span><span class="p">[</span><span class="n">var_64h</span><span class="p">])</span> <span class="o">%</span> <span class="mh">0x3b9aca09</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="cm">/* check sum == 0x3c0431a5 */</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">stack0xffffffffffffffa0</span> <span class="o">==</span> <span class="mh">0x3c0431a5</span><span class="p">)</span> <span class="p">{</span>
+        <span class="o">*</span><span class="p">(</span><span class="o">&amp;</span><span class="n">stack0xffffffffffffff70</span> <span class="o">+</span> <span class="n">iVar1</span><span class="p">)</span> <span class="o">=</span> <span class="mh">0x1396</span><span class="p">;</span>
+        <span class="n">sym</span><span class="p">.</span><span class="n">imp</span><span class="p">.</span><span class="n">puts</span><span class="p">(</span><span class="s">"Key is valid"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+        <span class="o">*</span><span class="p">(</span><span class="o">&amp;</span><span class="n">stack0xffffffffffffff70</span> <span class="o">+</span> <span class="n">iVar1</span><span class="p">)</span> <span class="o">=</span> <span class="mh">0x13a4</span><span class="p">;</span>
+        <span class="n">sym</span><span class="p">.</span><span class="n">imp</span><span class="p">.</span><span class="n">puts</span><span class="p">(</span><span class="s">"Wrong key!"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="cm">/* End of Useful Code */</span>
+    <span class="n">uVar3</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">goto</span> <span class="n">canary_check</span><span class="p">;</span>
+    <span class="nl">canary_check:</span>
+    <span class="cm">/*...*/</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="werid-stack-behavior">Werid Stack Behavior</h2>
+
+<p>From the decompiled code we can see that this code is doing something werid
+using <code class="language-plaintext highlighter-rouge">argv</code> and <code class="language-plaintext highlighter-rouge">slen</code>.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">uVar4</span> <span class="o">=</span> <span class="p">(</span><span class="n">var_5ch</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">+</span> <span class="mh">0xfU</span><span class="p">)</span> <span class="o">/</span> <span class="mh">0x10</span><span class="p">;</span>        <span class="cm">/* halflen = slen / 2 */</span>
+<span class="n">iVar1</span> <span class="o">=</span> <span class="n">uVar4</span> <span class="o">*</span> <span class="o">-</span><span class="mh">0x10</span><span class="p">;</span>                      <span class="cm">/* probably a decompiler issue */</span>
+<span class="n">var_40h</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">main</span><span class="o">::</span><span class="n">s</span> <span class="o">+</span> <span class="n">uVar4</span> <span class="o">*</span> <span class="o">-</span> <span class="mi">2</span><span class="p">;</span>           <span class="cm">/* char buf[6] */</span>
+<span class="o">*</span><span class="n">var_40h</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>                               <span class="cm">/* buf[0] = 1 */</span>
+</code></pre></div></div>
+
+<p>After looking at the assembly, I think this may be a decompiler’s misbehavior.</p>
+
+<pre><code class="language-asm">0x0000127d      488d14c50000.  lea rdx, [rax*8]   /* rdx = slen * 8 */
+0x00001285      b810000000     mov eax, 0x10      /* rax = 0x10 */
+0x0000128a      4883e801       sub rax, 1         /* rax = rax - 1 = 0xf */
+0x0000128e      4801d0         add rax, rdx       /* rax = slen * 8 + 0xf */
+0x00001291      be10000000     mov esi, 0x10
+0x00001296      ba00000000     mov edx, 0
+0x0000129b      48f7f6         div rsi            /* rax = slen / 2 = 3 */
+0x0000129e      486bc010       imul rax, rax, 0x10/* rax = 3 * 0x10 = 0x30 */
+0x000012a2      4829c4         sub rsp, rax       /* allocate 0x30 stack for buf! */
+0x000012a5      4889e0         mov rax, rsp       
+</code></pre>
+
+<p>Looks like <code class="language-plaintext highlighter-rouge">buf</code> is well-formed now, this werid code is just allocating <code class="language-plaintext highlighter-rouge">0x30</code> bytes
+to it, which is exactly <code class="language-plaintext highlighter-rouge">6 * sizeof(long)</code>.</p>
+
+<h2 id="i-dnk-math-but-i-know-bruteforce">I dnk math, but I know bruteforce</h2>
+
+<p>After resolving the decompliation myth. we can take a proper look at the checksum.
+It first generates a buffer containing <code class="language-plaintext highlighter-rouge">6</code> magic numbers.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">buf</span> <span class="o">=</span> <span class="p">{</span> <span class="mh">0x1</span><span class="p">,</span> <span class="mh">0x83</span><span class="p">,</span> <span class="mh">0x4309</span><span class="p">,</span> <span class="mh">0x224d9b</span><span class="p">,</span> <span class="mh">0x118db651</span><span class="p">,</span> <span class="mh">0x228a4e1d</span> <span class="p">};</span>
+</code></pre></div></div>
+
+<p>Then, without using the first, it uses the rest to multiply <strong>elementwisely</strong>
+with our input’s ASCII code, then sum them up.</p>
+
+<p>I genuinely dnk how to reverse this hash process, but we can esstially speed iterate
+up to bruteforce out the checksum.</p>
+
+<p>We can create a table storing the multiplication of <code class="language-plaintext highlighter-rouge">('1',..,'9') * buf</code>, totaling
+<code class="language-plaintext highlighter-rouge">9 * 5 = 45</code> numbers as <code class="language-plaintext highlighter-rouge">'0'</code> and <code class="language-plaintext highlighter-rouge">buf[0]</code> is unused.</p>
+
+<p>Then iterate all combination from <code class="language-plaintext highlighter-rouge">111111</code> to <code class="language-plaintext highlighter-rouge">999999</code> to sum different entries
+in the previous table to crack it.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/python3
+</span><span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="n">buf</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+    <span class="n">buf</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mh">0x83</span><span class="p">)</span> <span class="o">%</span> <span class="mh">0x3b9aca09</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">buf</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+    <span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+        <span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">hex</span><span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="s">"0"</span><span class="p">)</span> <span class="o">+</span> <span class="n">j</span><span class="p">)</span> <span class="o">%</span> <span class="mh">0x3b9aca09</span><span class="p">)</span>
+
+<span class="n">pprint</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">111111</span><span class="p">,</span> <span class="mi">1000000</span><span class="p">):</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">l</span><span class="p">).</span><span class="n">zfill</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="s">"0"</span><span class="p">)</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="nb">int</span><span class="p">(</span><span class="n">j</span><span class="p">)],</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="mh">0x3c0431a5</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'cracked, the code is </span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+        <span class="k">break</span>
+</code></pre></div></div>
+
+<p>The result is <code class="language-plaintext highlighter-rouge">231337</code>.</p>
+:ET

@@ -1,0 +1,36 @@
+I"i<h2 id="preliminary">Preliminary</h2>
+
+<h3 id="ebpf-寄存器追踪">eBPF 寄存器追踪</h3>
+
+<p>在 <code class="language-plaintext highlighter-rouge">eBPF</code> 中，为了防止指针越界，所有寄存器都具有下面的变量用于追踪寄存器的值。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* include/linux/bpf_verifier.h */</span>
+<span class="k">struct</span> <span class="n">bpf_reg_state</span> <span class="p">{</span>
+  <span class="cm">/* ... */</span>
+  <span class="n">s64</span> <span class="n">smin_value</span><span class="p">;</span> <span class="cm">/* minimum possible (s64)value */</span>
+  <span class="cm">/* ... */</span>
+  <span class="n">u32</span> <span class="n">u32_max_value</span><span class="p">;</span> <span class="cm">/* maximum possible (u32)value */</span>
+  <span class="cm">/* ... */</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>接着在 <code class="language-plaintext highlighter-rouge">adjust_ptr_min_max_vals()</code> 中，这些值会被更新以确保没有越界的访问。
+其中很多类型的寄存器都是被禁止进行<strong>数值</strong>计算的，例如下面这些。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* 随内核版本不同不同，下面为 v5.10 */</span>
+<span class="k">case</span> <span class="n">PTR_TO_PACKET_END</span><span class="p">:</span>
+<span class="k">case</span> <span class="n">PTR_TO_SOCKET</span><span class="p">:</span>
+<span class="k">case</span> <span class="n">PTR_TO_SOCKET_OR_NULL</span><span class="p">:</span>
+<span class="k">case</span> <span class="n">PTR_TO_SOCK_COMMON</span><span class="p">:</span>
+<span class="k">case</span> <span class="n">PTR_TO_SOCK_COMMON_OR_NULL</span><span class="p">:</span>
+<span class="k">case</span> <span class="n">PTR_TO_TCP_SOCK</span><span class="p">:</span>
+<span class="k">case</span> <span class="n">PTR_TO_TCP_SOCK_OR_NULL</span><span class="p">:</span>
+<span class="k">case</span> <span class="n">PTR_TO_XDP_SOCK</span><span class="p">:</span>
+  <span class="n">verbose</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s">"R%d pointer arithmetic on %s prohibited</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span>
+    <span class="n">dst</span><span class="p">,</span> <span class="n">reg_type_str</span><span class="p">[</span><span class="n">ptr_reg</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">]);</span>
+  <span class="k">return</span> <span class="o">-</span><span class="n">EACCES</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="cve-23222-任意指针读写"><a href="https://www.openwall.com/lists/oss-security/2022/01/18/2">CVE-23222</a> 任意指针读写</h2>
+
+:ET
