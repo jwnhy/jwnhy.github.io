@@ -65,6 +65,10 @@
 <lastmod>2022-07-12T00:00:00+08:00</lastmod>
 </url>
 <url>
+<loc>http://localhost:4000/system/x86_pf/</loc>
+<lastmod>2022-08-27T00:00:00+08:00</lastmod>
+</url>
+<url>
 <loc>http://localhost:4000/404</loc>
 </url>
 <url>
@@ -78,10 +82,14 @@
 </url>
 <url>
 <loc>http://localhost:4000/papers/ashman-hasp21.pdf</loc>
-<lastmod>2022-05-16T18:49:02+08:00</lastmod>
+<lastmod>2022-08-20T14:19:31+08:00</lastmod>
 </url>
 <url>
 <loc>http://localhost:4000/papers/badusbc-woot21.pdf</loc>
-<lastmod>2022-05-16T18:49:02+08:00</lastmod>
+<lastmod>2022-08-20T14:19:31+08:00</lastmod>
+</url>
+<url>
+<loc>http://localhost:4000/papers/raven-dac22.pdf</loc>
+<lastmod>2022-08-20T14:19:31+08:00</lastmod>
 </url>
 </urlset>

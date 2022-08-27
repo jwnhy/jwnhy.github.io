@@ -1,16 +1,16 @@
-current directory: /home/john/.ssh/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/eventmachine-1.2.7/ext/fastfilereader
-/usr/bin/ruby27 -I /usr/lib64/ruby/site_ruby/2.7.0 -r ./siteconf20220516-115876-1sg8k0b.rb extconf.rb
+current directory: /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/eventmachine-1.2.7/ext/fastfilereader
+/usr/bin/ruby27 -I /usr/lib64/ruby/site_ruby/2.7.0 -r ./siteconf20220827-93471-aehr6i.rb extconf.rb
 creating Makefile
 
-current directory: /home/john/.ssh/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/eventmachine-1.2.7/ext/fastfilereader
+current directory: /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/eventmachine-1.2.7/ext/fastfilereader
 make "DESTDIR=" clean
 
-current directory: /home/john/.ssh/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/eventmachine-1.2.7/ext/fastfilereader
+current directory: /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/eventmachine-1.2.7/ext/fastfilereader
 make "DESTDIR="
 compiling mapper.cpp
 compiling rubymain.cpp
 linking shared-object fastfilereaderext.so
 
-current directory: /home/john/.ssh/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/eventmachine-1.2.7/ext/fastfilereader
+current directory: /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/eventmachine-1.2.7/ext/fastfilereader
 make "DESTDIR=" install
-/usr/bin/install -c -m 0755 fastfilereaderext.so ./.gem.20220516-115876-1w3tfc0
+/usr/bin/install -c -m 0755 fastfilereaderext.so ./.gem.20220827-93471-1yyqs7x
