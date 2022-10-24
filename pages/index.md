@@ -33,5 +33,5 @@ Anyways, I am jwnhy, Here is my [resume](../resume.txt).
 
 and some other community works.
 
-- [Pronhub](www.pornhub.com) Community Translator
+- [Pornhub](https://www.pornhub.com) Community Translator
 - [Software Foundation](https://coq-zh.github.io/SF-zh/) Translator
