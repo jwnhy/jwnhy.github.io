@@ -31,5 +31,144 @@
   <span class="k">return</span> <span class="o">-</span><span class="n">EACCES</span><span class="p">;</span>
 </code></pre></div></div>
 
-<h2 id="cve-23222-任意指针读写"><a href="https://www.openwall.com/lists/oss-security/2022/01/18/2">CVE-23222</a> 任意指针读写</h2>
+<h2 id="cve-2022-23222-任意指针读写"><a href="https://www.openwall.com/lists/oss-security/2022/01/18/2">CVE-2022-23222</a> 任意指针读写</h2>
 
+<p>在上面的例子中，可以看到并没有对 <code class="language-plaintext highlighter-rouge">PTR_TO_MEM_OR_NULL</code> 进行边界范围的计算（为什么？）
+这也引入了 <a href="https://www.openwall.com/lists/oss-security/2022/01/18/2">CVE-2022-23222</a>。</p>
+
+<p>执行步骤</p>
+
+<ol>
+  <li>将 <code class="language-plaintext highlighter-rouge">0xffff...ffff</code> 传入 <code class="language-plaintext highlighter-rouge">bpf_ringbuf_reserve()</code>，该函数会在失败时返回 <code class="language-plaintext highlighter-rouge">NULL</code>，
+使 <code class="language-plaintext highlighter-rouge">r0 = NULL</code>。</li>
+  <li>
+    <p>将 <code class="language-plaintext highlighter-rouge">r0</code> 复制到 <code class="language-plaintext highlighter-rouge">r1</code>，将 <code class="language-plaintext highlighter-rouge">r1</code> 加一后，对 <code class="language-plaintext highlighter-rouge">r0</code> 进行 <code class="language-plaintext highlighter-rouge">NULL</code> 检查，这时，<code class="language-plaintext highlighter-rouge">verifier</code>
+ 会认为 <code class="language-plaintext highlighter-rouge">r0</code> 与 <code class="language-plaintext highlighter-rouge">r1</code> 均为 <code class="language-plaintext highlighter-rouge">0</code>。
+ 在进行 <code class="language-plaintext highlighter-rouge">NULL</code> 检查时使用的指令为 <code class="language-plaintext highlighter-rouge">BPF_JEQ</code>，其会调用 <code class="language-plaintext highlighter-rouge">reg_set_min_max()</code> 对函数进行标记。</p>
+
+    <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="k">case</span> <span class="n">BPF_JEQ</span><span class="p">:</span>
+ <span class="k">case</span> <span class="n">BPF_JNE</span><span class="p">:</span>
+  <span class="p">{</span>
+   <span class="k">struct</span> <span class="n">bpf_reg_state</span> <span class="o">*</span><span class="n">reg</span> <span class="o">=</span>
+     <span class="n">opcode</span> <span class="o">==</span> <span class="n">BPF_JEQ</span> <span class="o">?</span> <span class="n">true_reg</span> <span class="o">:</span> <span class="n">false_reg</span><span class="p">;</span>
+   <span class="cm">/* JEQ/JNE comparison doesn't change the register equivalence.
+    * r1 = r2;
+    * if (r1 == 42) goto label;
+    * ...
+    * label: // here both r1 and r2 are known to be 42.
+    *
+    * Hence when marking register as known preserve it's ID.
+    */</span>
+   <span class="k">if</span> <span class="p">(</span><span class="n">is_jmp32</span><span class="p">)</span>
+     <span class="n">__mark_reg32_known</span><span class="p">(</span><span class="n">reg</span><span class="p">,</span> <span class="n">val32</span><span class="p">);</span>
+   <span class="k">else</span>
+     <span class="n">__mark_reg_known</span><span class="p">(</span><span class="n">reg</span><span class="p">,</span> <span class="n">val</span><span class="p">);</span>
+   <span class="k">break</span><span class="p">;</span>
+  <span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>此时我们拥有一个 <code class="language-plaintext highlighter-rouge">verifier()</code> 认为是 <code class="language-plaintext highlighter-rouge">0</code> 而实际值为 <code class="language-plaintext highlighter-rouge">1</code> 的寄存器，利用其 <code class="language-plaintext highlighter-rouge">ptr = ptr + reg * offset</code>
+ 任意指针读写。</li>
+  <li>CVE 中还提到对栈空间的保护，因此需要利用 <code class="language-plaintext highlighter-rouge">bpf_skb_load_bytes_*()</code> 绕开这类保护，开许多进程同时读写，
+ 获取 <code class="language-plaintext highlighter-rouge">task_struct</code> 后将 <code class="language-plaintext highlighter-rouge">uid</code> 覆盖为 <code class="language-plaintext highlighter-rouge">0</code>。</li>
+</ol>
+
+<blockquote>
+  <p>CVE-3490 也是类似的问题</p>
+</blockquote>
+
+<h2 id="cve-2022-0500"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-0500">CVE-2022-0500</a></h2>
+
+<p>没有太多信息，只知道与 <code class="language-plaintext highlighter-rouge">BPF_BTF_LOAD</code> 有关。</p>
+
+<h2 id="cve-2022-0433-内核崩溃"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-0433">CVE-2022-0433</a> 内核崩溃</h2>
+
+<p>类型为 <code class="language-plaintext highlighter-rouge">bloom_map</code> 的对象不支持 <code class="language-plaintext highlighter-rouge">get_next_key</code> 操作，内核中省略了对应的实现，导致空指针崩溃。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">diff</span> <span class="o">--</span><span class="n">git</span> <span class="n">a</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">bpf</span><span class="o">/</span><span class="n">bloom_filter</span><span class="p">.</span><span class="n">c</span> <span class="n">b</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">bpf</span><span class="o">/</span><span class="n">bloom_filter</span><span class="p">.</span><span class="n">c</span>
+<span class="n">index</span> <span class="mi">277</span><span class="n">a05e9c984</span><span class="p">..</span><span class="n">fa34dc871995</span> <span class="mi">100644</span>
+<span class="o">---</span> <span class="n">a</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">bpf</span><span class="o">/</span><span class="n">bloom_filter</span><span class="p">.</span><span class="n">c</span>
+<span class="o">+++</span> <span class="n">b</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">bpf</span><span class="o">/</span><span class="n">bloom_filter</span><span class="p">.</span><span class="n">c</span>
+<span class="err">@@</span> <span class="o">-</span><span class="mi">82</span><span class="p">,</span><span class="mi">6</span> <span class="o">+</span><span class="mi">82</span><span class="p">,</span><span class="mi">11</span> <span class="err">@@</span> <span class="k">static</span> <span class="kt">int</span> <span class="n">bloom_map_delete_elem</span><span class="p">(</span><span class="k">struct</span> <span class="n">bpf_map</span> <span class="o">*</span><span class="n">map</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">value</span><span class="p">)</span>
+   <span class="k">return</span> <span class="o">-</span><span class="n">EOPNOTSUPP</span><span class="p">;</span>
+ <span class="err">}</span>
+ 
+<span class="o">+</span><span class="k">static</span> <span class="kt">int</span> <span class="n">bloom_map_get_next_key</span><span class="p">(</span><span class="k">struct</span> <span class="n">bpf_map</span> <span class="o">*</span><span class="n">map</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">key</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">next_key</span><span class="p">)</span>
+<span class="o">+</span><span class="p">{</span>
+<span class="o">+</span>  <span class="k">return</span> <span class="o">-</span><span class="n">EOPNOTSUPP</span><span class="p">;</span>
+<span class="o">+</span><span class="p">}</span>
+<span class="o">+</span>
+ <span class="k">static</span> <span class="k">struct</span> <span class="n">bpf_map</span> <span class="o">*</span><span class="nf">bloom_map_alloc</span><span class="p">(</span><span class="k">union</span> <span class="n">bpf_attr</span> <span class="o">*</span><span class="n">attr</span><span class="p">)</span>
+ <span class="p">{</span>
+   <span class="n">u32</span> <span class="n">bitset_bytes</span><span class="p">,</span> <span class="n">bitset_mask</span><span class="p">,</span> <span class="n">nr_hash_funcs</span><span class="p">,</span> <span class="n">nr_bits</span><span class="p">;</span>
+<span class="err">@@</span> <span class="o">-</span><span class="mi">192</span><span class="p">,</span><span class="mi">6</span> <span class="o">+</span><span class="mi">197</span><span class="p">,</span><span class="mi">7</span> <span class="err">@@</span> <span class="k">const</span> <span class="k">struct</span> <span class="n">bpf_map_ops</span> <span class="n">bloom_filter_map_ops</span> <span class="o">=</span> <span class="p">{</span>
+   <span class="p">.</span><span class="n">map_meta_equal</span> <span class="o">=</span> <span class="n">bpf_map_meta_equal</span><span class="p">,</span>
+   <span class="p">.</span><span class="n">map_alloc</span> <span class="o">=</span> <span class="n">bloom_map_alloc</span><span class="p">,</span>
+   <span class="p">.</span><span class="n">map_free</span> <span class="o">=</span> <span class="n">bloom_map_free</span><span class="p">,</span>
+<span class="o">+</span>  <span class="p">.</span><span class="n">map_get_next_key</span> <span class="o">=</span> <span class="n">bloom_map_get_next_key</span><span class="p">,</span>
+   <span class="p">.</span><span class="n">map_push_elem</span> <span class="o">=</span> <span class="n">bloom_map_push_elem</span><span class="p">,</span>
+   <span class="p">.</span><span class="n">map_peek_elem</span> <span class="o">=</span> <span class="n">bloom_map_peek_elem</span><span class="p">,</span>
+   <span class="p">.</span><span class="n">map_pop_elem</span> <span class="o">=</span> <span class="n">bloom_map_pop_elem</span><span class="p">,</span>
+<span class="o">--</span> 
+<span class="mi">2</span><span class="p">.</span><span class="mi">27</span><span class="p">.</span><span class="mi">0</span>
+</code></pre></div></div>
+
+<h2 id="cve-2021-45940-cve-2021-45941"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-45940">CVE-2021-45940</a> <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-45941">CVE-2021-45941</a></h2>
+
+<p>两个发生在 <code class="language-plaintext highlighter-rouge">__bpf_object__open()</code> 中的堆错误，应当为 <code class="language-plaintext highlighter-rouge">bpftool</code> 中的代码问题。</p>
+
+<h2 id="cve-2021-45402-check_alu_op-范围推测异常"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-45402">CVE-2021-45402</a> <code class="language-plaintext highlighter-rouge">check_alu_op()</code> 范围推测异常</h2>
+
+<p>当执行的 <code class="language-plaintext highlighter-rouge">eBPF</code> 指令为 32 位 <code class="language-plaintext highlighter-rouge">BPF_MOV</code> 时，会使用 <code class="language-plaintext highlighter-rouge">zext_32_to_64()</code> 将 32 位整数零扩展到 64 位。
+这时若该 32 位整数为<strong>负数</strong>，则会将结果设置为<strong>最坏结果</strong>，如下所示。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span> <span class="kt">void</span> <span class="nf">__reg_assign_32_into_64</span><span class="p">(</span><span class="k">struct</span> <span class="n">bpf_reg_state</span> <span class="o">*</span><span class="n">reg</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">reg</span><span class="o">-&gt;</span><span class="n">umin_value</span> <span class="o">=</span> <span class="n">reg</span><span class="o">-&gt;</span><span class="n">u32_min_value</span><span class="p">;</span>
+  <span class="n">reg</span><span class="o">-&gt;</span><span class="n">umax_value</span> <span class="o">=</span> <span class="n">reg</span><span class="o">-&gt;</span><span class="n">u32_max_value</span><span class="p">;</span>
+
+  <span class="cm">/* Attempt to pull 32-bit signed bounds into 64-bit bounds but must
+   * be positive otherwise set to worse case bounds and refine later
+   * from tnum.
+   */</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">__reg32_bound_s64</span><span class="p">(</span><span class="n">reg</span><span class="o">-&gt;</span><span class="n">s32_min_value</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="n">__reg32_bound_s64</span><span class="p">(</span><span class="n">reg</span><span class="o">-&gt;</span><span class="n">s32_max_value</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">reg</span><span class="o">-&gt;</span><span class="n">smin_value</span> <span class="o">=</span> <span class="n">reg</span><span class="o">-&gt;</span><span class="n">s32_min_value</span><span class="p">;</span>
+    <span class="n">reg</span><span class="o">-&gt;</span><span class="n">smax_value</span> <span class="o">=</span> <span class="n">reg</span><span class="o">-&gt;</span><span class="n">s32_max_value</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">reg</span><span class="o">-&gt;</span><span class="n">smin_value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">reg</span><span class="o">-&gt;</span><span class="n">smax_value</span> <span class="o">=</span> <span class="n">U32_MAX</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>接着会通过下面的一组函数调用进行 <code class="language-plaintext highlighter-rouge">refinement</code> 来推测该寄存器的具体范围。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">__update_reg_bounds</span><span class="p">(</span><span class="n">dst_reg</span><span class="p">);</span>
+<span class="n">__reg_deduce_bounds</span><span class="p">(</span><span class="n">dst_reg</span><span class="p">);</span>
+<span class="n">__reg_bound_offset</span><span class="p">(</span><span class="n">dst_reg</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>但如同 CVE 作者所说，这个 <code class="language-plaintext highlighter-rouge">refinement</code> 并不是<strong>总会</strong>发生，而是取决于后续程序的运行。
+如果在 32 位 <code class="language-plaintext highlighter-rouge">BPF_MOV</code> 指令之后紧跟一条指针运算指令，就会生成一个包含指针内容的标量。
+这个标量是可以被正常写入到用户空间的，导致内核空间指针泄漏。</p>
+
+<h2 id="cve-2021-41864-prealloc_elems_and_freelist-整数溢出"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-41864">CVE-2021-41864</a> <code class="language-plaintext highlighter-rouge">prealloc_elems_and_freelist()</code> 整数溢出</h2>
+
+<p><code class="language-plaintext highlighter-rouge">elem_size</code> 类型有问题，导致整型溢出。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">diff</span> <span class="o">--</span><span class="n">git</span> <span class="n">a</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">bpf</span><span class="o">/</span><span class="n">stackmap</span><span class="p">.</span><span class="n">c</span> <span class="n">b</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">bpf</span><span class="o">/</span><span class="n">stackmap</span><span class="p">.</span><span class="n">c</span>
+<span class="n">index</span> <span class="mi">09</span><span class="n">a3fd97d329e</span><span class="p">.</span><span class="mf">.6e75</span><span class="n">bbee39f0b</span> <span class="mi">100644</span>
+<span class="o">---</span> <span class="n">a</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">bpf</span><span class="o">/</span><span class="n">stackmap</span><span class="p">.</span><span class="n">c</span>
+<span class="o">+++</span> <span class="n">b</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">bpf</span><span class="o">/</span><span class="n">stackmap</span><span class="p">.</span><span class="n">c</span>
+<span class="err">@@</span> <span class="o">-</span><span class="mi">63</span><span class="p">,</span><span class="mi">7</span> <span class="o">+</span><span class="mi">63</span><span class="p">,</span><span class="mi">8</span> <span class="err">@@</span> <span class="k">static</span> <span class="kr">inline</span> <span class="kt">int</span> <span class="nf">stack_map_data_size</span><span class="p">(</span><span class="k">struct</span> <span class="n">bpf_map</span> <span class="o">*</span><span class="n">map</span><span class="p">)</span>
+ 
+ <span class="k">static</span> <span class="kt">int</span> <span class="n">prealloc_elems_and_freelist</span><span class="p">(</span><span class="k">struct</span> <span class="n">bpf_stack_map</span> <span class="o">*</span><span class="n">smap</span><span class="p">)</span>
+ <span class="p">{</span>
+<span class="o">-</span>  <span class="n">u32</span> <span class="n">elem_size</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">stack_map_bucket</span><span class="p">)</span> <span class="o">+</span> <span class="n">smap</span><span class="o">-&gt;</span><span class="n">map</span><span class="p">.</span><span class="n">value_size</span><span class="p">;</span>
+<span class="o">+</span>  <span class="n">u64</span> <span class="n">elem_size</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">stack_map_bucket</span><span class="p">)</span> <span class="o">+</span>
+<span class="o">+</span>      <span class="p">(</span><span class="n">u64</span><span class="p">)</span><span class="n">smap</span><span class="o">-&gt;</span><span class="n">map</span><span class="p">.</span><span class="n">value_size</span><span class="p">;</span>
+   <span class="kt">int</span> <span class="n">err</span><span class="p">;</span>
+ 
+   <span class="n">smap</span><span class="o">-&gt;</span><span class="n">elems</span> <span class="o">=</span> <span class="n">bpf_map_area_alloc</span><span class="p">(</span><span class="n">elem_size</span> <span class="o">*</span> <span class="n">smap</span><span class="o">-&gt;</span><span class="n">map</span><span class="p">.</span><span class="n">max_entries</span><span class="p">,</span>
+</code></pre></div></div>
