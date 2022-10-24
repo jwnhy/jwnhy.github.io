@@ -1,4 +1,28 @@
-[33m             Error: No such file or directory @ rb_file_s_stat - /home/john/documents/jwnhy.github.io/tags.lock[0m
+[31m                    ------------------------------------------------[0m
+[31m      Jekyll 4.2.2   Please append `--trace` to the `serve` command [0m
+[31m                     for any additional information or backtrace. [0m
+[31m                    ------------------------------------------------[0m
+/usr/lib64/ruby/2.7.0/socket.rb:201:in `bind': Address already in use - bind(2) for [33m             Error: No such file or directory @ rb_file_s_stat - /home/john/documents/jwnhy.github.io/tags.lock[0m
 [33m             Error: Run jekyll build --trace for more information.[0m
-[33m             Error: No such file or directory @ rb_file_s_stat - /home/john/documents/jwnhy.github.io/tags.lock[0m
-[33m             Error: Run jekyll build --trace for more information.[0m
+t.rb:227:in `each'
+	from /usr/lib64/ruby/2.7.0/socket.rb:227:in `foreach'
+	from /usr/lib64/ruby/2.7.0/socket.rb:763:in `tcp_server_sockets'
+	from /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/webrick-1.7.0/lib/webrick/utils.rb:60:in `create_listeners'
+	from /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/webrick-1.7.0/lib/webrick/server.rb:130:in `listen'
+	from /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/webrick-1.7.0/lib/webrick/server.rb:111:in `initialize'
+	from /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/webrick-1.7.0/lib/webrick/httpserver.rb:47:in `initialize'
+	from /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/jekyll-4.2.2/lib/jekyll/commands/serve.rb:215:in `new'
+	from /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/jekyll-4.2.2/lib/jekyll/commands/serve.rb:215:in `start_up_webrick'
+	from /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/jekyll-4.2.2/lib/jekyll/commands/serve.rb:102:in `process'
+	from /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/jekyll-4.2.2/lib/jekyll/command.rb:91:in `block in process_with_graceful_fail'
+	from /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/jekyll-4.2.2/lib/jekyll/command.rb:91:in `each'
+	from /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/jekyll-4.2.2/lib/jekyll/command.rb:91:in `process_with_graceful_fail'
+	from /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/jekyll-4.2.2/lib/jekyll/commands/serve.rb:86:in `block (2 levels) in init_with_program'
+	from /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/mercenary-0.4.0/lib/mercenary/command.rb:221:in `block in execute'
+	from /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/mercenary-0.4.0/lib/mercenary/command.rb:221:in `each'
+	from /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/mercenary-0.4.0/lib/mercenary/command.rb:221:in `execute'
+	from /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/mercenary-0.4.0/lib/mercenary/program.rb:44:in `go'
+	from /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/mercenary-0.4.0/lib/mercenary.rb:21:in `program'
+	from /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/gems/jekyll-4.2.2/exe/jekyll:15:in `<top (required)>'
+	from /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/bin/jekyll:23:in `load'
+	from /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/2.7.0/bin/jekyll:23:in `<main>'

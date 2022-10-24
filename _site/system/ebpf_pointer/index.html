@@ -625,12 +625,15 @@ setInterval(draw, 20);
   
   <!-- generate toc -->
   <ul id="ul_toc" class="ul_toc">
+  <li><a href="#ebpf-pointer-type-list">eBPF pointer type list</a></li>
   <li><a href="#scalar_value-tracking">SCALAR_VALUE tracking</a>
     <ul>
       <li><a href="#range-tracking">Range tracking</a></li>
       <li><a href="#tristate-number-tracking">Tristate number tracking</a></li>
     </ul>
   </li>
+  <li><a href="#memory-access-tracking">Memory access tracking</a></li>
+  <li><a href="#map-access-tracking">Map access tracking</a></li>
 </ul>
 </div>
 
@@ -688,6 +691,31 @@ then type of <code class="language-plaintext highlighter-rouge">R5</code> is cop
 
 <p>At the start of BPF program, <code class="language-plaintext highlighter-rouge">R1</code> contains a pointer to <code class="language-plaintext highlighter-rouge">bpf_context</code> and has
 type <code class="language-plaintext highlighter-rouge">PTR_TO_CTX</code>.</p>
+
+<h2 id="ebpf-pointer-type-list">eBPF pointer type list</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><code class="language-plaintext highlighter-rouge">NOT_INIT</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><code class="language-plaintext highlighter-rouge">SCALAR_VALUE</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><code class="language-plaintext highlighter-rouge">PTR_TO_CTX</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><code class="language-plaintext highlighter-rouge">CONST_PTR_TO_MAP</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><code class="language-plaintext highlighter-rouge">PTR_TO_MAP_VALUE</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><code class="language-plaintext highlighter-rouge">PTR_TO_STACK</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_PACKET</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_PACKET_META</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_PACKET_END</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_FLOW_KEYS</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_SOCKET</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_SOCK_COMMON</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_TCP_SOCK</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_TP_BUFFER</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_XDP_SOCK</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_BTF_ID</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><code class="language-plaintext highlighter-rouge">PTR_TO_MEM</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_BUF</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_FUNC</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><code class="language-plaintext highlighter-rouge">PTR_TO_MAP_KEY</code></li>
+</ul>
 
 <h2 id="scalar_value-tracking">SCALAR_VALUE tracking</h2>
 
@@ -748,13 +776,124 @@ using tristate numbers in Linux, which has already been merged into the kernel.<
 <span class="p">};</span>
 </code></pre></div></div>
 
-<p>These contains the following meanings.</p>
+<p>These contain the following meanings.</p>
 
 \[\begin{align}
 (P.v[k]=0\wedge P.m[k]=0)&amp;\triangleq P[k]=0 \\
 (P.v[k]=1\wedge P.m[k]=0)&amp;\triangleq P[k]=1 \\
-(P.v[k]=0\wedge P.m[k]=1)&amp;\triangleq P[k]=?
+(P.v[k]=0\wedge P.m[k]=1)&amp;\triangleq P[k]=\mu
 \end{align}\]
+
+<p>This implementation of tristate number enables the verifier to perform
+abstract interpretation of arithmetic operations.
+Here is an example of <code class="language-plaintext highlighter-rouge">tnum_add(tnum a, tnum b)</code> inside Linux kernel.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">tnum</span> <span class="nf">tnum_add</span><span class="p">(</span><span class="k">struct</span> <span class="n">tnum</span> <span class="n">a</span><span class="p">,</span> <span class="k">struct</span> <span class="n">tnum</span> <span class="n">b</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">u64</span> <span class="n">sm</span><span class="p">,</span> <span class="n">sv</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">chi</span><span class="p">,</span> <span class="n">mu</span><span class="p">;</span>
+
+  <span class="n">sm</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">mask</span> <span class="o">+</span> <span class="n">b</span><span class="p">.</span><span class="n">mask</span><span class="p">;</span>
+  <span class="n">sv</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">value</span> <span class="o">+</span> <span class="n">b</span><span class="p">.</span><span class="n">value</span><span class="p">;</span>
+  <span class="n">sigma</span> <span class="o">=</span> <span class="n">sm</span> <span class="o">+</span> <span class="n">sv</span><span class="p">;</span>
+  <span class="n">chi</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">^</span> <span class="n">sv</span><span class="p">;</span>
+  <span class="n">mu</span> <span class="o">=</span> <span class="n">chi</span> <span class="o">|</span> <span class="n">a</span><span class="p">.</span><span class="n">mask</span> <span class="o">|</span> <span class="n">b</span><span class="p">.</span><span class="n">mask</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">TNUM</span><span class="p">(</span><span class="n">sv</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">mu</span><span class="p">,</span> <span class="n">mu</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>About why this works, please refer to the original paper or the following part.
+Essentially, this is about the set ${p+q | p\in \gamma(P) \wedge q\in \gamma(Q)}$.</p>
+
+<p><strong>Remark III</strong> These <code class="language-plaintext highlighter-rouge">tnum</code> are used to update bounds like <code class="language-plaintext highlighter-rouge">smin_value</code>
+only in <code class="language-plaintext highlighter-rouge">__update_reg_bounds</code>.</p>
+
+<h2 id="memory-access-tracking">Memory access tracking</h2>
+
+<p>The following applies to</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">PTR_TO_MEM</code></li>
+  <li><code class="language-plaintext highlighter-rouge">PTR_TO_STACK</code></li>
+  <li><code class="language-plaintext highlighter-rouge">PTR_TO_CTX</code></li>
+  <li><code class="language-plaintext highlighter-rouge">PTR_TO_MAP_KEY</code></li>
+</ul>
+
+<p>As BPF program does not support global variable, all shared accesses are via
+<code class="language-plaintext highlighter-rouge">struct bpf_context</code>. However, the check is complicated since it depends on
+the program type. Basically, it will go through the following steps.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">check_mem_access()</code> checks if it is leaking pointers (W &amp; is_ptr) and <code class="language-plaintext highlighter-rouge">off</code>
+  is positive, fixed and known.</li>
+  <li><code class="language-plaintext highlighter-rouge">check_ctx_access()</code> mark this access if it can be transformed into a narrower
+  context access.</li>
+  <li><code class="language-plaintext highlighter-rouge">env-&gt;ops-&gt;is_valid_access()</code> makes sure it is a valid access in range (depending
+  on type) if exists.</li>
+</ul>
+
+<p>Here is an example of <code class="language-plaintext highlighter-rouge">sk_filter_is_valid_access</code></p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span> <span class="n">bool</span> <span class="nf">sk_filter_is_valid_access</span><span class="p">(</span><span class="kt">int</span> <span class="n">off</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span>
+              <span class="k">enum</span> <span class="n">bpf_access_type</span> <span class="n">type</span><span class="p">,</span>
+              <span class="k">const</span> <span class="k">struct</span> <span class="n">bpf_prog</span> <span class="o">*</span><span class="n">prog</span><span class="p">,</span>
+              <span class="k">struct</span> <span class="n">bpf_insn_access_aux</span> <span class="o">*</span><span class="n">info</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">switch</span> <span class="p">(</span><span class="n">off</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">case</span> <span class="n">bpf_ctx_range</span><span class="p">(</span><span class="k">struct</span> <span class="n">__sk_buff</span><span class="p">,</span> <span class="n">tc_classid</span><span class="p">):</span>
+  <span class="k">case</span> <span class="n">bpf_ctx_range</span><span class="p">(</span><span class="k">struct</span> <span class="n">__sk_buff</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+  <span class="k">case</span> <span class="n">bpf_ctx_range</span><span class="p">(</span><span class="k">struct</span> <span class="n">__sk_buff</span><span class="p">,</span> <span class="n">data_meta</span><span class="p">):</span>
+  <span class="k">case</span> <span class="n">bpf_ctx_range</span><span class="p">(</span><span class="k">struct</span> <span class="n">__sk_buff</span><span class="p">,</span> <span class="n">data_end</span><span class="p">):</span>
+  <span class="k">case</span> <span class="n">bpf_ctx_range_till</span><span class="p">(</span><span class="k">struct</span> <span class="n">__sk_buff</span><span class="p">,</span> <span class="n">family</span><span class="p">,</span> <span class="n">local_port</span><span class="p">):</span>
+  <span class="k">case</span> <span class="n">bpf_ctx_range</span><span class="p">(</span><span class="k">struct</span> <span class="n">__sk_buff</span><span class="p">,</span> <span class="n">tstamp</span><span class="p">):</span>
+  <span class="k">case</span> <span class="n">bpf_ctx_range</span><span class="p">(</span><span class="k">struct</span> <span class="n">__sk_buff</span><span class="p">,</span> <span class="n">wire_len</span><span class="p">):</span>
+  <span class="k">case</span> <span class="n">bpf_ctx_range</span><span class="p">(</span><span class="k">struct</span> <span class="n">__sk_buff</span><span class="p">,</span> <span class="n">hwtstamp</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">type</span> <span class="o">==</span> <span class="n">BPF_WRITE</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">off</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">bpf_ctx_range_till</span><span class="p">(</span><span class="k">struct</span> <span class="n">__sk_buff</span><span class="p">,</span> <span class="n">cb</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cb</span><span class="p">[</span><span class="mi">4</span><span class="p">]):</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="nl">default:</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="n">bpf_skb_is_valid_access</span><span class="p">(</span><span class="n">off</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">type</span><span class="p">,</span> <span class="n">prog</span><span class="p">,</span> <span class="n">info</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Similar checks is performed to <code class="language-plaintext highlighter-rouge">PTR_TO_MEM</code> with <code class="language-plaintext highlighter-rouge">check_mem_region_access()</code> and
+<code class="language-plaintext highlighter-rouge">__check_mem_access</code>.</p>
+
+<p>With <code class="language-plaintext highlighter-rouge">PTR_TO_STACK</code>, the verifier checks if it’s inbound with <code class="language-plaintext highlighter-rouge">check_stack_access_within_bounds</code>
+and then <code class="language-plaintext highlighter-rouge">update_stack_depth</code>. A special case here is that <strong>helper function</strong>
+may also access stack, this is checked by <code class="language-plaintext highlighter-rouge">check_helper_mem_access</code>
+when a helper call occurs.</p>
+
+<p>As for <code class="language-plaintext highlighter-rouge">PTR_TO_MAP_KEY</code>, it is checked via <code class="language-plaintext highlighter-rouge">check_mem_region_access()</code> and write
+to it is forbidden.</p>
+
+<p><strong>Remark IV</strong> All above types and <code class="language-plaintext highlighter-rouge">PTR_TO_MAP_VALUE</code> is checked by <code class="language-plaintext highlighter-rouge">check_mem_access()</code>.</p>
+
+<h2 id="map-access-tracking">Map access tracking</h2>
+
+<p><code class="language-plaintext highlighter-rouge">check_mem_access</code> is still in charge of checking <code class="language-plaintext highlighter-rouge">PTR_TO_MAP_VALUE</code>. Just with
+a few additional steps.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">check_mem_access()</code> checks if it is leaking pointers (W &amp; is_ptr) and access types.</li>
+  <li><code class="language-plaintext highlighter-rouge">check_map_access_type()</code> checks if this access is allowed (R/W).</li>
+  <li><code class="language-plaintext highlighter-rouge">check_map_access()</code> checks if there exists spinlock or timer (both are
+  forbidden via direct access)</li>
+  <li>If this access is read-only and the pointer is known (indicated by <code class="language-plaintext highlighter-rouge">tnum</code>),
+  then this register is marked as a known <code class="language-plaintext highlighter-rouge">SCALAR_VALUE</code>.</li>
+  <li>Otherwise, it is tracked as an unknown register.</li>
+</ul>
+
+<p><strong>Remark V</strong> <code class="language-plaintext highlighter-rouge">CONST_MAP_PTR</code> is the pointer to the map structure, it may only
+be loaded via <code class="language-plaintext highlighter-rouge">BPF_LD</code> with a non-standard 64-bit immediate. It is used in functions
+like <code class="language-plaintext highlighter-rouge">bpf_map_lookup_elem()</code> as its arguments to retrieve map element.</p>
 
  <div class="post_list">
 
