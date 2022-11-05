@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <!-- multi-device width -->
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <!-- site description -->
+    
+    <meta content="Chisel 介绍" name="description"/>
+    <!-- referer for 3rd-part images-->
+    <meta content="no-referrer" name="referrer"/>
+    <!-- title -->
+    <title>
+        
+            搭建自己的 CPU / Chisel 介绍
+        
+    </title>
+    <!-- icon -->
+    <link href="http://localhost:4000/src/assets/img/favicon.ico" rel="shortcut icon bookmark" type="image/x-icon"/>
+    <!-- global stylesheet -->
+    <link rel="stylesheet" href="http://localhost:4000/src/assets/css/main.css" type="text/css"/>
+    <!-- fa 5.9.0 -->
+    <link rel="stylesheet" href="http://localhost:4000/src/assets/css/fa.min.css" type="text/css"/>
+    <!-- global script -->
+    <script src="http://localhost:4000/src/assets/js/main.js" async></script>
+    <!-- mathjax 2.7.5 -->
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { 
+        linebreaks: { automatic: true }
+      },
+      SVG: { 
+        linebreaks: { automatic: true } 
+      }
+    });
+    </script>
+    <!-- mermaid 8.11.5-->
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.11.5/mermaid.min.js"></script>
+    
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>搭建自己的 CPU / Chisel 介绍 | jwnhy Blog</title>
+<meta name="generator" content="Jekyll v4.2.2" />
+<meta property="og:title" content="搭建自己的 CPU / Chisel 介绍" />
+<meta name="author" content="jwnhy" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Chisel 介绍" />
+<meta property="og:description" content="Chisel 介绍" />
+<link rel="canonical" href="http://localhost:4000/cpu/intro/" />
+<meta property="og:url" content="http://localhost:4000/cpu/intro/" />
+<meta property="og:site_name" content="jwnhy Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-11-05T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="搭建自己的 CPU / Chisel 介绍" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@jwnhy" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jwnhy"},"dateModified":"2022-11-05T00:00:00+08:00","datePublished":"2022-11-05T00:00:00+08:00","description":"Chisel 介绍","headline":"搭建自己的 CPU / Chisel 介绍","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/cpu/intro/"},"url":"http://localhost:4000/cpu/intro/"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-46D8C8RCCZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-46D8C8RCCZ');
+</script>
+
+  <body class="page">
+    <!-- background animations -->
+<div class="div_bg">
+    <canvas id="c"></canvas>
+</div>
+<script>
+var c = document.getElementById("c");
+var ctx = c.getContext("2d");
+c.height = window.innerHeight;
+c.width = window.innerWidth;
+var txts = "ABCFGHKLMNPQRSVWXYZabcdefghijklmnopqrstuvwxyz@#$%&*+-;/[]<>~";
+txts = txts.split("");
+var font_size = 12;
+var columns = c.width / font_size;
+var drops = [];
+for (var x = 0; x < columns; x++) drops[x] = 1;
+
+function draw() {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillRect(0, 0, c.width, c.height);
+  ctx.fillStyle = "#490";
+  ctx.font = font_size + "px arial";
+  for (var i = 0; i < drops.length; i++) {
+    var text = txts[Math.floor(Math.random() * txts.length)];
+    ctx.fillText(text, i * font_size, drops[i] * font_size);
+    if (drops[i] * font_size > c.height || Math.random() > 0.98) drops[i] = 0;
+    drops[i]++;
+  }
+}
+setInterval(draw, 20);
+</script>
+    <!-- collection list, shown by click "archive" buttom in header -->
+<div class="collection_list_container"  id="the_collection_list">
+<div class="collection_list_background"  onclick="close_collection_list()"></div>
+<div class="collection_list" onload="none">
+    <div class="collection_list_header">
+        <!-- TODO: search post -->
+                                            <!-- <a class="search_btn">
+      <i class="fa fa-search"> Search</i>
+    </a>
+    &nbsp; -->
+        <table class="collection_list_header_title">
+            <tr>
+                <td>Archive:</td>
+                <td id="clh_title"></td>
+            </tr>
+        </table>
+        <div class="close_btn" onclick="close_collection_list()">
+            <a class="close_btn_icon">
+                <i class="fa fa-times"></i>
+            </a>
+        </div>
+    </div>
+    <div class="collection_name_list">
+        <table class="vertical_center_table">
+            <tr>
+                <td>
+                    <ul>
+                        <!-- show all collections -->
+                        <li>
+                            <a class="a_collection_label" onclick="show_collection('all')">All
+                            </a>
+                        </li>
+                        <!-- show a simple collection -->
+                        
+                            
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('system')">
+                                                
+                                                    system
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('misc')">
+                                                
+                                                    Misc
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('programming_language')">
+                                                
+                                                    Programming Language
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('posts')">
+                                                
+                                                    posts
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('cpu')">
+                                                
+                                                    Build Your Own CPU
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                            
+                        
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="posts_by_cate">
+        <!-- post list in all collections -->
+        <div class="post_list_in_1_collection" id="all">
+            <table class="vertical_center_table">
+                <tr>
+                    <td>
+                        <ul>
+                            
+                                
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    system
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/toolchain/">RISC-V 工具链 & QEMU 虚拟机</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/rvbt/">RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/rt0/">Coffer 移植哪吒 D1 开发板小记</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/pmp/">RISC-V PMP 测试与抽象</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/linux_d1/">Coffer 引导 Linux 与 RISC-V 定时器的坑</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/lkd1/">LKD 读书笔记 Part 1</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/lkd2/">LKD 读书笔记 Part 2</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/etm-db410c/">Activate CoreSight on DragonBoard 410c</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/Hash-checker-0x01/">f0rizen's Hash checker 0x01</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/eBPF_CVE/">eBPF CVE 分析</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/system/ebpf_pointer/">Pointers in BPF program</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    Misc
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/misc/ad_problem/">一道有趣的面试题，广告推送问题</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    Programming Language
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/programming_language/lf-tactics/">常见 More Basic Tactics</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/programming_language/lf-conclusion/">逻辑基础小结</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/programming_language/lf-hoare/">Hoare 逻辑</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    posts
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/writing-a-unikernel-in-rust/">Planning to Write a Unikernel in Rust</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    Build Your Own CPU
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/cpu/intro/">搭建自己的 CPU / Chisel 介绍</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                
+                            
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- post list in a collection -->
+        
+            <div class="post_list_in_1_collection" id="cpu">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/cpu/intro/">搭建自己的 CPU / Chisel 介绍</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="misc">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/misc/ad_problem/">一道有趣的面试题，广告推送问题</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="posts">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/writing-a-unikernel-in-rust/">Planning to Write a Unikernel in Rust</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="programming_language">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/programming_language/lf-tactics/">常见 More Basic Tactics</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/programming_language/lf-conclusion/">逻辑基础小结</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/programming_language/lf-hoare/">Hoare 逻辑</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="system">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/toolchain/">RISC-V 工具链 & QEMU 虚拟机</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/rvbt/">RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/rt0/">Coffer 移植哪吒 D1 开发板小记</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/pmp/">RISC-V PMP 测试与抽象</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/linux_d1/">Coffer 引导 Linux 与 RISC-V 定时器的坑</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/lkd1/">LKD 读书笔记 Part 1</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/lkd2/">LKD 读书笔记 Part 2</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/etm-db410c/">Activate CoreSight on DragonBoard 410c</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/Hash-checker-0x01/">f0rizen's Hash checker 0x01</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/eBPF_CVE/">eBPF CVE 分析</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/system/ebpf_pointer/">Pointers in BPF program</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+    </div>
+</div>
+</div>
+    <div class="container" id="ctner">
+       <div class="header">
+  <table class="vertical_center_table">
+    <tr>
+      <td>
+        <nav class="nav_bar">
+          <ul>
+            <!-- left header -->
+            <li class="li_left">
+              <!-- open collection tree -->
+              
+              <a class="header_btn" onclick="open_collection_list()">
+                <i class="fa btn_icon fa-bars">
+                  
+                  <p class="btn_text">Archives</p>
+                  
+                </i>
+              </a>
+              
+              <!-- home -->
+              
+              <a class="header_btn" href="http://localhost:4000">
+                <i class="fa btn_icon fa-home">
+                  
+                  <p class="btn_text">Home</p>
+                  
+                </i>
+              </a>
+              
+              <!-- maximize -->
+              
+              <a class="header_btn" id="mxmz_btn" onclick="toggle_maximize()">
+                <i class="fa btn_icon fa-window-maximize">
+                  
+                  <p class="btn_text" id="mxmz_text">Maximize</p>
+                  
+                </i>
+              </a>
+              
+              <!-- access token -->
+              
+            </li>
+            <!-- right header -->
+            <span class="span_right">
+              
+              <!-- scroll up -->
+              <a class="header_btn" onclick="scroll_percentage(-0.88)">
+                <i class="fa btn_icon fa-backward">
+                  
+                  <p class="btn_text">Prev</p>
+                  
+                </i>
+              </a>
+              <!-- scroll down -->
+              <a class="header_btn" onclick="scroll_percentage(0.88)">
+                <i class="fa btn_icon fa-forward">
+                  
+                  <p class="btn_text">Next</p>
+                  
+                </i>
+              </a>
+              <!-- popup table of content -->
+              <a class="header_btn popup_btn" onclick="toggle_toc()">
+                <i class="fa btn_icon fa-list">
+                  
+                  <p class="btn_text">Content</p>
+                  
+                </i>
+              </a>
+              
+            </span>
+          </ul>
+        </nav>
+        <!-- <hr /> -->
+      </td>
+    </tr>
+  </table>
+</div>
+<!-- table of content -->
+
+<div class="div_toc toc" id="popup_toc">
+  
+  <!-- generate toc -->
+  <ul id="ul_toc" class="ul_toc">
+  <li><a href="#chisel-介绍">Chisel 介绍</a></li>
+  <li><a href="#本文介绍">本文介绍</a></li>
+  <li><a href="#chisel-构建系统">Chisel 构建系统</a></li>
+  <li><a href="#目录结构">目录结构</a></li>
+  <li><a href="#hello-chisel">Hello Chisel</a></li>
+  <li><a href="#hello-quartus">Hello Quartus</a>
+    <ul>
+      <li><a href="#创建项目">创建项目</a></li>
+      <li><a href="#针脚分配">针脚分配</a></li>
+      <li><a href="#综合与烧写">综合与烧写</a></li>
+    </ul>
+  </li>
+</ul>
+</div>
+
+<!-- toggle maximize -->
+
+<script>
+  var ctner_state = 0;
+  var ctner = document.getElementById("ctner");
+</script>
+
+<!-- encrypt and decrypt -->
+
+
+      <div class="div_article" id="div_atcl">
+        <article
+          id="main_atcl"
+          itemscope
+          itemtype="http://schema.org/BlogPosting"
+        >
+          <h1 id="搭建自己的 CPU / Chisel 介绍">搭建自己的 CPU / Chisel 介绍</h1>
+<div class="post_info">
+  <!-- author -->
+  
+  <span>
+    <i class="fa fa-user-secret"></i>
+    jwnhy
+  </span>
+  
+  <!-- date -->
+  
+  <span>
+    <i class="fa fa-calendar"></i>
+    Nov 05, 2022
+  </span>
+  
+  <!-- category -->
+  
+</div>
+<!-- abstract -->
+
+
+<br />
+<h2 id="chisel-介绍">Chisel 介绍</h2>
+
+<p>Chisel 是一个通过 Scala 语言生成 Verilog 代码，然后再通过 FPGA 工具写入板子。
+Chisel 是 Scala 的开源项目，而 FPGA 工具 Vivado 与 Quartus 则一般是由 Xilinx 和 Intel 等 FPGA 板卡厂商提供，并非开源。
+有一个被称为 F4PGA 的开源项目意图提供开源工具链替代 Vivado 与 Quartus，目前支持的板卡非常有限。</p>
+
+<pre><code class="language-mermaid">graph LR;
+Chisel--&gt;Verilog--&gt;Quartus/Vivado--&gt;FPGABoard;
+</code></pre>
+
+<h2 id="本文介绍">本文介绍</h2>
+
+<p>本文旨在记录自己学习 FPGA 编程的过程，我之前只有软件设计的基础，对 RISC-V 指令集较为了解。
+对硬件知识例如数字电路，时序逻辑等则是一无所知。之前了解到有一本基于 Chisel 搭建 CPU 的书籍，可惜只有日文版。
+这只是爱好性质的练习，但会尽力在最后做到一个能够 Work 的 RISC-V CPU 原型。</p>
+
+<ol>
+  <li>主要参考书籍 <a href="http://www.imm.dtu.dk/~masca/chisel-book.pdf">Digital Design with Chisel</a></li>
+  <li>FPGA 板卡 <a href="https://www.terasic.com.tw/cgi-bin/page/archive.pl?Language=Taiwan&amp;CategoryNo=235&amp;No=1059">DE10 Lite</a></li>
+  <li>FPGA 核心 MAX10M50DAF484C7G</li>
+  <li>仓库地址 <a href="https://github.com/jwnhy/ddchisel">jwnhy/ddchisel</a></li>
+</ol>
+
+<blockquote>
+  <p>FPGA 板卡不一定非要是同款，只要有类似器件即可，需要在 Pin Assignment 阶段根据手册重新设置针脚映射。</p>
+</blockquote>
+
+<h2 id="chisel-构建系统">Chisel 构建系统</h2>
+
+<p>Scala 使用 <code class="language-plaintext highlighter-rouge">sbt</code> (Simple Build Tool) 作为其构建系统，一个使用 Chisel 的 <code class="language-plaintext highlighter-rouge">sbt</code> 构建文件如下所示。</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// build.sbt</span>
+<span class="n">scalaVersion</span> <span class="o">:=</span> <span class="s">"2.12.13"</span>
+
+<span class="n">scalacOptions</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
+  <span class="s">"-feature"</span><span class="o">,</span>
+  <span class="s">"-language:reflectiveCalls"</span><span class="o">,</span>
+<span class="o">)</span>
+
+<span class="c1">// Chisel 3.5</span>
+<span class="nf">addCompilerPlugin</span><span class="o">(</span><span class="s">"edu.berkeley.cs"</span> <span class="o">%</span> <span class="s">"chisel3-plugin"</span> <span class="o">%</span> <span class="s">"3.5.4"</span> <span class="n">cross</span> <span class="nv">CrossVersion</span><span class="o">.</span><span class="py">full</span><span class="o">)</span>
+<span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"edu.berkeley.cs"</span> <span class="o">%%</span> <span class="s">"chiseltest"</span> <span class="o">%</span> <span class="s">"0.5.3"</span>
+<span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"edu.berkeley.cs"</span> <span class="o">%%</span> <span class="s">"chisel3"</span> <span class="o">%</span> <span class="s">"3.5.4"</span>
+</code></pre></div></div>
+
+<h2 id="目录结构">目录结构</h2>
+
+<p>由于 Scala 也是基于 JVM 的语言，继承了 Java 系列复杂的目录结构，通常一个 Chisel 项目的目录结构如下。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>project
+|   Makefile
+|   build.sbt
+|---src
+    |---main
+        |---scala
+            |   Top.scala
+            |   Module.scala
+    |---test
+        |---scala
+            |   TopTest.scala
+            |   ModuleTest.scala
+</code></pre></div></div>
+
+<h2 id="hello-chisel">Hello Chisel</h2>
+
+<p>接下来我们来看一个例子。</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Hello.scala</span>
+<span class="k">package</span> <span class="nn">hello</span>
+<span class="k">import</span> <span class="nn">chisel3._</span>
+
+<span class="k">class</span> <span class="nc">Hello</span> <span class="k">extends</span> <span class="nc">Module</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="nv">io</span> <span class="k">=</span> <span class="nc">IO</span><span class="o">(</span><span class="k">new</span> <span class="nc">Bundle</span> <span class="o">{</span>
+    <span class="k">val</span> <span class="nv">andSw</span> <span class="k">=</span> <span class="nc">Input</span><span class="o">(</span><span class="nc">UInt</span><span class="o">(</span><span class="mf">2.</span><span class="n">W</span><span class="o">))</span>
+    <span class="k">val</span> <span class="nv">andLed</span> <span class="k">=</span> <span class="nc">Output</span><span class="o">(</span><span class="nc">UInt</span><span class="o">(</span><span class="mf">1.</span><span class="n">W</span><span class="o">))</span>
+    <span class="k">val</span> <span class="nv">orSw</span> <span class="k">=</span> <span class="nc">Input</span><span class="o">(</span><span class="nc">UInt</span><span class="o">(</span><span class="mf">2.</span><span class="n">W</span><span class="o">))</span>
+    <span class="k">val</span> <span class="nv">orLed</span> <span class="k">=</span> <span class="nc">Output</span><span class="o">(</span><span class="nc">UInt</span><span class="o">(</span><span class="mf">1.</span><span class="n">W</span><span class="o">))</span>
+    <span class="k">val</span> <span class="nv">xorSw</span> <span class="k">=</span> <span class="nc">Input</span><span class="o">(</span><span class="nc">UInt</span><span class="o">(</span><span class="mf">2.</span><span class="n">W</span><span class="o">))</span>
+    <span class="k">val</span> <span class="nv">xorLed</span> <span class="k">=</span> <span class="nc">Output</span><span class="o">(</span><span class="nc">UInt</span><span class="o">(</span><span class="mf">1.</span><span class="n">W</span><span class="o">))</span>
+  <span class="o">})</span>
+  <span class="nv">io</span><span class="o">.</span><span class="py">xorLed</span> <span class="o">:=</span> <span class="nv">io</span><span class="o">.</span><span class="py">xorSw</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span> <span class="o">^</span> <span class="nv">io</span><span class="o">.</span><span class="py">xorSw</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
+  <span class="nv">io</span><span class="o">.</span><span class="py">andLed</span> <span class="o">:=</span> <span class="nv">io</span><span class="o">.</span><span class="py">andSw</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span> <span class="o">&amp;</span> <span class="nv">io</span><span class="o">.</span><span class="py">andSw</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
+  <span class="nv">io</span><span class="o">.</span><span class="py">orLed</span> <span class="o">:=</span> <span class="nv">io</span><span class="o">.</span><span class="py">orSw</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span> <span class="o">|</span> <span class="nv">io</span><span class="o">.</span><span class="py">orSw</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
+<span class="o">}</span>
+
+<span class="k">object</span> <span class="nc">Hello</span> <span class="k">extends</span> <span class="nc">App</span> <span class="o">{</span>
+  <span class="o">(</span><span class="k">new</span> <span class="nv">chisel3</span><span class="o">.</span><span class="py">stage</span><span class="o">.</span><span class="py">ChiselStage</span><span class="o">).</span><span class="py">emitVerilog</span><span class="o">(</span><span class="k">new</span> <span class="nc">Hello</span><span class="o">(),</span> <span class="nc">Array</span><span class="o">(</span><span class="s">"--target-dir"</span><span class="o">,</span> <span class="s">"generated"</span><span class="o">))</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">val io</code> 代表声明一个常量，相对应的，在 Scala 中，可以用 <code class="language-plaintext highlighter-rouge">var</code> 声明一个可以反复赋值的变量，
+这两者分别对应 Value 与 Variable。</li>
+  <li><code class="language-plaintext highlighter-rouge">IO(new Bundle {})</code>， <code class="language-plaintext highlighter-rouge">IO</code> 代表声明端口，<code class="language-plaintext highlighter-rouge">Bundle</code> 与 C 语言中的结构体类似，用于将一组值组合在一起。</li>
+  <li><code class="language-plaintext highlighter-rouge">val andSw = Input(UInt(2.W))</code>， <code class="language-plaintext highlighter-rouge">Input</code> 指明端口类型，<code class="language-plaintext highlighter-rouge">UInt</code> 表示该端口处理的为无符号整形，长度为
+<code class="language-plaintext highlighter-rouge">2.W</code> bits，值得注意的是，这里的 <code class="language-plaintext highlighter-rouge">UInt</code> 与 <code class="language-plaintext highlighter-rouge">2.W</code> 均非 Scala 自带的类型，而是用于表示硬件的类型，前者
+代表一个可综合的值，后者则是专用于表示宽度的 <code class="language-plaintext highlighter-rouge">Width</code> 类型，在这里由字面量 <code class="language-plaintext highlighter-rouge">1</code> 通过 <code class="language-plaintext highlighter-rouge">.W</code> 后缀转换而来。</li>
+  <li><code class="language-plaintext highlighter-rouge">io.xorLed := io.xorSw(0) ^ io.xorSw(1)</code>，这里的 <code class="language-plaintext highlighter-rouge">:=</code> 为重载后的运算符，被 Chisel 定义为线路间的
+连接，整个语句代表将 <code class="language-plaintext highlighter-rouge">io.xorLed</code> 与 <code class="language-plaintext highlighter-rouge">io.xorSw</code> 的两个位通过<strong>与非门</strong>连接起来。</li>
+</ul>
+
+<p>创建好目录结构后，我们只需要运行下面的指令即可令 <code class="language-plaintext highlighter-rouge">Chisel</code> 生成对应的 <code class="language-plaintext highlighter-rouge">Verilog</code> 代码。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt run
+</code></pre></div></div>
+
+<p>接下来，在 <code class="language-plaintext highlighter-rouge">generated/Hello.v</code> 中，即可看到 Chisel 生成的 Verilog 代码如下，</p>
+
+<div class="language-verilog highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="n">Hello</span><span class="p">(</span>
+  <span class="kt">input</span>        <span class="n">clock</span><span class="p">,</span>
+  <span class="kt">input</span>        <span class="n">reset</span><span class="p">,</span>
+  <span class="kt">input</span>  <span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span> <span class="n">io_andSw</span><span class="p">,</span>
+  <span class="kt">output</span>       <span class="n">io_andLed</span><span class="p">,</span>
+  <span class="kt">input</span>  <span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span> <span class="n">io_orSw</span><span class="p">,</span>
+  <span class="kt">output</span>       <span class="n">io_orLed</span><span class="p">,</span>
+  <span class="kt">input</span>  <span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span> <span class="n">io_xorSw</span><span class="p">,</span>
+  <span class="kt">output</span>       <span class="n">io_xorLed</span>
+<span class="p">);</span>
+  <span class="k">assign</span> <span class="n">io_andLed</span> <span class="o">=</span> <span class="n">io_andSw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">io_andSw</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span> <span class="c1">// @[Hello.scala 14:28]</span>
+  <span class="k">assign</span> <span class="n">io_orLed</span> <span class="o">=</span> <span class="n">io_orSw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">|</span> <span class="n">io_orSw</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span> <span class="c1">// @[Hello.scala 15:26]</span>
+  <span class="k">assign</span> <span class="n">io_xorLed</span> <span class="o">=</span> <span class="n">io_xorSw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">^</span> <span class="n">io_xorSw</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span> <span class="c1">// @[Hello.scala 13:28]</span>
+<span class="k">endmodule</span>
+</code></pre></div></div>
+
+<h2 id="hello-quartus">Hello Quartus</h2>
+
+<h3 id="创建项目">创建项目</h3>
+
+<p>有了 Verilog 代码之后，下一步就是用 Quartus 将 Verilog 代码烧录进 FPGA 开发板中。</p>
+
+<p>开启 Quartus，按照下列步骤创建新项目（也可以直接使用仓库中的 <code class="language-plaintext highlighter-rouge">.qpf</code>。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>File-&gt;New-&gt;New Quartus Prime Project-&gt;...
+</code></pre></div></div>
+
+<p>注意在创建过程中，选择正确的板卡类型 MAX10M50DAF484C7G。
+创建项目结束后，在左侧 <code class="language-plaintext highlighter-rouge">Project Navigator</code> 下拉框中，选择 Files
+，右键点击最顶层的 <code class="language-plaintext highlighter-rouge">Files</code> 并选择 <code class="language-plaintext highlighter-rouge">Add/Remove Files in Project</code>。
+<img src="https://i.imgur.com/PyWMbLZ.png" alt="Add File in Quartus" />
+在将 <code class="language-plaintext highlighter-rouge">generated/Hello.v</code> 添加到项目中之后，右键点击刚添加的文件，选择 <code class="language-plaintext highlighter-rouge">Set as a Top-Level Entity</code>，表明其为顶层实体。</p>
+
+<h3 id="针脚分配">针脚分配</h3>
+
+<p>值得注意的是，到目前为止，我们的 Chisel &amp; Verilog 程序都只定义了软件层面上的端口，
+并没有将硬件针脚和软件端口进行对应，接下来我们就要使用 Quartus Prime 进行针脚分配。</p>
+
+<p>首先输入部分，我们有 <code class="language-plaintext highlighter-rouge">io_{and,or,xor}Sw</code> 三个输入，每个输入 2 bits，我们将它们
+绑定到板子上的 6 个开关上。</p>
+
+<p>打开 DE-10 Lite 开发板的 <a href="https://www.terasic.com.tw/cgi-bin/page/archive_download.pl?Language=China&amp;No=1021&amp;FID=a13a2782811152b477e60203d34b1baakk">User Manual</a></p>
+
+<p>翻到关于 <code class="language-plaintext highlighter-rouge">Push-button、Switches、LEDs</code> 一节，找到对应的名称。</p>
+
+<p><img src="https://i.imgur.com/wSaHAeU.png" alt="开关分配图" /></p>
+
+<p>接着我们在最上方选择到 <code class="language-plaintext highlighter-rouge">Pin Planner</code>，分配对应的引脚。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Assigments-&gt;Pin Planner
+</code></pre></div></div>
+
+<p><img src="https://i.imgur.com/Q0az08t.png" alt="引脚分配" /></p>
+
+<p>为了避免重复劳动，Quartus 也提供了将引脚分配导出成 <code class="language-plaintext highlighter-rouge">.csv</code> 文件的方式，具体大家可以
+自己探索下，这里就不多讨论了。</p>
+
+<h3 id="综合与烧写">综合与烧写</h3>
+
+<p>做完这些后，对 Verilog 代码进行综合（类似于编译），点击蓝色三角形即可，或者</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Processing-&gt;Start Compliation
+</code></pre></div></div>
+
+<p>最后插入板卡，对 FPGA 进行编程。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Tools-&gt;Programmer
+</code></pre></div></div>
+
+<p><img src="https://i.imgur.com/U99vdI1.png" alt="烧写" /></p>
+
+<p>烧写结束后，应该就能够在 LED 灯上看到关于开关状态的反馈了。</p>
+
+ <div class="post_list">
+
+</div> 
+<!-- disqus -->
+<script id="dsq-count-scr" src="//project-vexed.disqus.com/count.js" async ></script>
+<div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://jwnhy.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+        </article>
+         <div class="footer">
+  <nav class="nav_bar">
+    <ul class="footer_owner_info">
+      <!-- email -->
+      
+      <a class="footer_btn" href="mailto://jwnhy0@gmail.com">
+        <i class="fa fa-envelope-square">
+          
+          <p>Email</p>
+          
+        </i>
+      </a>
+      
+      <!-- linkedin -->
+      
+      <!-- github -->
+      
+      <a class="footer_btn" href="https://github.com/jwnhy">
+        <i class="fa fa-github">
+          
+          <p>Github</p>
+          
+        </i>
+      </a>
+      
+      <!-- gitlab -->
+      
+      <!-- website -->
+      
+      <a class="footer_btn" href="">
+        <i class="fa fa-link">
+          
+          <p>Website</p>
+          
+        </i>
+      </a>
+      
+      <!-- twitter -->
+      
+      <a class="footer_btn" href="https://twitter.com/">
+        <i class="fa fa-twitter">
+          
+          <p>Twitter</p>
+          
+        </i>
+      </a>
+      
+      <!-- facebook -->
+      
+      <a class="footer_btn" href="https://www.facebook.com/">
+        <i class="fa fa-facebook">
+          
+          <p>Facebook</p>
+          
+        </i>
+      </a>
+      
+      <!-- instagram -->
+      
+      <!-- youtube -->
+      
+      <a
+        class="footer_btn"
+        href="https://www.youtube.com/user/"
+      >
+        <i class="fa fa-youtube">
+          
+          <p>Youtube</p>
+          
+        </i>
+      </a>
+      
+      <!-- steam -->
+      
+      <a
+        class="footer_btn"
+        href="https://steamcommunity.com/id/"
+      >
+        <i class="fa fa-steam">
+          
+          <p>Steam</p>
+          
+        </i>
+      </a>
+      
+      <!-- weibo -->
+      
+    </ul>
+    <!-- copyright -->
+    <ul class="footer_copyright">
+      <li class="copyright">© 2015 - 2020</li>
+      
+      <li>Designed by DeerRIDER, All Rights Reserved</li>
+      
+    </ul>
+  </nav>
+</div>
+ 
+      </div>
+    </div>
+  </body>
+  <script async src="http://localhost:4000/src/assets/js/init-mermaid.js"></script>
+</html>

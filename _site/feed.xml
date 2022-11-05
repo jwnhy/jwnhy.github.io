@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-11-05T21:07:42+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">jwnhy Blog</title><subtitle>Be humble, be better.</subtitle><entry><title type="html">Planning to Write a Unikernel in Rust</title><link href="http://localhost:4000/writing-a-unikernel-in-rust/" rel="alternate" type="text/html" title="Planning to Write a Unikernel in Rust" /><published>2022-05-02T00:00:00+08:00</published><updated>2022-05-02T00:00:00+08:00</updated><id>http://localhost:4000/writing-a-unikernel-in-rust</id><content type="html" xml:base="http://localhost:4000/writing-a-unikernel-in-rust/"><![CDATA[<h2 id="why-wrting-a-unikernel-in-rust">Why wrting a unikernel in Rust?</h2>
+
+<ol>
+  <li>I have experience in writing some toy kernel in Rust, but they kind of not
+fitting my wish, no filesystem, limited syscalls, etc.</li>
+  <li>It may be useful in cases like virtualization/TEEs.</li>
+</ol>
+
+<h2 id="what-it-consists-of">What it consists of?</h2>
+
+<ol>
+  <li>Base libaries
+    <ul>
+      <li>Memory management</li>
+      <li>Scheduler</li>
+      <li>Common syscalls</li>
+    </ul>
+  </li>
+  <li>Filesystem
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">virt-block</code> compatiable</li>
+    </ul>
+  </li>
+  <li>Network stack
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">virtio</code> compatiable</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="what-it-is">What it is?</h2>
+
+<ol>
+  <li>Running on virtualized/special machine environment</li>
+  <li>Easy compartmentalization in both <code class="language-plaintext highlighter-rouge">code</code> and <code class="language-plaintext highlighter-rouge">data</code></li>
+  <li>Small yet secure</li>
+</ol>
+
+<h2 id="what-it-is-not">What it is not?</h2>
+
+<ol>
+  <li>Chuck of drivers</li>
+  <li>Running on baremetal board</li>
+  <li>Dealing with tedious details</li>
+</ol>]]></content><author><name>jwnhy</name></author><category term="System" /><summary type="html"><![CDATA[Why wrting a unikernel in Rust?]]></summary></entry></feed>
