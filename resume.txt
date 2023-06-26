@@ -33,25 +33,17 @@ Skills
 
 Professional Experience
 --------------------------------------------------------------------------------
-December 2021 to Current
+December 2021 to 2022
 Southern University Of Science And Technology Shenzhen, Guangdong
 Research Assistant    
 > Develop system software on RISC-V platform.
 > Research security solutions on RISC-V.
 > Perform verification for system software.
 
-December 2017 to June 2021
-Southern University Of Science And Technology Shenzhen, Guangdong
-Teacher Helper    
-> Supported instructor with test administration, curriculum development 
-> and assignment grading.
-> Recorded grades for coursework and tests in online reporting system.
-
 July 2020 to August 2020
 Tencent Holdings Shenzhen, Guangdong
 Intern    
-> Created data visualization graphics, translating complex data sets 
-> into comprehensive visual representations.
+> Created data visualization graphics.
 > Developed database solutions in multiple SQL languages.
 
 Publications
