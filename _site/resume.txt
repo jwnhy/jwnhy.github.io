@@ -33,32 +33,28 @@ Skills
 
 Professional Experience
 --------------------------------------------------------------------------------
-December 2021 to Current
+December 2021 to 2022
 Southern University Of Science And Technology Shenzhen, Guangdong
 Research Assistant    
 > Develop system software on RISC-V platform.
 > Research security solutions on RISC-V.
 > Perform verification for system software.
 
-December 2017 to June 2021
-Southern University Of Science And Technology Shenzhen, Guangdong
-Teacher Helper    
-> Supported instructor with test administration, curriculum development 
-> and assignment grading.
-> Recorded grades for coursework and tests in online reporting system.
-
 July 2020 to August 2020
 Tencent Holdings Shenzhen, Guangdong
 Intern    
-> Created data visualization graphics, translating complex data sets 
-> into comprehensive visual representations.
+> Created data visualization graphics.
 > Developed database solutions in multiple SQL languages.
 
 Publications
 --------------------------------------------------------------------------------
+RingGuard: Guard io_uring with eBPF
+Wanning He, Hongyi Lu, Fengwei Zhang, Shuai Wang
+To appear in SIGCOMM 2023 Workshop on eBPF and Kernel Extensions (eBPF '23)
+
 Raven: A Novel Kernel Debugging Tool on RISC-V
-Hongyi Lu; Fengwei Zhang
-To appear in The Design Automation Conference (DAC' 22).
+Hongyi Lu, Fengwei Zhang
+In Proceedings of the 2022 Design Automation Conference (DAC' 22).
 https://compass.sustech.edu.cn/paper/raven-dac22.pdf
 
 A Novel Memory Management for RISC-V Enclaves
@@ -68,7 +64,7 @@ In Proceedings of the Hardware and Architectural Support for Security and Privac
 (HASP' 21)
 
 BadUSB-C: Revisiting BadUSB with Type-C
-Hongyi Lu; Yechang Wu; Shuqing Li; You Lin; Chaozu Zhang; Fengwei Zhang
+Hongyi Lu, Yechang Wu, Shuqing Li, You Lin, Chaozu Zhang, Fengwei Zhang
 In Proceedings of the 2021 IEEE Security and Privacy Workshops (WOOT' 21) 
 https://compass.sustech.edu.cn/paper/badusbc-woot21.pdf
 
