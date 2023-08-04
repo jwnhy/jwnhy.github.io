@@ -53,6 +53,13 @@ Similarly for macros like `p4d_index`, these dummy macros just simply
 return 0 when `p4d` is folded. This is presumably for a unified implementation
 of pagetable walking (same implementation for {3,4,5}-level paging).
 
+The following picture shows how Linux uses different structures to handle
+pagetable hierarchy, epspecially `p4d = (p4d_t*)(*pgd) + p4d_index(addr)`.
+![image.png](https://pic4.58cdn.com.cn/nowater/webim/big/n_v28cb2886a12a544cd941848d7986907e4.png)
+
+Particularly, when only 4-level paging is enabled, the `p4d_index(*)` *always*
+returns 0, that is `pgd` directly points to different `pud`.
+
 ## Practice
 
 The reason I dig into this is that I need to map an *unused* part of
@@ -65,3 +72,30 @@ thread, meaning it should be injected into `init_mm`, the address space
 of `init` process.
 
 > This design only works for 4-level paging w.o. Kernel Pagetable Isolation (KPTI).
+
+![pagetable.drawio.png](https://pic2.58cdn.com.cn/nowater/webim/big/n_v25836460d75744cb38f67e2b07ee66bdd.png)
+
+In practice here, we only care about 4-level paging, meaning `p4d`'s
+are always folded as shown in above figure.
+
+```c
+void init_x(void) {
+  /* other code */
+  top_pgd = init_mm.pgd;
+  pgd = pgd_offset_pgd(top_pgd, addr);
+  p4d = p4d_offset(pgd, addr);   // dummy transition
+
+  /* we assume 4 page level, pgd = p4d*/
+  BUG_ON(p4d != (p4d_t *)pgd);
+  nr_pgd = (MOAT_END - MOAT_START) >> 39;
+  for (i = 0; i < nr_pgd; i++) {
+    BUG_ON(!moat_pud_alloc(&init_mm, p4d, addr));
+    addr = pgd_addr_end(addr, MOAT_END);
+    pgd = pgd_offset_pgd(top_pgd, addr);
+    p4d = p4d_offset(pgd, addr); // dummy transition.
+  }
+}
+```
+
+After this function is executed, four additional `pud` are allocated,
+`pgd[504-507]` pointing to four different `pud` table.
