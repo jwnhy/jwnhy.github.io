@@ -164,7 +164,7 @@ checked program was:
 /* end */
 
  "x86_64-pc-linux-gnu-gcc -o conftest -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I.     -O2 -pipe -fno-strict-aliasing -fPIC  conftest.c  -L. -L/usr/lib64 -L. -Wl,-O1 -Wl,--as-needed -fstack-protector-strong -rdynamic -Wl,-export-dynamic -Wl,--no-as-needed      -lssl -lcrypto -lcrypto -lssl -lruby31  -lssl -lcrypto -lcrypto -lssl -lm  -lc"
-/usr/lib/gcc/x86_64-pc-linux-gnu/12/../../../../x86_64-pc-linux-gnu/bin/ld: /tmp/ccxHBPE6.o: in function `t':
+/usr/lib/gcc/x86_64-pc-linux-gnu/12/../../../../x86_64-pc-linux-gnu/bin/ld: /tmp/ccJVwq3t.o: in function `t':
 conftest.c:(.text+0x7): undefined reference to `rb_thread_blocking_region'
 collect2: error: ld returned 1 exit status
 checked program was:
@@ -328,7 +328,7 @@ checked program was:
 /* end */
 
  "x86_64-pc-linux-gnu-gcc -o conftest -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I.     -O2 -pipe -fno-strict-aliasing -fPIC  conftest.c  -L. -L/usr/lib64 -L. -Wl,-O1 -Wl,--as-needed -fstack-protector-strong -rdynamic -Wl,-export-dynamic -Wl,--no-as-needed      -lssl -lcrypto -lcrypto -lssl -lruby31  -lssl -lcrypto -lcrypto -lssl -lm  -lc"
-/usr/lib/gcc/x86_64-pc-linux-gnu/12/../../../../x86_64-pc-linux-gnu/bin/ld: /tmp/ccV1HXuY.o: in function `t':
+/usr/lib/gcc/x86_64-pc-linux-gnu/12/../../../../x86_64-pc-linux-gnu/bin/ld: /tmp/ccionBs4.o: in function `t':
 conftest.c:(.text+0x7): undefined reference to `rb_enable_interrupt'
 collect2: error: ld returned 1 exit status
 checked program was:
