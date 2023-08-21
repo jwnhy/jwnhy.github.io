@@ -1,0 +1,48 @@
+current directory: /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/3.1.0/gems/ffi-1.15.5/ext/ffi_c
+/usr/bin/ruby31 -I /usr/lib64/ruby/site_ruby/3.1.0 extconf.rb
+checking for ffi_prep_closure_loc() in -lffi... yes
+checking for ffi_prep_cif_var()... yes
+checking for ffi_raw_call()... yes
+checking for ffi_prep_raw_closure()... yes
+checking for whether -pthread is accepted as LDFLAGS... yes
+creating extconf.h
+creating Makefile
+
+current directory: /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/3.1.0/gems/ffi-1.15.5/ext/ffi_c
+make DESTDIR\= sitearchdir\=./.gem.20230706-9331-4loj7e sitelibdir\=./.gem.20230706-9331-4loj7e clean
+rm -f 
+rm -fr ffi_c.so false *.o  *.bak mkmf.log .*.time
+
+current directory: /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/3.1.0/gems/ffi-1.15.5/ext/ffi_c
+make DESTDIR\= sitearchdir\=./.gem.20230706-9331-4loj7e sitelibdir\=./.gem.20230706-9331-4loj7e
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o AbstractMemory.o -c AbstractMemory.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o ArrayType.o -c ArrayType.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o Buffer.o -c Buffer.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o Call.o -c Call.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o ClosurePool.o -c ClosurePool.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o DynamicLibrary.o -c DynamicLibrary.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o Function.o -c Function.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o FunctionInfo.o -c FunctionInfo.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o LastError.o -c LastError.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o LongDouble.o -c LongDouble.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o MappedType.o -c MappedType.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o MemoryPointer.o -c MemoryPointer.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o MethodHandle.o -c MethodHandle.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o Platform.o -c Platform.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o Pointer.o -c Pointer.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o Struct.o -c Struct.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o StructByValue.o -c StructByValue.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o StructLayout.o -c StructLayout.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o Thread.o -c Thread.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o Type.o -c Type.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o Types.o -c Types.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o Variadic.o -c Variadic.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I. -I/usr/lib64/libffi/include -DRUBY_EXTCONF_H=\"extconf.h\"    -fPIC -O2 -pipe -fno-strict-aliasing -fPIC   -o ffi.o -c ffi.c
+rm -f ffi_c.so
+x86_64-pc-linux-gnu-gcc -shared -o ffi_c.so AbstractMemory.o ArrayType.o Buffer.o Call.o ClosurePool.o DynamicLibrary.o Function.o FunctionInfo.o LastError.o LongDouble.o MappedType.o MemoryPointer.o MethodHandle.o Platform.o Pointer.o Struct.o StructByValue.o StructLayout.o Thread.o Type.o Types.o Variadic.o ffi.o -L. -L/usr/lib64 -L. -Wl,-O1 -Wl,--as-needed -fstack-protector-strong -rdynamic -Wl,-export-dynamic -Wl,--no-as-needed  -pthread -Wl,-O1 -Wl,--as-needed    -lruby31 -lffi  -lffi -lm  -lc
+
+current directory: /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/3.1.0/gems/ffi-1.15.5/ext/ffi_c
+make DESTDIR\= sitearchdir\=./.gem.20230706-9331-4loj7e sitelibdir\=./.gem.20230706-9331-4loj7e install
+/bin/mkdir -p . ./.gem.20230706-9331-4loj7e
+exit > .sitearchdir.time
+/usr/bin/install -c -m 0755 ffi_c.so ./.gem.20230706-9331-4loj7e

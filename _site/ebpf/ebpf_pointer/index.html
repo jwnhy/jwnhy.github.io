@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <!-- multi-device width -->
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <!-- site description -->
+    
+    <meta content="In BPF program, there is a type for each register, which changes and ischecked by the verification. If instruction is BPF_MOV64_REG(BPF_REG_1, BPF_REG_5),the..." name="description"/>
+    <!-- referer for 3rd-part images-->
+    <meta content="no-referrer" name="referrer"/>
+    <!-- title -->
+    <title>
+        
+            Pointers in BPF program
+        
+    </title>
+    <!-- icon -->
+    <link href="http://localhost:4000/src/assets/img/favicon.ico" rel="shortcut icon bookmark" type="image/x-icon"/>
+    <!-- global stylesheet -->
+    <link rel="stylesheet" href="http://localhost:4000/src/assets/css/main.css" type="text/css"/>
+    <!-- fa 5.9.0 -->
+    <link rel="stylesheet" href="http://localhost:4000/src/assets/css/fa.min.css" type="text/css"/>
+    <!-- global script -->
+    <script src="http://localhost:4000/src/assets/js/main.js" async></script>
+    <!-- mathjax 2.7.5 -->
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { 
+        linebreaks: { automatic: true }
+      },
+      SVG: { 
+        linebreaks: { automatic: true } 
+      }
+    });
+    </script>
+    <!-- mermaid 8.11.5-->
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.11.5/mermaid.min.js"></script>
+    
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pointers in BPF program | jwnhy Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Pointers in BPF program" />
+<meta name="author" content="jwnhy" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="In BPF program, there is a type for each register, which changes and is checked by the verification. If instruction is BPF_MOV64_REG(BPF_REG_1, BPF_REG_5), then type of R5 is copied to R1." />
+<meta property="og:description" content="In BPF program, there is a type for each register, which changes and is checked by the verification. If instruction is BPF_MOV64_REG(BPF_REG_1, BPF_REG_5), then type of R5 is copied to R1." />
+<link rel="canonical" href="http://localhost:4000/ebpf/ebpf_pointer/" />
+<meta property="og:url" content="http://localhost:4000/ebpf/ebpf_pointer/" />
+<meta property="og:site_name" content="jwnhy Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-07-12T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pointers in BPF program" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@jwnhy" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jwnhy"},"dateModified":"2022-07-12T00:00:00+08:00","datePublished":"2022-07-12T00:00:00+08:00","description":"In BPF program, there is a type for each register, which changes and is checked by the verification. If instruction is BPF_MOV64_REG(BPF_REG_1, BPF_REG_5), then type of R5 is copied to R1.","headline":"Pointers in BPF program","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/ebpf/ebpf_pointer/"},"url":"http://localhost:4000/ebpf/ebpf_pointer/"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-46D8C8RCCZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-46D8C8RCCZ');
+</script>
+
+  <body class="page">
+    <!-- background animations -->
+<div class="div_bg">
+    <canvas id="c"></canvas>
+</div>
+<script>
+var c = document.getElementById("c");
+var ctx = c.getContext("2d");
+c.height = window.innerHeight;
+c.width = window.innerWidth;
+var txts = "ABCFGHKLMNPQRSVWXYZabcdefghijklmnopqrstuvwxyz@#$%&*+-;/[]<>~";
+txts = txts.split("");
+var font_size = 12;
+var columns = c.width / font_size;
+var drops = [];
+for (var x = 0; x < columns; x++) drops[x] = 1;
+
+function draw() {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillRect(0, 0, c.width, c.height);
+  ctx.fillStyle = "#490";
+  ctx.font = font_size + "px arial";
+  for (var i = 0; i < drops.length; i++) {
+    var text = txts[Math.floor(Math.random() * txts.length)];
+    ctx.fillText(text, i * font_size, drops[i] * font_size);
+    if (drops[i] * font_size > c.height || Math.random() > 0.98) drops[i] = 0;
+    drops[i]++;
+  }
+}
+setInterval(draw, 20);
+</script>
+    <!-- collection list, shown by click "archive" buttom in header -->
+<div class="collection_list_container"  id="the_collection_list">
+<div class="collection_list_background"  onclick="close_collection_list()"></div>
+<div class="collection_list" onload="none">
+    <div class="collection_list_header">
+        <!-- TODO: search post -->
+                                            <!-- <a class="search_btn">
+      <i class="fa fa-search"> Search</i>
+    </a>
+    &nbsp; -->
+        <table class="collection_list_header_title">
+            <tr>
+                <td>Archive:</td>
+                <td id="clh_title"></td>
+            </tr>
+        </table>
+        <div class="close_btn" onclick="close_collection_list()">
+            <a class="close_btn_icon">
+                <i class="fa fa-times"></i>
+            </a>
+        </div>
+    </div>
+    <div class="collection_name_list">
+        <table class="vertical_center_table">
+            <tr>
+                <td>
+                    <ul>
+                        <!-- show all collections -->
+                        <li>
+                            <a class="a_collection_label" onclick="show_collection('all')">All
+                            </a>
+                        </li>
+                        <!-- show a simple collection -->
+                        
+                            
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('arm')">
+                                                
+                                                    arm
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('riscv')">
+                                                
+                                                    RISC-V
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('linux')">
+                                                
+                                                    linux
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('ebpf')">
+                                                
+                                                    eBPF
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('misc')">
+                                                
+                                                    Misc
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('programming_language')">
+                                                
+                                                    Programming Language
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('posts')">
+                                                
+                                                    posts
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_collection_label" onclick="show_collection('cpu')">
+                                                
+                                                    Build Your Own CPU
+                                                
+                                            </a>
+                                        </li>
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                                    
+                                
+                            
+                        
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="posts_by_cate">
+        <!-- post list in all collections -->
+        <div class="post_list_in_1_collection" id="all">
+            <table class="vertical_center_table">
+                <tr>
+                    <td>
+                        <ul>
+                            
+                                
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    arm
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/arm/etm-db410c/">Activate CoreSight on DragonBoard 410c</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    RISC-V
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/riscv/toolchain/">RISC-V 工具链 & QEMU 虚拟机</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/riscv/rvbt/">RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/riscv/rt0/">Coffer 移植哪吒 D1 开发板小记</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/riscv/pmp/">RISC-V PMP 测试与抽象</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/riscv/linux_d1/">Coffer 引导 Linux 与 RISC-V 定时器的坑</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    linux
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/linux/lkd1/">LKD 读书笔记 Part 1</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/linux/lkd2/">LKD 读书笔记 Part 2</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/linux/kernel_update/">Gentoo system/kernel update procedure</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/linux/x86_pagetable/">x86 4-level and 5-level pagetable on Linux</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/linux/kexec/">How to use `kexec` for fast reboot/crashdump.</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    eBPF
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/ebpf/eBPF_CVE/">eBPF CVE 分析</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/ebpf/ebpf_pointer/">Pointers in BPF program</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    Misc
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/misc/ad_problem/">一道有趣的面试题，广告推送问题</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/misc/Hash-checker-0x01/">f0rizen's Hash checker 0x01</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    Programming Language
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/programming_language/lf-tactics/">常见 More Basic Tactics</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/programming_language/lf-conclusion/">逻辑基础小结</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/programming_language/lf-hoare/">Hoare 逻辑</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    posts
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/writing-a-unikernel-in-rust/">Planning to Write a Unikernel in Rust</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                
+                                    
+                                        
+                                    
+                                        
+                                            <p class="h_collection_label">
+                                                
+                                                    Build Your Own CPU
+                                                
+                                            </p>
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/cpu/intro/">搭建自己的 CPU / Chisel 介绍</a>
+                                                    </li>
+                                                
+                                            
+                                                
+                                                    <li>
+                                                        <a class="a_title" href="http://localhost:4000/cpu/comb/">搭建自己的 CPU / 组合逻辑</a>
+                                                    </li>
+                                                
+                                            
+                                            <br/>
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                        
+                                    
+                                
+                            
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- post list in a collection -->
+        
+            <div class="post_list_in_1_collection" id="arm">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/arm/etm-db410c/">Activate CoreSight on DragonBoard 410c</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="cpu">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/cpu/intro/">搭建自己的 CPU / Chisel 介绍</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/cpu/comb/">搭建自己的 CPU / 组合逻辑</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="ebpf">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/ebpf/eBPF_CVE/">eBPF CVE 分析</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/ebpf/ebpf_pointer/">Pointers in BPF program</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="linux">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/linux/lkd1/">LKD 读书笔记 Part 1</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/linux/lkd2/">LKD 读书笔记 Part 2</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/linux/kernel_update/">Gentoo system/kernel update procedure</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/linux/x86_pagetable/">x86 4-level and 5-level pagetable on Linux</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/linux/kexec/">How to use `kexec` for fast reboot/crashdump.</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="misc">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/misc/ad_problem/">一道有趣的面试题，广告推送问题</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/misc/Hash-checker-0x01/">f0rizen's Hash checker 0x01</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="posts">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/writing-a-unikernel-in-rust/">Planning to Write a Unikernel in Rust</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="programming_language">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/programming_language/lf-tactics/">常见 More Basic Tactics</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/programming_language/lf-conclusion/">逻辑基础小结</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/programming_language/lf-hoare/">Hoare 逻辑</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="post_list_in_1_collection" id="riscv">
+                <table class="vertical_center_table">
+                    <tr>
+                        <td>
+                            <ul>
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/riscv/toolchain/">RISC-V 工具链 & QEMU 虚拟机</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/riscv/rvbt/">RISC-V 裸金属环境下的 Backtrace 与 Debug 辅助工具</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/riscv/rt0/">Coffer 移植哪吒 D1 开发板小记</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/riscv/pmp/">RISC-V PMP 测试与抽象</a>
+                                        </li>
+                                    
+                                
+                                    
+                                        <li>
+                                            <a class="a_title" href="http://localhost:4000/riscv/linux_d1/">Coffer 引导 Linux 与 RISC-V 定时器的坑</a>
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        
+    </div>
+</div>
+</div>
+    <div class="container" id="ctner">
+       <div class="header">
+  <table class="vertical_center_table">
+    <tr>
+      <td>
+        <nav class="nav_bar">
+          <ul>
+            <!-- left header -->
+            <li class="li_left">
+              <!-- open collection tree -->
+              
+              <a class="header_btn" onclick="open_collection_list()">
+                <i class="fa btn_icon fa-bars">
+                  
+                  <p class="btn_text">Archives</p>
+                  
+                </i>
+              </a>
+              
+              <!-- home -->
+              
+              <a class="header_btn" href="http://localhost:4000">
+                <i class="fa btn_icon fa-home">
+                  
+                  <p class="btn_text">Home</p>
+                  
+                </i>
+              </a>
+              
+              <!-- maximize -->
+              
+              <a class="header_btn" id="mxmz_btn" onclick="toggle_maximize()">
+                <i class="fa btn_icon fa-window-maximize">
+                  
+                  <p class="btn_text" id="mxmz_text">Maximize</p>
+                  
+                </i>
+              </a>
+              
+              <!-- access token -->
+              
+            </li>
+            <!-- right header -->
+            <span class="span_right">
+              
+              <!-- scroll up -->
+              <a class="header_btn" onclick="scroll_percentage(-0.88)">
+                <i class="fa btn_icon fa-backward">
+                  
+                  <p class="btn_text">Prev</p>
+                  
+                </i>
+              </a>
+              <!-- scroll down -->
+              <a class="header_btn" onclick="scroll_percentage(0.88)">
+                <i class="fa btn_icon fa-forward">
+                  
+                  <p class="btn_text">Next</p>
+                  
+                </i>
+              </a>
+              <!-- popup table of content -->
+              <a class="header_btn popup_btn" onclick="toggle_toc()">
+                <i class="fa btn_icon fa-list">
+                  
+                  <p class="btn_text">Content</p>
+                  
+                </i>
+              </a>
+              
+            </span>
+          </ul>
+        </nav>
+        <!-- <hr /> -->
+      </td>
+    </tr>
+  </table>
+</div>
+<!-- table of content -->
+
+<div class="div_toc toc" id="popup_toc">
+  
+  <!-- generate toc -->
+  <ul id="ul_toc" class="ul_toc">
+  <li><a href="#ebpf-pointer-type-list">eBPF pointer type list</a></li>
+  <li><a href="#scalar_value-tracking">SCALAR_VALUE tracking</a>
+    <ul>
+      <li><a href="#range-tracking">Range tracking</a></li>
+      <li><a href="#tristate-number-tracking">Tristate number tracking</a></li>
+    </ul>
+  </li>
+  <li><a href="#memory-access-tracking">Memory access tracking</a></li>
+  <li><a href="#map-access-tracking">Map access tracking</a></li>
+</ul>
+</div>
+
+<!-- toggle maximize -->
+
+<script>
+  var ctner_state = 0;
+  var ctner = document.getElementById("ctner");
+</script>
+
+<!-- encrypt and decrypt -->
+
+
+      <div class="div_article" id="div_atcl">
+        <article
+          id="main_atcl"
+          itemscope
+          itemtype="http://schema.org/BlogPosting"
+        >
+          <h1 id="Pointers in BPF program">Pointers in BPF program</h1>
+<div class="post_info">
+  <!-- author -->
+  
+  <span>
+    <i class="fa fa-user-secret"></i>
+    jwnhy
+  </span>
+  
+  <!-- date -->
+  
+  <span>
+    <i class="fa fa-calendar"></i>
+    Jul 12, 2022
+  </span>
+  
+  <!-- category -->
+  
+</div>
+<!-- abstract -->
+
+
+<br />
+<p>In BPF program, there is a <strong>type</strong> for each register, which changes and is
+checked by the verification. If instruction is <code class="language-plaintext highlighter-rouge">BPF_MOV64_REG(BPF_REG_1, BPF_REG_5)</code>,
+then type of <code class="language-plaintext highlighter-rouge">R5</code> is copied to <code class="language-plaintext highlighter-rouge">R1</code>.</p>
+
+<p>All register are 64-bit.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">R0</code> return register</li>
+  <li><code class="language-plaintext highlighter-rouge">R[1-5]</code> argument passing registers</li>
+  <li><code class="language-plaintext highlighter-rouge">R[6-9]</code> callee saved registers</li>
+  <li><code class="language-plaintext highlighter-rouge">R10</code> frame pointer (read-only)</li>
+</ul>
+
+<p>At the start of BPF program, <code class="language-plaintext highlighter-rouge">R1</code> contains a pointer to <code class="language-plaintext highlighter-rouge">bpf_context</code> and has
+type <code class="language-plaintext highlighter-rouge">PTR_TO_CTX</code>.</p>
+
+<h2 id="ebpf-pointer-type-list">eBPF pointer type list</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><code class="language-plaintext highlighter-rouge">NOT_INIT</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><code class="language-plaintext highlighter-rouge">SCALAR_VALUE</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><code class="language-plaintext highlighter-rouge">PTR_TO_CTX</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><code class="language-plaintext highlighter-rouge">CONST_PTR_TO_MAP</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><code class="language-plaintext highlighter-rouge">PTR_TO_MAP_VALUE</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><code class="language-plaintext highlighter-rouge">PTR_TO_STACK</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_PACKET</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_PACKET_META</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_PACKET_END</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_FLOW_KEYS</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_SOCKET</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_SOCK_COMMON</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_TCP_SOCK</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_TP_BUFFER</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_XDP_SOCK</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_BTF_ID</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><code class="language-plaintext highlighter-rouge">PTR_TO_MEM</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_BUF</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">PTR_TO_FUNC</code></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><code class="language-plaintext highlighter-rouge">PTR_TO_MAP_KEY</code></li>
+</ul>
+
+<h2 id="scalar_value-tracking">SCALAR_VALUE tracking</h2>
+
+<p>Tracking of <code class="language-plaintext highlighter-rouge">SCALAR_VALUE</code> consists of two parts, range and tristate number.
+While the former tracks the range of one scalar registers, the latter tracks
+how much knowledge does the verifier has over each <strong>bit</strong> of that register.</p>
+
+<h3 id="range-tracking">Range tracking</h3>
+
+<p><code class="language-plaintext highlighter-rouge">bpf_reg_state</code> constains the following fields.</p>
+
+<ul>
+  <li>s64 smin_value: minimum possible (s64)value</li>
+  <li>s64 smax_value: maximum possible (s64)value</li>
+  <li>u64 umin_value: minimum possible (u64)value</li>
+  <li>u64 umax_value: maximum possible (u64)value</li>
+  <li>s32 s32_min_value: minimum possible (s32)value</li>
+  <li>s32 s32_max_value: maximum possible (s32)value</li>
+  <li>u32 u32_min_value: minimum possible (u32)value</li>
+  <li>u32 u32_max_value: maximum possible (u32)value</li>
+</ul>
+
+<p>These range values is updated through verification process.
+Depending on the type of operands, these values are used in different ways.</p>
+
+<p>In <code class="language-plaintext highlighter-rouge">pointer += K</code>, where an offset scalar is added to a pointer.</p>
+
+<p>If the offset is known (a.k.a. without any unknown bit), then <code class="language-plaintext highlighter-rouge">dst_reg</code>
+directly inherits all range values of <code class="language-plaintext highlighter-rouge">src_reg</code> with a new offset
+<code class="language-plaintext highlighter-rouge">ptr_reg + off_reg-&gt;smin_val</code>.</p>
+
+<p>If the offset has any unknown bit, it goes through a deduction process.</p>
+
+<ol>
+  <li>If either signed or unsigned addition overflows, saturates it.</li>
+  <li>Deduce new values if it doesn’t overflows.</li>
+  <li>Deduce new <code class="language-plaintext highlighter-rouge">tnum</code> through <code class="language-plaintext highlighter-rouge">tnum_add(ptr_reg-&gt;var_off, off_reg-&gt;var_off)</code>.</li>
+  <li>Inherits whatever is left in <code class="language-plaintext highlighter-rouge">ptr_reg</code>.</li>
+</ol>
+
+<p>When the pointer is used in memory access, only the <code class="language-plaintext highlighter-rouge">smin_value</code> is used,
+which is <code class="language-plaintext highlighter-rouge">smin_value + off</code>.</p>
+
+<p><strong>Remark I</strong> Only <code class="language-plaintext highlighter-rouge">BPF_ADD</code> and <code class="language-plaintext highlighter-rouge">BPF_SUB</code> is allowed between pointer and scalar.</p>
+
+<p><strong>Remark II</strong> <code class="language-plaintext highlighter-rouge">tnum</code> are used to update these values in <code class="language-plaintext highlighter-rouge">__update_reg&lt;bits&gt;_bounds</code>.</p>
+
+<h3 id="tristate-number-tracking">Tristate number tracking</h3>
+
+<p><a href="https://arxiv.org/pdf/2105.05398.pdf">This paper</a> introduces a way of tracking info
+using tristate numbers in Linux, which has already been merged into the kernel.</p>
+
+<p>Tristate numbers are implemented in Linux in the following way.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">tnum</span> <span class="p">{</span>
+  <span class="n">u64</span> <span class="n">value</span><span class="p">;</span>
+  <span class="n">u64</span> <span class="n">mask</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>These contain the following meanings.</p>
+
+\[\begin{align}
+(P.v[k]=0\wedge P.m[k]=0)&amp;\triangleq P[k]=0 \\
+(P.v[k]=1\wedge P.m[k]=0)&amp;\triangleq P[k]=1 \\
+(P.v[k]=0\wedge P.m[k]=1)&amp;\triangleq P[k]=\mu
+\end{align}\]
+
+<p>This implementation of tristate number enables the verifier to perform
+abstract interpretation of arithmetic operations.
+Here is an example of <code class="language-plaintext highlighter-rouge">tnum_add(tnum a, tnum b)</code> inside Linux kernel.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">tnum</span> <span class="nf">tnum_add</span><span class="p">(</span><span class="k">struct</span> <span class="n">tnum</span> <span class="n">a</span><span class="p">,</span> <span class="k">struct</span> <span class="n">tnum</span> <span class="n">b</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">u64</span> <span class="n">sm</span><span class="p">,</span> <span class="n">sv</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">chi</span><span class="p">,</span> <span class="n">mu</span><span class="p">;</span>
+
+  <span class="n">sm</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">mask</span> <span class="o">+</span> <span class="n">b</span><span class="p">.</span><span class="n">mask</span><span class="p">;</span>
+  <span class="n">sv</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">value</span> <span class="o">+</span> <span class="n">b</span><span class="p">.</span><span class="n">value</span><span class="p">;</span>
+  <span class="n">sigma</span> <span class="o">=</span> <span class="n">sm</span> <span class="o">+</span> <span class="n">sv</span><span class="p">;</span>
+  <span class="n">chi</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">^</span> <span class="n">sv</span><span class="p">;</span>
+  <span class="n">mu</span> <span class="o">=</span> <span class="n">chi</span> <span class="o">|</span> <span class="n">a</span><span class="p">.</span><span class="n">mask</span> <span class="o">|</span> <span class="n">b</span><span class="p">.</span><span class="n">mask</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">TNUM</span><span class="p">(</span><span class="n">sv</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">mu</span><span class="p">,</span> <span class="n">mu</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>About why this works, please refer to the original paper or the following part.
+Essentially, this is about the set ${p+q | p\in \gamma(P) \wedge q\in \gamma(Q)}$.</p>
+
+<p><strong>Remark III</strong> These <code class="language-plaintext highlighter-rouge">tnum</code> are used to update bounds like <code class="language-plaintext highlighter-rouge">smin_value</code>
+only in <code class="language-plaintext highlighter-rouge">__update_reg_bounds</code>.</p>
+
+<h2 id="memory-access-tracking">Memory access tracking</h2>
+
+<p>The following applies to</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">PTR_TO_MEM</code></li>
+  <li><code class="language-plaintext highlighter-rouge">PTR_TO_STACK</code></li>
+  <li><code class="language-plaintext highlighter-rouge">PTR_TO_CTX</code></li>
+  <li><code class="language-plaintext highlighter-rouge">PTR_TO_MAP_KEY</code></li>
+</ul>
+
+<p>As BPF program does not support global variable, all shared accesses are via
+<code class="language-plaintext highlighter-rouge">struct bpf_context</code>. However, the check is complicated since it depends on
+the program type. Basically, it will go through the following steps.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">check_mem_access()</code> checks if it is leaking pointers (W &amp; is_ptr) and <code class="language-plaintext highlighter-rouge">off</code>
+  is positive, fixed and known.</li>
+  <li><code class="language-plaintext highlighter-rouge">check_ctx_access()</code> mark this access if it can be transformed into a narrower
+  context access.</li>
+  <li><code class="language-plaintext highlighter-rouge">env-&gt;ops-&gt;is_valid_access()</code> makes sure it is a valid access in range (depending
+  on type) if exists.</li>
+</ul>
+
+<p>Here is an example of <code class="language-plaintext highlighter-rouge">sk_filter_is_valid_access</code></p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span> <span class="n">bool</span> <span class="nf">sk_filter_is_valid_access</span><span class="p">(</span><span class="kt">int</span> <span class="n">off</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span>
+              <span class="k">enum</span> <span class="n">bpf_access_type</span> <span class="n">type</span><span class="p">,</span>
+              <span class="k">const</span> <span class="k">struct</span> <span class="n">bpf_prog</span> <span class="o">*</span><span class="n">prog</span><span class="p">,</span>
+              <span class="k">struct</span> <span class="n">bpf_insn_access_aux</span> <span class="o">*</span><span class="n">info</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">switch</span> <span class="p">(</span><span class="n">off</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">case</span> <span class="n">bpf_ctx_range</span><span class="p">(</span><span class="k">struct</span> <span class="n">__sk_buff</span><span class="p">,</span> <span class="n">tc_classid</span><span class="p">):</span>
+  <span class="k">case</span> <span class="n">bpf_ctx_range</span><span class="p">(</span><span class="k">struct</span> <span class="n">__sk_buff</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+  <span class="k">case</span> <span class="n">bpf_ctx_range</span><span class="p">(</span><span class="k">struct</span> <span class="n">__sk_buff</span><span class="p">,</span> <span class="n">data_meta</span><span class="p">):</span>
+  <span class="k">case</span> <span class="n">bpf_ctx_range</span><span class="p">(</span><span class="k">struct</span> <span class="n">__sk_buff</span><span class="p">,</span> <span class="n">data_end</span><span class="p">):</span>
+  <span class="k">case</span> <span class="n">bpf_ctx_range_till</span><span class="p">(</span><span class="k">struct</span> <span class="n">__sk_buff</span><span class="p">,</span> <span class="n">family</span><span class="p">,</span> <span class="n">local_port</span><span class="p">):</span>
+  <span class="k">case</span> <span class="n">bpf_ctx_range</span><span class="p">(</span><span class="k">struct</span> <span class="n">__sk_buff</span><span class="p">,</span> <span class="n">tstamp</span><span class="p">):</span>
+  <span class="k">case</span> <span class="n">bpf_ctx_range</span><span class="p">(</span><span class="k">struct</span> <span class="n">__sk_buff</span><span class="p">,</span> <span class="n">wire_len</span><span class="p">):</span>
+  <span class="k">case</span> <span class="n">bpf_ctx_range</span><span class="p">(</span><span class="k">struct</span> <span class="n">__sk_buff</span><span class="p">,</span> <span class="n">hwtstamp</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">type</span> <span class="o">==</span> <span class="n">BPF_WRITE</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">off</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">bpf_ctx_range_till</span><span class="p">(</span><span class="k">struct</span> <span class="n">__sk_buff</span><span class="p">,</span> <span class="n">cb</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cb</span><span class="p">[</span><span class="mi">4</span><span class="p">]):</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="nl">default:</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="n">bpf_skb_is_valid_access</span><span class="p">(</span><span class="n">off</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">type</span><span class="p">,</span> <span class="n">prog</span><span class="p">,</span> <span class="n">info</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Similar checks is performed to <code class="language-plaintext highlighter-rouge">PTR_TO_MEM</code> with <code class="language-plaintext highlighter-rouge">check_mem_region_access()</code> and
+<code class="language-plaintext highlighter-rouge">__check_mem_access</code>.</p>
+
+<p>With <code class="language-plaintext highlighter-rouge">PTR_TO_STACK</code>, the verifier checks if it’s inbound with <code class="language-plaintext highlighter-rouge">check_stack_access_within_bounds</code>
+and then <code class="language-plaintext highlighter-rouge">update_stack_depth</code>. A special case here is that <strong>helper function</strong>
+may also access stack, this is checked by <code class="language-plaintext highlighter-rouge">check_helper_mem_access</code>
+when a helper call occurs.</p>
+
+<p>As for <code class="language-plaintext highlighter-rouge">PTR_TO_MAP_KEY</code>, it is checked via <code class="language-plaintext highlighter-rouge">check_mem_region_access()</code> and write
+to it is forbidden.</p>
+
+<p><strong>Remark IV</strong> All above types and <code class="language-plaintext highlighter-rouge">PTR_TO_MAP_VALUE</code> is checked by <code class="language-plaintext highlighter-rouge">check_mem_access()</code>.</p>
+
+<h2 id="map-access-tracking">Map access tracking</h2>
+
+<p><code class="language-plaintext highlighter-rouge">check_mem_access</code> is still in charge of checking <code class="language-plaintext highlighter-rouge">PTR_TO_MAP_VALUE</code>. Just with
+a few additional steps.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">check_mem_access()</code> checks if it is leaking pointers (W &amp; is_ptr) and access types.</li>
+  <li><code class="language-plaintext highlighter-rouge">check_map_access_type()</code> checks if this access is allowed (R/W).</li>
+  <li><code class="language-plaintext highlighter-rouge">check_map_access()</code> checks if there exists spinlock or timer (both are
+  forbidden via direct access)</li>
+  <li>If this access is read-only and the pointer is known (indicated by <code class="language-plaintext highlighter-rouge">tnum</code>),
+  then this register is marked as a known <code class="language-plaintext highlighter-rouge">SCALAR_VALUE</code>.</li>
+  <li>Otherwise, it is tracked as an unknown register.</li>
+</ul>
+
+<p><strong>Remark V</strong> <code class="language-plaintext highlighter-rouge">CONST_MAP_PTR</code> is the pointer to the map structure, it may only
+be loaded via <code class="language-plaintext highlighter-rouge">BPF_LD</code> with a non-standard 64-bit immediate. It is used in functions
+like <code class="language-plaintext highlighter-rouge">bpf_map_lookup_elem()</code> as its arguments to retrieve map element.</p>
+
+ <div class="post_list">
+
+</div> 
+<!-- disqus -->
+<script id="dsq-count-scr" src="//project-vexed.disqus.com/count.js" async ></script>
+<div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://jwnhy.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+        </article>
+         <div class="footer">
+  <nav class="nav_bar">
+    <ul class="footer_owner_info">
+      <!-- email -->
+      
+      <a class="footer_btn" href="mailto://jwnhy0@gmail.com">
+        <i class="fa fa-envelope-square">
+          
+          <p>Email</p>
+          
+        </i>
+      </a>
+      
+      <!-- linkedin -->
+      
+      <!-- github -->
+      
+      <a class="footer_btn" href="https://github.com/jwnhy">
+        <i class="fa fa-github">
+          
+          <p>Github</p>
+          
+        </i>
+      </a>
+      
+      <!-- gitlab -->
+      
+      <!-- website -->
+      
+      <a class="footer_btn" href="">
+        <i class="fa fa-link">
+          
+          <p>Website</p>
+          
+        </i>
+      </a>
+      
+      <!-- twitter -->
+      
+      <a class="footer_btn" href="https://twitter.com/">
+        <i class="fa fa-twitter">
+          
+          <p>Twitter</p>
+          
+        </i>
+      </a>
+      
+      <!-- facebook -->
+      
+      <a class="footer_btn" href="https://www.facebook.com/">
+        <i class="fa fa-facebook">
+          
+          <p>Facebook</p>
+          
+        </i>
+      </a>
+      
+      <!-- instagram -->
+      
+      <!-- youtube -->
+      
+      <a
+        class="footer_btn"
+        href="https://www.youtube.com/user/"
+      >
+        <i class="fa fa-youtube">
+          
+          <p>Youtube</p>
+          
+        </i>
+      </a>
+      
+      <!-- steam -->
+      
+      <a
+        class="footer_btn"
+        href="https://steamcommunity.com/id/"
+      >
+        <i class="fa fa-steam">
+          
+          <p>Steam</p>
+          
+        </i>
+      </a>
+      
+      <!-- weibo -->
+      
+    </ul>
+    <!-- copyright -->
+    <ul class="footer_copyright">
+      <li class="copyright">© 2015 - 2020</li>
+      
+      <li>Designed by DeerRIDER, All Rights Reserved</li>
+      
+    </ul>
+  </nav>
+</div>
+ 
+      </div>
+    </div>
+  </body>
+  <script async src="http://localhost:4000/src/assets/js/init-mermaid.js"></script>
+</html>

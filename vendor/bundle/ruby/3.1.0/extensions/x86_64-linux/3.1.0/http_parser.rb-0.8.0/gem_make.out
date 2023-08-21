@@ -1,0 +1,21 @@
+current directory: /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/3.1.0/gems/http_parser.rb-0.8.0/ext/ruby_http_parser
+/usr/bin/ruby31 -I /usr/lib64/ruby/site_ruby/3.1.0 extconf.rb
+creating Makefile
+
+current directory: /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/3.1.0/gems/http_parser.rb-0.8.0/ext/ruby_http_parser
+make DESTDIR\= sitearchdir\=./.gem.20230706-9331-p4uhct sitelibdir\=./.gem.20230706-9331-p4uhct clean
+rm -f 
+rm -fr ruby_http_parser.so false *.o  *.bak mkmf.log .*.time
+
+current directory: /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/3.1.0/gems/http_parser.rb-0.8.0/ext/ruby_http_parser
+make DESTDIR\= sitearchdir\=./.gem.20230706-9331-p4uhct sitelibdir\=./.gem.20230706-9331-p4uhct
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I.   -fPIC -O2 -pipe -fno-strict-aliasing -fPIC -I"/home/john/documents/jwnhy.github.io/vendor/bundle/ruby/3.1.0/gems/http_parser.rb-0.8.0/ext/ruby_http_parser"  -o ruby_http_parser.o -c ruby_http_parser.c
+x86_64-pc-linux-gnu-gcc -I. -I/usr/include/ruby-3.1.0/x86_64-linux -I/usr/include/ruby-3.1.0/ruby/backward -I/usr/include/ruby-3.1.0 -I.   -fPIC -O2 -pipe -fno-strict-aliasing -fPIC -I"/home/john/documents/jwnhy.github.io/vendor/bundle/ruby/3.1.0/gems/http_parser.rb-0.8.0/ext/ruby_http_parser"  -o ryah_http_parser.o -c ryah_http_parser.c
+rm -f ruby_http_parser.so
+x86_64-pc-linux-gnu-gcc -shared -o ruby_http_parser.so ruby_http_parser.o ryah_http_parser.o -L. -L/usr/lib64 -L. -Wl,-O1 -Wl,--as-needed -fstack-protector-strong -rdynamic -Wl,-export-dynamic -Wl,--no-as-needed -Wl,-O1 -Wl,--as-needed    -lruby31  -lm  -lc
+
+current directory: /home/john/documents/jwnhy.github.io/vendor/bundle/ruby/3.1.0/gems/http_parser.rb-0.8.0/ext/ruby_http_parser
+make DESTDIR\= sitearchdir\=./.gem.20230706-9331-p4uhct sitelibdir\=./.gem.20230706-9331-p4uhct install
+/bin/mkdir -p . ./.gem.20230706-9331-p4uhct
+exit > .sitearchdir.time
+/usr/bin/install -c -m 0755 ruby_http_parser.so ./.gem.20230706-9331-p4uhct
