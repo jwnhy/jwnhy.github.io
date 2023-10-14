@@ -29,7 +29,7 @@ Here is my [resume](../resume.txt).
 ## What have I done? (non-selected publications)
 
 - [Detecting GDB/LLDB bugs with differential testing (18 bugs found!)](./#)
-- [Securing io_uring with eBPF (SIGCOMM eBPF '23)](./#)
+- [Securing io_uring with eBPF (SIGCOMM eBPF '23)](./papers/ringguard-ebpf23.pdf)
 - [A Kernel Debugger called Raven (DAC '22)](./papers/raven-dac22.pdf)
 - [An Exciting Attack abusing USB-C (WOOT '21)](./papers/badusbc-woot21.pdf) with
 [CVE-2021-22325](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-22325)
@@ -44,3 +44,6 @@ and some other community works.
 ## Rejections I've got
 
 - USENIX Security '23 R2 Reject
+- ASPLOS '24 Reject
+- S&P '24 Reject
+- SIGMETRIC '24 Reject
