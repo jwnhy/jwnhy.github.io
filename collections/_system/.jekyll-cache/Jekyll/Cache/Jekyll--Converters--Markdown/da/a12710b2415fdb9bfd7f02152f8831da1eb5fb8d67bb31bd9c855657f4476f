@@ -1,0 +1,83 @@
+I"æ<p>In BPF program, there is a <strong>type</strong> for each register, which changes and is
+checked by the verification. If instruction is <code class="language-plaintext highlighter-rouge">BPF_MOV64_REG(BPF_REG_1, BPF_REG_5)</code>,
+then type of <code class="language-plaintext highlighter-rouge">R5</code> is copied to <code class="language-plaintext highlighter-rouge">R1</code>.</p>
+
+<p>All register are 64-bit.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">R0</code> return register</li>
+  <li><code class="language-plaintext highlighter-rouge">R[1-5]</code> argument passing registers</li>
+  <li><code class="language-plaintext highlighter-rouge">R[6-9]</code> callee saved registers</li>
+  <li><code class="language-plaintext highlighter-rouge">R10</code> frame pointer (read-only)</li>
+</ul>
+
+<p>At the start of BPF program, <code class="language-plaintext highlighter-rouge">R1</code> contains a pointer to <code class="language-plaintext highlighter-rouge">bpf_context</code> and has
+type <code class="language-plaintext highlighter-rouge">PTR_TO_CTX</code>.</p>
+
+<h2 id="scalar_value-tracking">SCALAR_VALUE tracking</h2>
+
+<p>Tracking of <code class="language-plaintext highlighter-rouge">SCALAR_VALUE</code> consists of two parts, range and tristate number.
+While the former tracks the range of one scalar registers, the latter tracks
+how much knowledge does the verifier has over each <strong>bit</strong> of that register.</p>
+
+<h3 id="range-tracking">Range tracking</h3>
+
+<p><code class="language-plaintext highlighter-rouge">bpf_reg_state</code> constains the following fields.</p>
+
+<ul>
+  <li>s64 smin_value: minimum possible (s64)value</li>
+  <li>s64 smax_value: maximum possible (s64)value</li>
+  <li>u64 umin_value: minimum possible (u64)value</li>
+  <li>u64 umax_value: maximum possible (u64)value</li>
+  <li>s32 s32_min_value: minimum possible (s32)value</li>
+  <li>s32 s32_max_value: maximum possible (s32)value</li>
+  <li>u32 u32_min_value: minimum possible (u32)value</li>
+  <li>u32 u32_max_value: maximum possible (u32)value</li>
+</ul>
+
+<p>These range values is updated through verification process.
+Depending on the type of operands, these values are used in different ways.</p>
+
+<p>In <code class="language-plaintext highlighter-rouge">pointer += K</code>, where an offset scalar is added to a pointer.</p>
+
+<p>If the offset is known (a.k.a. without any unknown bit), then <code class="language-plaintext highlighter-rouge">dst_reg</code>
+directly inherits all range values of <code class="language-plaintext highlighter-rouge">src_reg</code> with a new offset
+<code class="language-plaintext highlighter-rouge">ptr_reg + off_reg-&gt;smin_val</code>.</p>
+
+<p>If the offset has any unknown bit, it goes through a deduction process.</p>
+
+<ol>
+  <li>If either signed or unsigned addition overflows, saturates it.</li>
+  <li>Deduce new values if it doesnâ€™t overflows.</li>
+  <li>Deduce new <code class="language-plaintext highlighter-rouge">tnum</code> through <code class="language-plaintext highlighter-rouge">tnum_add(ptr_reg-&gt;var_off, off_reg-&gt;var_off)</code>.</li>
+  <li>Inherits whatever is left in <code class="language-plaintext highlighter-rouge">ptr_reg</code>.</li>
+</ol>
+
+<p>When the pointer is used in memory access, only the <code class="language-plaintext highlighter-rouge">smin_value</code> is used,
+which is <code class="language-plaintext highlighter-rouge">smin_value + off</code>.</p>
+
+<p><strong>Remark I</strong> Only <code class="language-plaintext highlighter-rouge">BPF_ADD</code> and <code class="language-plaintext highlighter-rouge">BPF_SUB</code> is allowed between pointer and scalar.</p>
+
+<p><strong>Remark II</strong> <code class="language-plaintext highlighter-rouge">tnum</code> are used to update these values in <code class="language-plaintext highlighter-rouge">__update_reg&lt;bits&gt;_bounds</code>.</p>
+
+<h3 id="tristate-number-tracking">Tristate number tracking</h3>
+
+<p><a href="https://arxiv.org/pdf/2105.05398.pdf">This paper</a> introduces a way of tracking info
+using tristate numbers in Linux, which has already been merged into the kernel.</p>
+
+<p>Tristate numbers are implemented in Linux in the following way.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">tnum</span> <span class="p">{</span>
+  <span class="n">u64</span> <span class="n">value</span><span class="p">;</span>
+  <span class="n">u64</span> <span class="n">mask</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>These contains the following meanings.</p>
+
+\[\begin{align}
+(P.v[k]=0\wedge P.m[k]=0)&amp;\triangleq P[k]=0 \\
+(P.v[k]=1\wedge P.m[k]=0)&amp;\triangleq P[k]=1 \\
+(P.v[k]=0\wedge P.m[k]=1)&amp;\triangleq P[k]=?
+\end{align}\]
+:ET
