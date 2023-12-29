@@ -1020,7 +1020,8 @@ setInterval(draw, 20);
   <li><a href="#last-resort-official-image">Last resort: official image</a>
     <ul>
       <li><a href="#issue-i-docker---privilege--sys-and-chroot">Issue I: docker –privilege , /sys and chroot</a></li>
-      <li><a href="#issue-ii-handling-dependencies-of-deb-packages">Issue II: Handling dependencies of .deb packages</a></li>
+      <li><a href="#issue-ii-handling-or-in-the-dependencies-of-deb-packages">Issue II: Handling OR in the dependencies of .deb packages</a></li>
+      <li><a href="#issue-iii-weird-dependencies">Issue III: Weird dependencies</a></li>
     </ul>
   </li>
 </ul>
@@ -1138,30 +1139,33 @@ To construct a usable docker image, I need to find out what packages needed for 
 
 <p>I am not sure if these symptoms are connected or not. Anyways, after referencing some materials. This issue is resolved by using docker with <code class="language-plaintext highlighter-rouge">--privilege</code> option.</p>
 
-<h3 id="issue-ii-handling-dependencies-of-deb-packages">Issue II: Handling dependencies of <code class="language-plaintext highlighter-rouge">.deb</code> packages</h3>
+<h3 id="issue-ii-handling-or-in-the-dependencies-of-deb-packages">Issue II: Handling OR in the dependencies of <code class="language-plaintext highlighter-rouge">.deb</code> packages</h3>
 
 <p>Some packages of Orange Pi 5 require patching to have certain functionalities (e.g., GPU acceleration). Thus, they are distributed in <code class="language-plaintext highlighter-rouge">.deb</code> formats and need manual dependency management.</p>
 
-<p>The builder script uses a fairly complicated and vulnerable way of managing these packages (<code class="language-plaintext highlighter-rouge">scripts/image_helper.sh:270</code>). In China, the dependency installation often fails due to network issues.</p>
+<p>The script scans such a package via <code class="language-plaintext highlighter-rouge">dpkg-deb -I</code> to obtain its dependencies. Then, with a sequence of <code class="language-plaintext highlighter-rouge">sed</code>’s, the script extracts the dependencies in a nice format. The only problem with this pipeline is that it does not handles cases like <code class="language-plaintext highlighter-rouge">LIB_A | LIB_B</code>. The script just irresponsibly ignore such cases, which leads to errors. So I added the following to handle the OR cases, <code class="language-plaintext highlighter-rouge">scripts/image_helper.sh:297</code>.</p>
 
-<p>So I made some simplification.</p>
+<p>It’s not a perfect solution as it only keeps the former option between the OR, but it’s sufficient.</p>
 
-<ol>
-  <li>By adding <code class="language-plaintext highlighter-rouge">--allow-change-held-packages</code>, the script no longer needs to check for installed packages; I don’t expect them to work in the long term anyway.</li>
-  <li>By adding <code class="language-plaintext highlighter-rouge">-o Acquire::Retries...</code>, the script now tries harder when network issues occur.</li>
-</ol>
-
-<p>The changed script looks like this.</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for </span>package <span class="k">in</span> <span class="s2">"</span><span class="k">${</span><span class="nv">deb_packages</span><span class="p">[@]</span><span class="k">}</span><span class="s2">"</span><span class="p">;</span> <span class="k">do
-	</span>package_names+<span class="o">=(</span><span class="si">$(</span>dpkg-deb <span class="nt">-f</span> <span class="s2">"</span><span class="nv">$package</span><span class="s2">"</span> Package<span class="si">)</span><span class="o">)</span>
-
-	<span class="nv">dep_str</span><span class="o">=</span><span class="si">$(</span>dpkg-deb <span class="nt">-I</span> <span class="s2">"</span><span class="k">${</span><span class="nv">package</span><span class="k">}</span><span class="s2">"</span> | <span class="nb">grep</span> <span class="s1">'Depends'</span> | <span class="nb">sed</span> <span class="s1">'s/.*: //'</span> | <span class="nb">sed</span> <span class="s1">'s/ //g'</span> | <span class="nb">sed</span> <span class="s1">'s/([^)]*)//g'</span> | <span class="nb">sed</span> <span class="s1">'s/|[^,]*//g'</span> | <span class="nb">sed</span> <span class="s1">'s/,/ /g'</span><span class="si">)</span>
-
-	display_alert <span class="s2">"Installing Dependencies"</span> <span class="s2">"</span><span class="k">${</span><span class="nv">dep_str</span><span class="k">}</span><span class="s2">"</span>
-	<span class="nb">chroot</span> <span class="nv">$SDCARD</span> /bin/bash <span class="nt">-c</span> <span class="s2">"apt-get update; apt-get </span><span class="k">${</span><span class="nv">apt_retries</span><span class="k">}</span><span class="s2"> -y --allow-change-held-packages -qq install </span><span class="k">${</span><span class="nv">dep_str</span><span class="k">}</span><span class="s2">"</span> <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="k">${</span><span class="nv">DEST</span><span class="k">}</span><span class="s2">"</span>/<span class="k">${</span><span class="nv">LOG_SUBPATH</span><span class="k">}</span>/install.log 2&gt;&amp;1
-<span class="k">done</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for </span>element <span class="k">in</span> <span class="s2">"</span><span class="k">${</span><span class="nv">dep_array</span><span class="p">[@]</span><span class="k">}</span><span class="s2">"</span><span class="p">;</span> <span class="k">do
+    if</span> <span class="o">[[</span> <span class="nv">$element</span> <span class="o">==</span> <span class="k">*</span><span class="s2">"|"</span><span class="k">*</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+        <span class="c"># added by me to handle '|'</span>
+        package_dependencies+<span class="o">=(</span><span class="si">$(</span><span class="nb">echo</span> <span class="nv">$element</span> | <span class="nb">sed</span> <span class="s1">'s/|.*//g'</span><span class="si">)</span><span class="o">)</span>
+	<span class="k">else
+		if</span> <span class="o">!</span> find_in_array <span class="s2">"</span><span class="nv">$element</span><span class="s2">"</span> <span class="s2">"</span><span class="k">${</span><span class="nv">package_dependencies</span><span class="p">[@]</span><span class="k">}</span><span class="s2">"</span><span class="p">;</span> <span class="k">then
+			</span>package_dependencies+<span class="o">=(</span><span class="s2">"</span><span class="k">${</span><span class="nv">element</span><span class="k">}</span><span class="s2">"</span><span class="o">)</span>
+		<span class="k">fi
+	fi
+done</span>
 </code></pre></div></div>
+
+<h3 id="issue-iii-weird-dependencies">Issue III: Weird dependencies</h3>
+
+<p>Getting rid of the OR issue is not enough. Chromium has some weird dependencies that prevents installation. Anyways, I decided just installing them manually.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nb">chroot</span> <span class="nv">$SDCARD</span> /bin/bash <span class="nt">-c</span> <span class="s2">"apt-get update; apt-get -y -qq install libxtst6 xdg-utils libpipewire-0.3-0"</span> <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="k">${</span><span class="nv">DEST</span><span class="k">}</span><span class="s2">"</span>/<span class="k">${</span><span class="nv">LOG_SUBPATH</span><span class="k">}</span>/install.log 2&gt;&amp;1
+</code></pre></div></div>
+
 
  <div class="post_list">
 
