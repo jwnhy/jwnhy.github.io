@@ -1164,7 +1164,7 @@ done</span>
 
 <p>Getting rid of the OR issue is not enough. Chromium has some weird dependencies that prevents installation. Anyways, I decided just installing them manually.</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nb">chroot</span> <span class="nv">$SDCARD</span> /bin/bash <span class="nt">-c</span> <span class="s2">"apt-get update; apt-get -y -qq install libxtst6 xdg-utils libpipewire-0.3-0"</span> <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="k">${</span><span class="nv">DEST</span><span class="k">}</span><span class="s2">"</span>/<span class="k">${</span><span class="nv">LOG_SUBPATH</span><span class="k">}</span>/install.log 2&gt;&amp;1
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">chroot</span> <span class="nv">$SDCARD</span> /bin/bash <span class="nt">-c</span> <span class="s2">"apt-get update; apt-get -y -qq install libxtst6 xdg-utils libpipewire-0.3-0"</span> <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="k">${</span><span class="nv">DEST</span><span class="k">}</span><span class="s2">"</span>/<span class="k">${</span><span class="nv">LOG_SUBPATH</span><span class="k">}</span>/install.log 2&gt;&amp;1
 </code></pre></div></div>
 
 <h3 id="issue-iv-proxy">Issue IV: Proxy</h3>
