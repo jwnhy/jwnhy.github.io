@@ -1,5 +1,5 @@
 ---
-post_list: "date"
+post_list: false
 collection_list: true
 toc: true
 comment: true
@@ -34,16 +34,16 @@ Keywords: `io_uring`, `eBPF`, `DWARF`, `debugger`, `RISC-V`, `Arm`, `x86`
     *Hongyi Lu*, Zhibo Liu, Shuai Wang, and Fengwei Zhang. **FSE 2024** 
 
 - RingGuard: Guard io_uring with eBPF [[paper]](./papers/ringguard-ebpf23.pdf)  
-    Wanning He, *Hongyi Lu*, Fengwei Zhang, and Shuai Wang **SIGCOMM eBPF 2023**
+    Wanning He, *Hongyi Lu*, Fengwei Zhang, and Shuai Wang. **SIGCOMM eBPF 2023**
 
 - Raven: A Novel Kernel Debugging Tool on RISC-V [[paper]](./papers/raven-dac22.pdf) [[code]](https://github.com/jwnhy/raven-open)  
-    *Hongyi Lu* and Fengwei Zhang **DAC 2022**
+    *Hongyi Lu* and Fengwei Zhang. **DAC 2022**
 
 - Revisiting BadUSB with Type-C [[paper]](./papers/badusbc-woot21.pdf) [[CVE-2021-22325]](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-22325)  
-    *Hongyi Lu*, Yechang Wu, Shuqing Li, You Lin, Chaozu Zhang, Fengwei Zhang **WOOT 2021**
+    *Hongyi Lu*, Yechang Wu, Shuqing Li, You Lin, Chaozu Zhang, Fengwei Zhang. **WOOT 2021**
 
 - A Novel Memory Management for RISC-V Enclaves [[paper]](./papers/ashman-hasp21.pdf)  [[code]](https://github.com/Compass-All/Ashman)  
-    Haonan Li, Weijie Huang, Mingde Ren, *Hongyi Lu*, Zhenyu Ning, Heming Cui, and Fengwei Zhang **HASP 2021**
+    Haonan Li, Weijie Huang, Mingde Ren, *Hongyi Lu*, Zhenyu Ning, Heming Cui, and Fengwei Zhang. **HASP 2021**
 
 
 And some community works.
