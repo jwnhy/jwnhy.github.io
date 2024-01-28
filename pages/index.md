@@ -22,29 +22,35 @@ Here is my [resume](../resume.txt).
 ## What interests me?
 
 - C00l stuff
+- System security 
 - Reverse engineering
-- System Security 
-- Software Engineering
+- Software engineering
 
 ## What have I done? (non-selected publications)
 
-- [Detecting GDB/LLDB bugs with differential testing (18 bugs found!)](./dtd-fse24.pdf)
-- [Securing io_uring with eBPF (SIGCOMM eBPF '23)](./papers/ringguard-ebpf23.pdf)
-- [A Kernel Debugger called Raven (DAC '22)](./papers/raven-dac22.pdf)
-- [An Exciting Attack abusing USB-C (WOOT '21)](./papers/badusbc-woot21.pdf) with
+- [DTD: Comprehensive and Scalable Testing for Debuggers (FSE 2024)](./papers/dtd-fse24.pdf)
+- [RingGuard: Guard io_uring with eBPF (SIGCOMM eBPF 2023)](./papers/ringguard-ebpf23.pdf)
+- [Raven: A Novel Kernel Debugging Tool on RISC-V (DAC 2022)](./papers/raven-dac22.pdf)
+- [Revisiting BadUSB with Type-C (WOOT 2021)](./papers/badusbc-woot21.pdf) with
 [CVE-2021-22325](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-22325)
-- [A Memory Management Scheme on RISC-V (HASP '21)](./papers/ashman-hasp21.pdf)
+- [A Novel Memory Management for RISC-V Enclaves (HASP 2021)](./papers/ashman-hasp21.pdf)
 - [A Video to ASCII Player (for fun)](https://github.com/jwnhy/video2ascii)
 
-and some other community works.
+And some community works.
 
 - [Pornhub](https://www.pornhub.com) Community Translator
 - [Software Foundation](https://coq-zh.github.io/SF-zh/) Translator
 - [LLVM](https://llvm.org/) Contributor
 
-## Rejections I've got
+## Reject/Accept Timeline
 
-- USENIX Security '23 R2 Reject
-- ASPLOS '24 Reject
-- S&P '24 R2 Reject
-- SIGMETRIC '24 Reject
+<details><summary>FSE 2024 Accept</summary>
+1. ASPLOS 2024 Reject<br>
+2. SIGMETRIC 2024 Reject<br>
+3. FSE 2024 Accept
+</details>
+
+<details><summary>Ongoing...</summary>
+1. USENIX Security 2023 R2 Reject<br>
+2. S&P 2024 R2 Reject
+</details>

@@ -105,7 +105,15 @@
 <lastmod>2022-08-20T14:19:31+08:00</lastmod>
 </url>
 <url>
+<loc>http://localhost:4000/papers/dtd-fse24.pdf</loc>
+<lastmod>2024-01-28T11:40:50+08:00</lastmod>
+</url>
+<url>
 <loc>http://localhost:4000/papers/raven-dac22.pdf</loc>
 <lastmod>2022-08-20T14:19:31+08:00</lastmod>
+</url>
+<url>
+<loc>http://localhost:4000/papers/ringguard-ebpf23.pdf</loc>
+<lastmod>2024-01-28T11:41:36+08:00</lastmod>
 </url>
 </urlset>
