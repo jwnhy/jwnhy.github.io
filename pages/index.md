@@ -13,9 +13,9 @@ permalink: /
 
 ## Who am I?
 
-I am Hongyi Lu (jwnhy), a Computer Science Ph.D student in HKUST,
-under the supervision of [Prof. Shuai Wang](https://www.cse.ust.hk/~shuaiw/)
-and [Prof. Fengwei Zhang](https://fengweiz.github.io/).
+I am Hongyi Lu (jwnhy), a Computer Science Ph.D student in SUSTech-HKUST joint
+program, under the supervision of [Prof. Shuai Wang](https://www.cse.ust.hk/~shuaiw/) and [Prof. Fengwei
+Zhang](https://fengweiz.github.io/).
 
 Here is my [resume](../resume.txt).
 
@@ -23,12 +23,12 @@ Here is my [resume](../resume.txt).
 
 - C00l stuff
 - Reverse engineering
-- System programming
-- Programming language
+- System Security 
+- Software Engineering
 
 ## What have I done? (non-selected publications)
 
-- [Detecting GDB/LLDB bugs with differential testing (18 bugs found!)](./#)
+- [Detecting GDB/LLDB bugs with differential testing (18 bugs found!)](./dtd-fse24.pdf)
 - [Securing io_uring with eBPF (SIGCOMM eBPF '23)](./papers/ringguard-ebpf23.pdf)
 - [A Kernel Debugger called Raven (DAC '22)](./papers/raven-dac22.pdf)
 - [An Exciting Attack abusing USB-C (WOOT '21)](./papers/badusbc-woot21.pdf) with
@@ -40,10 +40,11 @@ and some other community works.
 
 - [Pornhub](https://www.pornhub.com) Community Translator
 - [Software Foundation](https://coq-zh.github.io/SF-zh/) Translator
+- [LLVM](https://llvm.org/) Contributor
 
 ## Rejections I've got
 
 - USENIX Security '23 R2 Reject
 - ASPLOS '24 Reject
-- S&P '24 Reject
+- S&P '24 R2 Reject
 - SIGMETRIC '24 Reject
