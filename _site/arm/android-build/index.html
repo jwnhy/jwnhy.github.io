@@ -6,13 +6,13 @@
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
     <!-- site description -->
     
-    <meta content="近日为哪吒 D1 移植 RISC-V 可信执行环境 Coffer，一些值得注意的点，写了一个小记。" name="description"/>
+    <meta content="Build release kernel." name="description"/>
     <!-- referer for 3rd-part images-->
     <meta content="no-referrer" name="referrer"/>
     <!-- title -->
     <title>
         
-            Coffer 移植哪吒 D1 开发板小记
+            Android AOSP kernel build, module build, and misc.
         
     </title>
     <!-- icon -->
@@ -43,24 +43,24 @@
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.11.5/mermaid.min.js"></script>
     
     <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Coffer 移植哪吒 D1 开发板小记 | jwnhy Blog</title>
+<title>Android AOSP kernel build, module build, and misc. | jwnhy Blog</title>
 <meta name="generator" content="Jekyll v4.3.2" />
-<meta property="og:title" content="Coffer 移植哪吒 D1 开发板小记" />
+<meta property="og:title" content="Android AOSP kernel build, module build, and misc." />
 <meta name="author" content="jwnhy" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="近日为哪吒 D1 移植 RISC-V 可信执行环境 Coffer，一些值得注意的点，写了一个小记。" />
-<meta property="og:description" content="近日为哪吒 D1 移植 RISC-V 可信执行环境 Coffer，一些值得注意的点，写了一个小记。" />
-<link rel="canonical" href="http://localhost:4000/riscv/rt0/" />
-<meta property="og:url" content="http://localhost:4000/riscv/rt0/" />
+<meta name="description" content="Build release kernel." />
+<meta property="og:description" content="Build release kernel." />
+<link rel="canonical" href="http://localhost:4000/arm/android-build/" />
+<meta property="og:url" content="http://localhost:4000/arm/android-build/" />
 <meta property="og:site_name" content="jwnhy Blog" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2021-06-30T00:00:00+08:00" />
+<meta property="article:published_time" content="2024-04-04T00:00:00+08:00" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Coffer 移植哪吒 D1 开发板小记" />
+<meta property="twitter:title" content="Android AOSP kernel build, module build, and misc." />
 <meta name="twitter:site" content="@" />
 <meta name="twitter:creator" content="@jwnhy" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jwnhy"},"dateModified":"2021-06-30T00:00:00+08:00","datePublished":"2021-06-30T00:00:00+08:00","description":"近日为哪吒 D1 移植 RISC-V 可信执行环境 Coffer，一些值得注意的点，写了一个小记。","headline":"Coffer 移植哪吒 D1 开发板小记","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/riscv/rt0/"},"url":"http://localhost:4000/riscv/rt0/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jwnhy"},"dateModified":"2024-04-04T00:00:00+08:00","datePublished":"2024-04-04T00:00:00+08:00","description":"Build release kernel.","headline":"Android AOSP kernel build, module build, and misc.","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/arm/android-build/"},"url":"http://localhost:4000/arm/android-build/"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -1026,14 +1026,9 @@ setInterval(draw, 20);
   
   <!-- generate toc -->
   <ul id="ul_toc" class="ul_toc">
-  <li><a href="#d1-sdk-opensbi-打包位置">D1 SDK OpenSBI 打包位置</a></li>
-  <li><a href="#嵌入式程序初始化">嵌入式程序初始化</a>
-    <ul>
-      <li><a href="#寄存器初始化">寄存器初始化</a></li>
-      <li><a href="#清空-bss-段和初始化-data-段">清空 .bss 段和初始化 .data 段</a></li>
-      <li><a href="#全志自定义-header">全志自定义 Header</a></li>
-    </ul>
-  </li>
+  <li><a href="#build-release-kernel">Build release kernel.</a></li>
+  <li><a href="#build-qpr-kernel-quarterly-platform-release">Build QPR kernel (Quarterly Platform Release)</a></li>
+  <li><a href="#build-kernel-module">Build Kernel Module</a></li>
 </ul>
 </div>
 
@@ -1053,7 +1048,7 @@ setInterval(draw, 20);
           itemscope
           itemtype="http://schema.org/BlogPosting"
         >
-          <h1 id="Coffer 移植哪吒 D1 开发板小记">Coffer 移植哪吒 D1 开发板小记</h1>
+          <h1 id="Android AOSP kernel build, module build, and misc.">Android AOSP kernel build, module build, and misc.</h1>
 <div class="post_info">
   <!-- author -->
   
@@ -1066,7 +1061,7 @@ setInterval(draw, 20);
   
   <span>
     <i class="fa fa-calendar"></i>
-    Jun 30, 2021
+    Apr 04, 2024
   </span>
   
   <!-- category -->
@@ -1076,160 +1071,46 @@ setInterval(draw, 20);
 
 
 <br />
-<p>近日为哪吒 D1 移植 RISC-V 可信执行环境 Coffer，一些值得注意的点，写了一个小记。</p>
+<h2 id="build-release-kernel">Build release kernel.</h2>
 
-<h2 id="d1-sdk-opensbi-打包位置">D1 SDK OpenSBI 打包位置</h2>
+<p>First we need to follow the official <a href="https://source.android.com/docs/setup/build/building-pixel-kernels">guide</a>.
+For example, if we want to build kernel for Pixel 8 Pro (Husky), we run the following commands to initialize the repo.</p>
 
-<p>对于 D1 开发板，全志定制了一整套工具链以支持平头哥自研的一些指令，幸运的是，其对于 SBI 的 OpenSBI 部分并没有使用定制指令，
-而是使用普通的 RISC-V 工具链（似乎用定制工具链编译不过去xs）。
-因为采用普通工具链的缘故，官方 <code class="language-plaintext highlighter-rouge">make</code> 脚本甚至不会检查，而是直接从 OpenSBI 的文件夹复制过去。（还复制了好几回，无语。）</p>
-
-<p>OpenSBI 中最初的编译产物位置</p>
-
-<p><code class="language-plaintext highlighter-rouge">lichee/brandy-2.0/opensbi/build/platform/thead/c910/firmware</code></p>
-
-<p>第一次复制位置</p>
-
-<p><code class="language-plaintext highlighter-rouge">device/config/chips/d1/bin/opensbi_sun20iw1p1.bin</code></p>
-
-<p>第二次复制位置</p>
-
-<p><code class="language-plaintext highlighter-rouge">out/d1_nezha/image/opensbi.fex</code></p>
-
-<p>一般来说复制到第一次复制的目录，然后执行 <code class="language-plaintext highlighter-rouge">pack</code> 就好，<code class="language-plaintext highlighter-rouge">pack</code> 会执行第二次复制。</p>
-
-<h2 id="嵌入式程序初始化">嵌入式程序初始化</h2>
-
-<p>由于 QEMU 这类的模拟器会提供默认的寄存器初始化与内存初始化等功能，因此不需要类似的初始化流程。 而嵌入式主板不同，因此需要一套简单的流程让从 Flash 闪存中加载的程序能够正常运行。</p>
-
-<h3 id="寄存器初始化">寄存器初始化</h3>
-
-<pre><code class="language-asm">  li sp, 0
-  li gp, 0
-  li tp, 0
-  li t0, 0
-  li t1, 0
-  li t2, 0
-  li s0, 0
-  li s1, 0
-  li a3, 0
-  li a4, 0
-  li a5, 0
-  li a6, 0
-  li a7, 0
-  li s2, 0
-  li s3, 0
-  li s4, 0
-  li s5, 0
-  li s6, 0
-  li s7, 0
-  li s8, 0
-  li s9, 0
-  li s10, 0
-  li s11, 0
-  li t3, 0
-  li t4, 0
-  li t5, 0
-  li t6, 0
-  csrw mscratch, 0
-</code></pre>
-
-<h3 id="清空-bss-段和初始化-data-段">清空 <code class="language-plaintext highlighter-rouge">.bss</code> 段和初始化 <code class="language-plaintext highlighter-rouge">.data</code> 段</h3>
-
-<p>从内存中复制过来的 <code class="language-plaintext highlighter-rouge">.bss</code> 段不确保完全为 0，直接使用会有各种奇怪的问题。</p>
-
-<p>每个 LOADABLE/ALLOCATABLE 段通常有两个地址，VMA（运行时虚拟地址） 与 LMA（加载时地址），两者在嵌入式环境不一定相等，可能需要重定位。</p>
-
-<p>利用 Rust 的 <code class="language-plaintext highlighter-rouge">r0</code> 库直接搞定。</p>
-
-<div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">extern</span> <span class="s">"C"</span> <span class="p">{</span>
-        <span class="k">static</span> <span class="k">mut</span> <span class="n">_bss_start</span><span class="p">:</span> <span class="nb">u32</span><span class="p">;</span>
-        <span class="k">static</span> <span class="k">mut</span> <span class="n">_bss_end</span><span class="p">:</span> <span class="nb">u32</span><span class="p">;</span>
-        <span class="k">static</span> <span class="k">mut</span> <span class="n">_data_start</span><span class="p">:</span> <span class="nb">u32</span><span class="p">;</span>
-        <span class="k">static</span> <span class="k">mut</span> <span class="n">_data_end</span><span class="p">:</span> <span class="nb">u32</span><span class="p">;</span>
-        <span class="k">static</span> <span class="n">_flash_data</span><span class="p">:</span> <span class="nb">u32</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">unsafe</span> <span class="p">{</span>
-        <span class="nn">r0</span><span class="p">::</span><span class="nf">zero_bss</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span> <span class="n">_bss_start</span><span class="p">,</span> <span class="o">&amp;</span><span class="k">mut</span> <span class="n">_bss_end</span><span class="p">);</span>
-        <span class="nn">r0</span><span class="p">::</span><span class="nf">init_data</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span> <span class="n">_data_start</span><span class="p">,</span><span class="o">&amp;</span><span class="k">mut</span> <span class="n">_data_end</span> <span class="p">,</span> <span class="o">&amp;</span><span class="n">_flash_data</span><span class="p">);</span>
-    <span class="p">}</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>repo init https://android.googlesource.com/kernel/manifest <span class="nt">--depth</span><span class="o">=</span>1 <span class="nt">--groups</span><span class="o">=</span>default,-mips,-darwin,-x86,-riscv <span class="nt">-b</span> android-gs-shusky-5.15-android14-d1
+repo <span class="nb">sync</span> <span class="nt">-c</span> <span class="nt">--no-tags</span>
 </code></pre></div></div>
 
-<h3 id="全志自定义-header">全志自定义 Header</h3>
+<p>Let’s go through these options one by one.</p>
 
-<p>全志非常有创意的定制了一块自定义 Header，我也不知道有啥用。 只能原样在 Coffer 中重构了一个一样的以防止出现问题，根据注释是放置设备树等信息的位置。</p>
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">https://android.googlesource.com/kernel/manifest</code> is the manifest url of your android build, you might use other mirror like <a href="https://mirrors.tuna.tsinghua.edu.cn/help/AOSP/">Tsinghua</a>.</li>
+  <li><code class="language-plaintext highlighter-rouge">--depth=1</code> means we don’t want any history, shrinking the disk usage by much.</li>
+  <li><code class="language-plaintext highlighter-rouge">--groups=default,-mips,-darwin,-x86,-riscv</code> means we don’t want to build Android for {mips, x86, and riscv} or install MacOS toolchains (darwin).</li>
+  <li><code class="language-plaintext highlighter-rouge">-b android-gs-shusky-5.15-android14-d1</code> is the manifest branch for Pixel 8 Pro, found on <a href="https://source.android.com/docs/setup/build/building-pixel-kernels">guide</a>.</li>
+</ol>
 
-<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lichee/brandy-2.0/opensbi/platform/thead/c910/private_opensbi.h</span>
-<span class="k">struct</span> <span class="n">private_opensbi_head</span> <span class="p">{</span>
-        <span class="kt">unsigned</span> <span class="kt">int</span>  <span class="n">jump_instruction</span><span class="p">;</span> <span class="cm">/* jumping to real code */</span>
-        <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">magic</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>                 <span class="cm">/* ="opensbi" */</span>
-        <span class="kt">unsigned</span> <span class="kt">int</span>  <span class="n">dtb_base</span><span class="p">;</span>                 <span class="cm">/* the address of dtb base*/</span>
-        <span class="kt">unsigned</span> <span class="kt">int</span>  <span class="n">uboot_base</span><span class="p">;</span>               <span class="cm">/* the address of dtb base*/</span>
-        <span class="kt">unsigned</span> <span class="kt">int</span>  <span class="n">res3</span><span class="p">;</span>
-        <span class="kt">unsigned</span> <span class="kt">int</span>  <span class="n">res4</span><span class="p">;</span>
-        <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">res5</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
-        <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">res6</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
-        <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">opensbi_base</span><span class="p">;</span>              <span class="cm">/* the address of opensbi base*/</span>
-<span class="p">};</span>
+<h2 id="build-qpr-kernel-quarterly-platform-release">Build QPR kernel (Quarterly Platform Release)</h2>
 
-<span class="c1">// lichee/brandy-2.0/opensbi/platform/thead/c910/opensbi_head.c</span>
-<span class="cp">#define BROM_FILE_HEAD_SIZE             (0x400 &amp; 0x00FFFFF)
-#define BROM_FILE_HEAD_BIT_10_1         ((BROM_FILE_HEAD_SIZE &amp; 0x7FE) &gt;&gt; 1)
-#define BROM_FILE_HEAD_BIT_11           ((BROM_FILE_HEAD_SIZE &amp; 0x800) &gt;&gt; 11)
-#define BROM_FILE_HEAD_BIT_19_12        ((BROM_FILE_HEAD_SIZE &amp; 0xFF000) &gt;&gt; 12)
-#define BROM_FILE_HEAD_BIT_20           ((BROM_FILE_HEAD_SIZE &amp; 0x100000) &gt;&gt; 20)
-</span>
-<span class="cp">#define BROM_FILE_HEAD_SIZE_OFFSET      ((BROM_FILE_HEAD_BIT_20 &lt;&lt; 31) | \
-                                        (BROM_FILE_HEAD_BIT_10_1 &lt;&lt; 21) | \
-                                        (BROM_FILE_HEAD_BIT_11 &lt;&lt; 20) | \
-                                        (BROM_FILE_HEAD_BIT_19_12 &lt;&lt; 12))
-#define JUMP_INSTRUCTION                (BROM_FILE_HEAD_SIZE_OFFSET | 0x6f)
-</span><span class="c1">// 这里直接硬编码了一个 RISC-V 的跳转指令</span>
-<span class="c1">// 0x400 是该自定义头的大小</span>
-<span class="c1">// j 0x4000_0400</span>
+<p>You might notice that <code class="language-plaintext highlighter-rouge">https://android.googlesource.com/kernel/manifest</code> does not contain QPR builds (simply replacing the branch suffix <code class="language-plaintext highlighter-rouge">-d1</code> with <code class="language-plaintext highlighter-rouge">qprX-beta</code> does not work). We need to manually modify the <code class="language-plaintext highlighter-rouge">default.xml</code> in <code class="language-plaintext highlighter-rouge">.repo/manifests</code>.</p>
 
-<span class="k">struct</span> <span class="n">private_opensbi_head</span>  <span class="n">opensbi_head</span> <span class="n">__attribute__</span> <span class="p">((</span><span class="n">section</span><span class="p">(</span><span class="s">".head_data"</span><span class="p">)))</span> <span class="o">=</span>
-<span class="p">{</span>
-                <span class="n">JUMP_INSTRUCTION</span><span class="p">,</span>
-                <span class="s">"opensbi"</span><span class="p">,</span>
-                <span class="mi">0</span><span class="p">,</span> 
-                <span class="mi">0</span><span class="p">,</span>
-                <span class="mi">0</span><span class="p">,</span>
-                <span class="mi">0</span><span class="p">,</span>
-                <span class="p">{</span><span class="mi">0</span><span class="p">},</span>
-                <span class="p">{</span><span class="mi">0</span><span class="p">},</span>
-                <span class="n">FW_TEXT_START</span>
-<span class="p">};</span>
+<p>Note that manifests are just declarations indicating where to pull the sources from. Though there is NO <code class="language-plaintext highlighter-rouge">qprX-beta</code> branch manifest for a complete kernel build, there are sub-manifests in each sub-repo. We just need to enable pointing the manifest to them by changing the <code class="language-plaintext highlighter-rouge">&lt;default revision&gt;</code> tag in the manifest <code class="language-plaintext highlighter-rouge">default.xml</code>.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;default</span> <span class="na">revision=</span><span class="s">"android-gs-shusky-5.15-android14-qpr3-beta"</span> <span class="na">remote=</span><span class="s">"aosp"</span> <span class="na">sync-j=</span><span class="s">"4"</span> <span class="nt">/&gt;</span>
 </code></pre></div></div>
 
-<p>我的 Rust 复刻，注意 Rust 的 <code class="language-plaintext highlighter-rouge">char</code> 类型和 C 语言的不一致。</p>
+<p>After modifying the <code class="language-plaintext highlighter-rouge">default.xml</code>, syncing and building the repo, you might encounter errors that say something is missing.</p>
 
-<div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">#[repr(C)]</span>
-<span class="k">struct</span> <span class="n">SunxiHead</span> <span class="p">{</span>
-    <span class="k">pub</span> <span class="n">jump_inst</span><span class="p">:</span> <span class="nb">u32</span><span class="p">,</span>
-    <span class="k">pub</span> <span class="n">magic</span><span class="p">:</span> <span class="p">[</span><span class="nb">u8</span><span class="p">;</span> <span class="mi">8</span><span class="p">],</span>
-    <span class="k">pub</span> <span class="n">dtb_base</span><span class="p">:</span> <span class="nb">u32</span><span class="p">,</span>
-    <span class="k">pub</span> <span class="n">uboot_base</span><span class="p">:</span> <span class="nb">u32</span><span class="p">,</span>
-    <span class="k">pub</span> <span class="n">res3</span><span class="p">:</span> <span class="nb">u32</span><span class="p">,</span>
-    <span class="k">pub</span> <span class="n">res4</span><span class="p">:</span> <span class="nb">u32</span><span class="p">,</span>
-    <span class="k">pub</span> <span class="n">res5</span><span class="p">:</span> <span class="p">[</span><span class="nb">u8</span><span class="p">;</span> <span class="mi">8</span><span class="p">],</span>
-    <span class="k">pub</span> <span class="n">res6</span><span class="p">:</span> <span class="p">[</span><span class="nb">u8</span><span class="p">;</span> <span class="mi">8</span><span class="p">],</span>
-    <span class="k">pub</span> <span class="n">opensbi_base</span><span class="p">:</span> <span class="nb">u32</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="nd">#[link_section</span> <span class="nd">=</span> <span class="s">".head_data"</span><span class="nd">]</span>
-<span class="k">static</span> <span class="n">SUNXI_HEAD</span><span class="p">:</span> <span class="n">SunxiHead</span> <span class="o">=</span> <span class="n">SunxiHead</span> <span class="p">{</span>
-    <span class="n">jump_inst</span><span class="p">:</span> <span class="mi">0x4000_006f</span><span class="p">,</span> <span class="c1">// j 0x4000_0400</span>
-    <span class="n">magic</span><span class="p">:</span> <span class="o">*</span><span class="s">b"opensbi"</span><span class="p">,</span>
-    <span class="n">dtb_base</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">uboot_base</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">res3</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">res4</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">res5</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">;</span> <span class="mi">8</span><span class="p">],</span>
-    <span class="n">res6</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">;</span> <span class="mi">8</span><span class="p">],</span>
-    <span class="n">opensbi_base</span><span class="p">:</span> <span class="mi">0x4000_0000</span><span class="p">,</span>
-<span class="p">};</span>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;I am too lazy to re-run the building process to show the error message.&gt;
 </code></pre></div></div>
+
+<p>We just add the relevant declarations, like this. You can find the list of AOSP modules in <code class="language-plaintext highlighter-rouge">https://android.googlesource.com/kernel/</code>.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;project</span> <span class="na">path=</span><span class="s">"private/google-modules/uwb/qorvo/qm35"</span> <span class="na">name=</span><span class="s">"kernel/google-modules/uwb/qorvo/qm35"</span> <span class="na">groups=</span><span class="s">"partner"</span> <span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<h2 id="build-kernel-module">Build Kernel Module</h2>
+
+<p>Most existing modules are in <code class="language-plaintext highlighter-rouge">./private/google-modules</code>. For now, I only know how to add a new module in this folder and its sub-folders.</p>
 
  <div class="post_list">
 
