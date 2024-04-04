@@ -1030,7 +1030,8 @@ setInterval(draw, 20);
   <li><a href="#build-qpr-kernel-quarterly-platform-release">Build QPR kernel (Quarterly Platform Release)</a></li>
   <li><a href="#build-kernel-module">Build Kernel Module</a>
     <ul>
-      <li><a href="#create-boilerplate-code">Create boilerplate code</a></li>
+      <li><a href="#bazel-setup--reference-other-module">Bazel setup &amp;&amp; reference other module</a></li>
+      <li><a href="#miscellaneous">Miscellaneous</a></li>
     </ul>
   </li>
 </ul>
@@ -1117,14 +1118,15 @@ repo <span class="nb">sync</span> <span class="nt">-c</span> <span class="nt">--
 <p>Most existing modules are in <code class="language-plaintext highlighter-rouge">./private/google-modules</code>. For now, I only know how to add a new module in this folder and its sub-folders. I will introduce the following contents.</p>
 
 <ul>
-  <li>Create boilerplate code</li>
+  <li>Bazel setup</li>
   <li>Reference other module</li>
   <li>Miscellaneous</li>
 </ul>
 
-<h3 id="create-boilerplate-code">Create boilerplate code</h3>
+<h3 id="bazel-setup--reference-other-module">Bazel setup &amp;&amp; reference other module</h3>
 
-<p>Let’s create a module in <code class="language-plaintext highlighter-rouge">./private/google-modules/gpu/csfparser/moye</code>. After copying your module codes into it, it should contain the following. Note that we need to create <code class="language-plaintext highlighter-rouge">BUILD.bazel</code>, <code class="language-plaintext highlighter-rouge">Kbuild</code>.</p>
+<p>In this example, I will introduce how to create a new module named <code class="language-plaintext highlighter-rouge">moye</code> and reference <code class="language-plaintext highlighter-rouge">mali_kbase</code> in it.
+Let’s create a module in <code class="language-plaintext highlighter-rouge">./private/google-modules/gpu/csfparser/moye</code>. After copying your module codes into it, it should contain the following. Note that we need to create <code class="language-plaintext highlighter-rouge">BUILD.bazel</code>, <code class="language-plaintext highlighter-rouge">Kbuild</code>.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ <span class="nb">ls
 </span>bifrost  BUILD.bazel            kbase_defs.h  main.c  Makefile   moye_fw.h   moye_mmu.h     util.c
@@ -1133,53 +1135,104 @@ build    compile_commands.json  Kbuild        main.h  moye_fw.c  moye_mmu.c  moy
 
 <p><code class="language-plaintext highlighter-rouge">BUILD.bazel</code> looks like:</p>
 
-<details>
-<summary>Click to check</summary>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">load</span><span class="p">(</span><span class="sh">"</span><span class="s">//build/kernel/kleaf:kernel.bzl</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">kernel_module</span><span class="sh">"</span><span class="p">)</span>
 
-```
-load("//build/kernel/kleaf:kernel.bzl", "kernel_module")
-
-kernel_module(
-    name = "moye",
-    srcs = glob([
-        "**/*.c",
-        "**/*.h",
-        "Kbuild",
-    ]) + [
-        "//private/google-modules/gpu/mali_kbase:headers",
-        "//private/google-modules/gpu/common:headers",
-        "//private/google-modules/soc/gs:gs_soc_headers",
-    ],
-    outs = [
-        "moye.ko",
-    ],
-    kernel_build = "//private/google-modules/soc/gs:gs_kernel_build",
-    visibility = [
-        "//private/devices/google:__subpackages__",
-        "//private/google-modules/gpu/mali_kbase:__pkg__",
-        "//private/google-modules/soc/gs:__pkg__",
-    ],
-    deps = [
-        "//private/google-modules/gpu/mali_kbase",
-        "//private/google-modules/soc/gs:gs_soc_module",
-    ],
-)
-```
-
-</details>
+<span class="nf">kernel_module</span><span class="p">(</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="sh">"</span><span class="s">moye</span><span class="sh">"</span><span class="p">,</span>
+    <span class="n">srcs</span> <span class="o">=</span> <span class="nf">glob</span><span class="p">([</span>
+        <span class="sh">"</span><span class="s">**/*.c</span><span class="sh">"</span><span class="p">,</span>
+        <span class="sh">"</span><span class="s">**/*.h</span><span class="sh">"</span><span class="p">,</span>
+        <span class="sh">"</span><span class="s">Kbuild</span><span class="sh">"</span><span class="p">,</span>
+    <span class="p">])</span> <span class="o">+</span> <span class="p">[</span>
+        <span class="sh">"</span><span class="s">//private/google-modules/gpu/mali_kbase:headers</span><span class="sh">"</span><span class="p">,</span>
+        <span class="sh">"</span><span class="s">//private/google-modules/gpu/common:headers</span><span class="sh">"</span><span class="p">,</span>
+        <span class="sh">"</span><span class="s">//private/google-modules/soc/gs:gs_soc_headers</span><span class="sh">"</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">outs</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="sh">"</span><span class="s">moye.ko</span><span class="sh">"</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">kernel_build</span> <span class="o">=</span> <span class="sh">"</span><span class="s">//private/google-modules/soc/gs:gs_kernel_build</span><span class="sh">"</span><span class="p">,</span>
+    <span class="n">visibility</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="sh">"</span><span class="s">//private/devices/google:__subpackages__</span><span class="sh">"</span><span class="p">,</span>
+        <span class="sh">"</span><span class="s">//private/google-modules/gpu/mali_kbase:__pkg__</span><span class="sh">"</span><span class="p">,</span>
+        <span class="sh">"</span><span class="s">//private/google-modules/soc/gs:__pkg__</span><span class="sh">"</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">deps</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="sh">"</span><span class="s">//private/google-modules/gpu/mali_kbase</span><span class="sh">"</span><span class="p">,</span>
+        <span class="sh">"</span><span class="s">//private/google-modules/soc/gs:gs_soc_module</span><span class="sh">"</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div></div>
 
 <p>Essentially, <code class="language-plaintext highlighter-rouge">BUILD.bazel</code> decides what is available when compiling the module. That is why we have</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    srcs = glob([
-        "**/*.c",
-        "**/*.h",
-        "Kbuild",
-    ]) + [
-        "//private/google-modules/gpu/mali_kbase:headers",
-        "//private/google-modules/gpu/common:headers",
-        "//private/google-modules/soc/gs:gs_soc_headers",
-    ],
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">srcs</span> <span class="o">=</span> <span class="nf">glob</span><span class="p">([</span>
+        <span class="sh">"</span><span class="s">**/*.c</span><span class="sh">"</span><span class="p">,</span> <span class="c1"># including all C files.
+</span>        <span class="sh">"</span><span class="s">**/*.h</span><span class="sh">"</span><span class="p">,</span> <span class="c1"># including all header files.
+</span>        <span class="sh">"</span><span class="s">Kbuild</span><span class="sh">"</span><span class="p">,</span> <span class="c1"># including the Kbuild of the module.
+</span>    <span class="p">])</span> <span class="o">+</span> <span class="p">[</span>
+        <span class="c1"># we want to use headers from other modules.
+</span>        <span class="sh">"</span><span class="s">//private/google-modules/gpu/mali_kbase:headers</span><span class="sh">"</span><span class="p">,</span>
+        <span class="sh">"</span><span class="s">//private/google-modules/gpu/common:headers</span><span class="sh">"</span><span class="p">,</span>
+        <span class="sh">"</span><span class="s">//private/google-modules/soc/gs:gs_soc_headers</span><span class="sh">"</span><span class="p">,</span>
+    <span class="p">],</span>
 </code></pre></div></div>
+
+<p>In particular, <code class="language-plaintext highlighter-rouge">//private/google-modules/gpu/mali_kbase</code> in fact refers to the Bazel target of another module named <code class="language-plaintext highlighter-rouge">mali_kbase</code>. It is located in <code class="language-plaintext highlighter-rouge">./private/google-modules/gpu/mali_kbase</code>. The <code class="language-plaintext highlighter-rouge">visibility</code> and <code class="language-plaintext highlighter-rouge">deps</code> specifies what modules can sees our module and what modules our module depends on. <code class="language-plaintext highlighter-rouge">deps</code> is particularly important if you want to reference other modules.</p>
+
+<p>Now let’s see the <code class="language-plaintext highlighter-rouge">Kbuild</code> file.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># make $(src) as absolute path if it isn't already, by prefixing $(srctree)</span>
+src:<span class="o">=</span><span class="si">$(</span><span class="k">if</span> <span class="si">$(</span>patsubst /%,,<span class="si">$(</span>src<span class="si">))</span>,<span class="si">$(</span>srctree<span class="si">)</span>/<span class="si">$(</span>src<span class="si">)</span>,<span class="si">$(</span>src<span class="si">))</span>
+
+obj-m +<span class="o">=</span> moye.o	
+moye-objs :<span class="o">=</span> main.o util.o moye_fw.o moye_mmu.o
+
+ccflags-y +<span class="o">=</span> <span class="se">\</span>
+    <span class="si">$(</span>DEFINES<span class="si">)</span> <span class="se">\</span>
+    <span class="nt">-I</span><span class="si">$(</span>src<span class="si">)</span>/../../common/include <span class="se">\</span>
+    <span class="nt">-I</span><span class="si">$(</span>src<span class="si">)</span>/../../mali_kbase <span class="se">\</span>
+    <span class="nt">-I</span><span class="si">$(</span>srctree<span class="si">)</span>/include/linux <span class="se">\</span>
+    <span class="nt">-DMALI_CUSTOMER_RELEASE</span><span class="o">=</span>1 <span class="se">\</span>
+    <span class="nt">-DMALI_USE_CSF</span><span class="o">=</span>1 <span class="se">\</span>
+    <span class="nt">-DMALI_UNIT_TEST</span><span class="o">=</span>0 <span class="se">\</span>
+    <span class="nt">-DMALI_JIT_PRESSURE_LIMIT_BASE</span><span class="o">=</span>0 <span class="se">\</span>
+</code></pre></div></div>
+
+<p>Except the usual <code class="language-plaintext highlighter-rouge">obj-m</code> and <code class="language-plaintext highlighter-rouge">moye-objs</code> for kernel module, we add <code class="language-plaintext highlighter-rouge">CFLAGS</code> via <code class="language-plaintext highlighter-rouge">ccflags-y</code>. The <code class="language-plaintext highlighter-rouge">BUILD.bazel</code> only enables our module see the additional headers, they still require manual inclusion, such as <code class="language-plaintext highlighter-rouge">-I$(src)/../../common/include</code>. Note that Bazel respects the original folder structure, so we need to jump out of our folder using <code class="language-plaintext highlighter-rouge">../</code>.</p>
+
+<p>As for <code class="language-plaintext highlighter-rouge">-DMALI_XXX_XXX={0,1}</code>, these defines are for the headers in <code class="language-plaintext highlighter-rouge">mali_kbase</code>. Since we directly include these header files in a hacky way, these headers need some defines to work properly. So, we just add these defines manually and make sure they align with the defines in <code class="language-plaintext highlighter-rouge">mali_kbase</code>.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#ifdef MALI_CUSTOMER_RELEASE
+</span><span class="c1">// code requires these defines</span>
+<span class="cp">#endif
+</span></code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Makefile</code> is rather boring. We need to suppress some warnings as we are referencing another module.</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">KERNEL_SRC</span> <span class="o">?=</span> /lib/modules/<span class="p">$(</span>shell <span class="nb">uname</span> <span class="nt">-r</span><span class="p">)</span>/build
+<span class="nv">M</span> <span class="o">?=</span> <span class="p">$(</span>shell <span class="nb">pwd</span><span class="p">)</span>
+
+<span class="nv">KBUILD_OPTIONS</span> <span class="o">+=</span> <span class="p">$(</span>KBUILD_EXTRA<span class="p">)</span> <span class="c"># Extra config if any</span>
+
+<span class="nv">EXTRA_CFLAGS</span> <span class="o">+=</span> <span class="nt">-I</span><span class="p">$(</span>M<span class="p">)</span>
+<span class="nv">EXTRA_CFLAGS</span> <span class="o">+=</span> <span class="nt">-I</span><span class="p">$(</span>M<span class="p">)</span>/../../common/include
+<span class="nv">EXTRA_CFLAGS</span> <span class="o">+=</span> <span class="nt">-Wno-unused-variable</span> <span class="nt">-Wno-unused-function</span> <span class="nt">-Wno-missing-prototypes</span>
+
+<span class="nv">EXTRA_SYMBOLS</span> <span class="o">=</span> <span class="p">$(</span>OUT_DIR<span class="p">)</span>/../private/google-modules/gpu/mali_kbase/Module.symvers
+
+<span class="k">include</span><span class="sx"> $(KERNEL_SRC)/../private/google-modules/soc/gs/Makefile.include</span>
+
+<span class="nl">modules modules_install clean</span><span class="o">:</span>
+	<span class="p">$(</span>MAKE<span class="p">)</span> <span class="nt">-C</span> <span class="p">$(</span>KERNEL_SRC<span class="p">)</span> <span class="nv">M</span><span class="o">=</span><span class="p">$(</span>M<span class="p">)</span> <span class="nv">W</span><span class="o">=</span>1 <span class="p">$(</span>KBUILD_OPTIONS<span class="p">)</span> <span class="nv">EXTRA_CFLAGS</span><span class="o">=</span><span class="s2">"</span><span class="p">$(</span><span class="s2">EXTRA_CFLAGS</span><span class="p">)</span><span class="s2">"</span> <span class="nv">KBUILD_EXTRA_SYMBOLS</span><span class="o">=</span><span class="s2">"</span><span class="p">$(</span><span class="s2">EXTRA_SYMBOLS</span><span class="p">)</span><span class="s2">"</span> <span class="p">$(</span>@<span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="miscellaneous">Miscellaneous</h3>
+
+<ul>
+  <li>Note that Android kernel module does not support the default <code class="language-plaintext highlighter-rouge">init_module</code> and <code class="language-plaintext highlighter-rouge">cleanup_module</code>. Using these two directly crashes the phone. One needs to explicit specifies the entry point using <code class="language-plaintext highlighter-rouge">module_init()</code> and <code class="language-plaintext highlighter-rouge">module_exit()</code> macros.</li>
+  <li>Only the <code class="language-plaintext highlighter-rouge">T</code> symbols in the <code class="language-plaintext highlighter-rouge">/proc/kallsyms</code> can be referenced in other modules.</li>
+</ul>
 
  <div class="post_list">
 

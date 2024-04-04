@@ -45,12 +45,13 @@ We just add the relevant declarations, like this. You can find the list of AOSP 
 
 Most existing modules are in `./private/google-modules`. For now, I only know how to add a new module in this folder and its sub-folders. I will introduce the following contents.
 
-- Create boilerplate code
+- Bazel setup
 - Reference other module
 - Miscellaneous
 
-### Create boilerplate code
+### Bazel setup && reference other module
 
+In this example, I will introduce how to create a new module named `moye` and reference `mali_kbase` in it.
 Let's create a module in `./private/google-modules/gpu/csfparser/moye`. After copying your module codes into it, it should contain the following. Note that we need to create `BUILD.bazel`, `Kbuild`.
 
 ```bash
@@ -61,10 +62,7 @@ build    compile_commands.json  Kbuild        main.h  moye_fw.c  moye_mmu.c  moy
 
 `BUILD.bazel` looks like:
 
-<details>
-<summary>Click to check</summary>
-
-```
+```python
 load("//build/kernel/kleaf:kernel.bzl", "kernel_module")
 
 kernel_module(
@@ -94,18 +92,74 @@ kernel_module(
 )
 ```
 
-</details>
-
 Essentially, `BUILD.bazel` decides what is available when compiling the module. That is why we have 
 
-```
+```python
     srcs = glob([
-        "**/*.c",
-        "**/*.h",
-        "Kbuild",
+        "**/*.c", # including all C files.
+        "**/*.h", # including all header files.
+        "Kbuild", # including the Kbuild of the module.
     ]) + [
+        # we want to use headers from other modules.
         "//private/google-modules/gpu/mali_kbase:headers",
         "//private/google-modules/gpu/common:headers",
         "//private/google-modules/soc/gs:gs_soc_headers",
     ],
 ```
+
+In particular, `//private/google-modules/gpu/mali_kbase` in fact refers to the Bazel target of another module named `mali_kbase`. It is located in `./private/google-modules/gpu/mali_kbase`. The `visibility` and `deps` specifies what modules can sees our module and what modules our module depends on. `deps` is particularly important if you want to reference other modules.
+
+Now let's see the `Kbuild` file.
+
+```bash
+# make $(src) as absolute path if it isn't already, by prefixing $(srctree)
+src:=$(if $(patsubst /%,,$(src)),$(srctree)/$(src),$(src))
+
+obj-m += moye.o	
+moye-objs := main.o util.o moye_fw.o moye_mmu.o
+
+ccflags-y += \
+    $(DEFINES) \
+    -I$(src)/../../common/include \
+    -I$(src)/../../mali_kbase \
+    -I$(srctree)/include/linux \
+    -DMALI_CUSTOMER_RELEASE=1 \
+    -DMALI_USE_CSF=1 \
+    -DMALI_UNIT_TEST=0 \
+    -DMALI_JIT_PRESSURE_LIMIT_BASE=0 \
+```
+
+Except the usual `obj-m` and `moye-objs` for kernel module, we add `CFLAGS` via `ccflags-y`. The `BUILD.bazel` only enables our module see the additional headers, they still require manual inclusion, such as `-I$(src)/../../common/include`. Note that Bazel respects the original folder structure, so we need to jump out of our folder using `../`.
+
+As for `-DMALI_XXX_XXX={0,1}`, these defines are for the headers in `mali_kbase`. Since we directly include these header files in a hacky way, these headers need some defines to work properly. So, we just add these defines manually and make sure they align with the defines in `mali_kbase`.
+
+```c
+#ifdef MALI_CUSTOMER_RELEASE
+// code requires these defines
+#endif
+```
+
+`Makefile` is rather boring. We need to suppress some warnings as we are referencing another module.
+
+```makefile
+KERNEL_SRC ?= /lib/modules/$(shell uname -r)/build
+M ?= $(shell pwd)
+
+KBUILD_OPTIONS += $(KBUILD_EXTRA) # Extra config if any
+
+EXTRA_CFLAGS += -I$(M)
+EXTRA_CFLAGS += -I$(M)/../../common/include
+EXTRA_CFLAGS += -Wno-unused-variable -Wno-unused-function -Wno-missing-prototypes
+
+EXTRA_SYMBOLS = $(OUT_DIR)/../private/google-modules/gpu/mali_kbase/Module.symvers
+
+include $(KERNEL_SRC)/../private/google-modules/soc/gs/Makefile.include
+
+modules modules_install clean:
+	$(MAKE) -C $(KERNEL_SRC) M=$(M) W=1 $(KBUILD_OPTIONS) EXTRA_CFLAGS="$(EXTRA_CFLAGS)" KBUILD_EXTRA_SYMBOLS="$(EXTRA_SYMBOLS)" $(@)
+```
+
+### Miscellaneous
+
+- Note that Android kernel module does not support the default `init_module` and `cleanup_module`. Using these two directly crashes the phone. One needs to explicit specifies the entry point using `module_init()` and `module_exit()` macros.
+- Only the `T` symbols in the `/proc/kallsyms` can be referenced in other modules.
