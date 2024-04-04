@@ -43,4 +43,69 @@ We just add the relevant declarations, like this. You can find the list of AOSP 
 
 ## Build Kernel Module
 
-Most existing modules are in `./private/google-modules`. For now, I only know how to add a new module in this folder and its sub-folders.
+Most existing modules are in `./private/google-modules`. For now, I only know how to add a new module in this folder and its sub-folders. I will introduce the following contents.
+
+- Create boilerplate code
+- Reference other module
+- Miscellaneous
+
+### Create boilerplate code
+
+Let's create a module in `./private/google-modules/gpu/csfparser/moye`. After copying your module codes into it, it should contain the following. Note that we need to create `BUILD.bazel`, `Kbuild`.
+
+```bash
+❯ ls
+bifrost  BUILD.bazel            kbase_defs.h  main.c  Makefile   moye_fw.h   moye_mmu.h     util.c
+build    compile_commands.json  Kbuild        main.h  moye_fw.c  moye_mmu.c  moye_regmap.h  util.h
+```
+
+`BUILD.bazel` looks like:
+
+<details>
+<summary>Click to check</summary>
+
+```
+load("//build/kernel/kleaf:kernel.bzl", "kernel_module")
+
+kernel_module(
+    name = "moye",
+    srcs = glob([
+        "**/*.c",
+        "**/*.h",
+        "Kbuild",
+    ]) + [
+        "//private/google-modules/gpu/mali_kbase:headers",
+        "//private/google-modules/gpu/common:headers",
+        "//private/google-modules/soc/gs:gs_soc_headers",
+    ],
+    outs = [
+        "moye.ko",
+    ],
+    kernel_build = "//private/google-modules/soc/gs:gs_kernel_build",
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/gpu/mali_kbase:__pkg__",
+        "//private/google-modules/soc/gs:__pkg__",
+    ],
+    deps = [
+        "//private/google-modules/gpu/mali_kbase",
+        "//private/google-modules/soc/gs:gs_soc_module",
+    ],
+)
+```
+
+</details>
+
+Essentially, `BUILD.bazel` decides what is available when compiling the module. That is why we have 
+
+```
+    srcs = glob([
+        "**/*.c",
+        "**/*.h",
+        "Kbuild",
+    ]) + [
+        "//private/google-modules/gpu/mali_kbase:headers",
+        "//private/google-modules/gpu/common:headers",
+        "//private/google-modules/soc/gs:gs_soc_headers",
+    ],
+```

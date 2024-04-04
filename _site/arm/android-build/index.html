@@ -1028,7 +1028,11 @@ setInterval(draw, 20);
   <ul id="ul_toc" class="ul_toc">
   <li><a href="#build-release-kernel">Build release kernel.</a></li>
   <li><a href="#build-qpr-kernel-quarterly-platform-release">Build QPR kernel (Quarterly Platform Release)</a></li>
-  <li><a href="#build-kernel-module">Build Kernel Module</a></li>
+  <li><a href="#build-kernel-module">Build Kernel Module</a>
+    <ul>
+      <li><a href="#create-boilerplate-code">Create boilerplate code</a></li>
+    </ul>
+  </li>
 </ul>
 </div>
 
@@ -1110,7 +1114,72 @@ repo <span class="nb">sync</span> <span class="nt">-c</span> <span class="nt">--
 
 <h2 id="build-kernel-module">Build Kernel Module</h2>
 
-<p>Most existing modules are in <code class="language-plaintext highlighter-rouge">./private/google-modules</code>. For now, I only know how to add a new module in this folder and its sub-folders.</p>
+<p>Most existing modules are in <code class="language-plaintext highlighter-rouge">./private/google-modules</code>. For now, I only know how to add a new module in this folder and its sub-folders. I will introduce the following contents.</p>
+
+<ul>
+  <li>Create boilerplate code</li>
+  <li>Reference other module</li>
+  <li>Miscellaneous</li>
+</ul>
+
+<h3 id="create-boilerplate-code">Create boilerplate code</h3>
+
+<p>Let’s create a module in <code class="language-plaintext highlighter-rouge">./private/google-modules/gpu/csfparser/moye</code>. After copying your module codes into it, it should contain the following. Note that we need to create <code class="language-plaintext highlighter-rouge">BUILD.bazel</code>, <code class="language-plaintext highlighter-rouge">Kbuild</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ <span class="nb">ls
+</span>bifrost  BUILD.bazel            kbase_defs.h  main.c  Makefile   moye_fw.h   moye_mmu.h     util.c
+build    compile_commands.json  Kbuild        main.h  moye_fw.c  moye_mmu.c  moye_regmap.h  util.h
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">BUILD.bazel</code> looks like:</p>
+
+<details>
+<summary>Click to check</summary>
+
+```
+load("//build/kernel/kleaf:kernel.bzl", "kernel_module")
+
+kernel_module(
+    name = "moye",
+    srcs = glob([
+        "**/*.c",
+        "**/*.h",
+        "Kbuild",
+    ]) + [
+        "//private/google-modules/gpu/mali_kbase:headers",
+        "//private/google-modules/gpu/common:headers",
+        "//private/google-modules/soc/gs:gs_soc_headers",
+    ],
+    outs = [
+        "moye.ko",
+    ],
+    kernel_build = "//private/google-modules/soc/gs:gs_kernel_build",
+    visibility = [
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/gpu/mali_kbase:__pkg__",
+        "//private/google-modules/soc/gs:__pkg__",
+    ],
+    deps = [
+        "//private/google-modules/gpu/mali_kbase",
+        "//private/google-modules/soc/gs:gs_soc_module",
+    ],
+)
+```
+
+</details>
+
+<p>Essentially, <code class="language-plaintext highlighter-rouge">BUILD.bazel</code> decides what is available when compiling the module. That is why we have</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    srcs = glob([
+        "**/*.c",
+        "**/*.h",
+        "Kbuild",
+    ]) + [
+        "//private/google-modules/gpu/mali_kbase:headers",
+        "//private/google-modules/gpu/common:headers",
+        "//private/google-modules/soc/gs:gs_soc_headers",
+    ],
+</code></pre></div></div>
 
  <div class="post_list">
 
