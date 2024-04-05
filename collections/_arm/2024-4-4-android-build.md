@@ -45,11 +45,11 @@ We just add the relevant declarations, like this. You can find the list of AOSP 
 
 Most existing modules are in `./private/google-modules`. For now, I only know how to add a new module in this folder and its sub-folders. I will introduce the following contents.
 
-- Bazel setup
-- Reference other module
+- Bazel setup & reference other module
+- Generation of `compile_commands.json`
 - Miscellaneous
 
-### Bazel setup && reference other module
+### Bazel setup & reference other module
 
 In this example, I will introduce how to create a new module named `moye` and reference `mali_kbase` in it.
 Let's create a module in `./private/google-modules/gpu/csfparser/moye`. After copying your module codes into it, it should contain the following. Note that we need to create `BUILD.bazel`, `Kbuild`.
@@ -159,7 +159,23 @@ modules modules_install clean:
 	$(MAKE) -C $(KERNEL_SRC) M=$(M) W=1 $(KBUILD_OPTIONS) EXTRA_CFLAGS="$(EXTRA_CFLAGS)" KBUILD_EXTRA_SYMBOLS="$(EXTRA_SYMBOLS)" $(@)
 ```
 
+### Generation of `compile_commands.json`
+
+Though AOSP provides some vague instructions on how to generate `compile_commands.json` for *common* Android kernel, I didn't find any materials on how to generate this in a dist release. And I'm tired of jujitsu with Bazel. So, I decide just using `bear` to generate `compile_commands.json` for my module.
+
+To begin with, we need to copy `bear` into the building environment. Since `clang` must be visible the environment, we just copy it there (it's dirty but works).
+
+```bash
+cp /usr/bin/bear ./prebuilts/clang/host/linux-x86/clang-<version>/bin # let bear visible in the building environment.
+```
+
+Then we just simply add `bear` into the `Makefile` of our module, or any module you want to have `compile_commands.json`.
+
+```bash
+bear -- $(MAKE) -C $(KERNEL_SRC) M=$(M) W=1 $(KBUILD_OPTIONS) EXTRA_CFLAGS="$(EXTRA_CFLAGS)" KBUILD_EXTRA_SYMBOLS="$(EXTRA_SYMBOLS)" $(@)
+```
+
 ### Miscellaneous
 
-- Note that Android kernel module does not support the default `init_module` and `cleanup_module`. Using these two directly crashes the phone. One needs to explicit specifies the entry point using `module_init()` and `module_exit()` macros.
+- Note that Android kernel module does not support the default `init_module` and `cleanup_module`. Using these two directly crashes the phone. One needs to explicitly specifies the entry point using `module_init()` and `module_exit()` macros.
 - Only the `T` symbols in the `/proc/kallsyms` can be referenced in other modules.

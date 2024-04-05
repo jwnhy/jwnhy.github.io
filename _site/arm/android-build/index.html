@@ -1030,7 +1030,8 @@ setInterval(draw, 20);
   <li><a href="#build-qpr-kernel-quarterly-platform-release">Build QPR kernel (Quarterly Platform Release)</a></li>
   <li><a href="#build-kernel-module">Build Kernel Module</a>
     <ul>
-      <li><a href="#bazel-setup--reference-other-module">Bazel setup &amp;&amp; reference other module</a></li>
+      <li><a href="#bazel-setup--reference-other-module">Bazel setup &amp; reference other module</a></li>
+      <li><a href="#generation-of-compile_commandsjson">Generation of compile_commands.json</a></li>
       <li><a href="#miscellaneous">Miscellaneous</a></li>
     </ul>
   </li>
@@ -1118,12 +1119,12 @@ repo <span class="nb">sync</span> <span class="nt">-c</span> <span class="nt">--
 <p>Most existing modules are in <code class="language-plaintext highlighter-rouge">./private/google-modules</code>. For now, I only know how to add a new module in this folder and its sub-folders. I will introduce the following contents.</p>
 
 <ul>
-  <li>Bazel setup</li>
-  <li>Reference other module</li>
+  <li>Bazel setup &amp; reference other module</li>
+  <li>Generation of <code class="language-plaintext highlighter-rouge">compile_commands.json</code></li>
   <li>Miscellaneous</li>
 </ul>
 
-<h3 id="bazel-setup--reference-other-module">Bazel setup &amp;&amp; reference other module</h3>
+<h3 id="bazel-setup--reference-other-module">Bazel setup &amp; reference other module</h3>
 
 <p>In this example, I will introduce how to create a new module named <code class="language-plaintext highlighter-rouge">moye</code> and reference <code class="language-plaintext highlighter-rouge">mali_kbase</code> in it.
 Let’s create a module in <code class="language-plaintext highlighter-rouge">./private/google-modules/gpu/csfparser/moye</code>. After copying your module codes into it, it should contain the following. Note that we need to create <code class="language-plaintext highlighter-rouge">BUILD.bazel</code>, <code class="language-plaintext highlighter-rouge">Kbuild</code>.</p>
@@ -1227,10 +1228,24 @@ ccflags-y +<span class="o">=</span> <span class="se">\</span>
 	<span class="p">$(</span>MAKE<span class="p">)</span> <span class="nt">-C</span> <span class="p">$(</span>KERNEL_SRC<span class="p">)</span> <span class="nv">M</span><span class="o">=</span><span class="p">$(</span>M<span class="p">)</span> <span class="nv">W</span><span class="o">=</span>1 <span class="p">$(</span>KBUILD_OPTIONS<span class="p">)</span> <span class="nv">EXTRA_CFLAGS</span><span class="o">=</span><span class="s2">"</span><span class="p">$(</span><span class="s2">EXTRA_CFLAGS</span><span class="p">)</span><span class="s2">"</span> <span class="nv">KBUILD_EXTRA_SYMBOLS</span><span class="o">=</span><span class="s2">"</span><span class="p">$(</span><span class="s2">EXTRA_SYMBOLS</span><span class="p">)</span><span class="s2">"</span> <span class="p">$(</span>@<span class="p">)</span>
 </code></pre></div></div>
 
+<h3 id="generation-of-compile_commandsjson">Generation of <code class="language-plaintext highlighter-rouge">compile_commands.json</code></h3>
+
+<p>Though AOSP provides some vague instructions on how to generate <code class="language-plaintext highlighter-rouge">compile_commands.json</code> for <em>common</em> Android kernel, I didn’t find any materials on how to generate this in a dist release. And I’m tired of jujitsu with Bazel. So, I decide just using <code class="language-plaintext highlighter-rouge">bear</code> to generate <code class="language-plaintext highlighter-rouge">compile_commands.json</code> for my module.</p>
+
+<p>To begin with, we need to copy <code class="language-plaintext highlighter-rouge">bear</code> into the building environment. Since <code class="language-plaintext highlighter-rouge">clang</code> must be visible the environment, we just copy it there (it’s dirty but works).</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cp</span> /usr/bin/bear ./prebuilts/clang/host/linux-x86/clang-&lt;version&gt;/bin <span class="c"># let bear visible in the building environment.</span>
+</code></pre></div></div>
+
+<p>Then we just simply add <code class="language-plaintext highlighter-rouge">bear</code> into the <code class="language-plaintext highlighter-rouge">Makefile</code> of our module, or any module you want to have <code class="language-plaintext highlighter-rouge">compile_commands.json</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bear <span class="nt">--</span> <span class="si">$(</span>MAKE<span class="si">)</span> <span class="nt">-C</span> <span class="si">$(</span>KERNEL_SRC<span class="si">)</span> <span class="nv">M</span><span class="o">=</span><span class="si">$(</span>M<span class="si">)</span> <span class="nv">W</span><span class="o">=</span>1 <span class="si">$(</span>KBUILD_OPTIONS<span class="si">)</span> <span class="nv">EXTRA_CFLAGS</span><span class="o">=</span><span class="s2">"</span><span class="si">$(</span>EXTRA_CFLAGS<span class="si">)</span><span class="s2">"</span> <span class="nv">KBUILD_EXTRA_SYMBOLS</span><span class="o">=</span><span class="s2">"</span><span class="si">$(</span>EXTRA_SYMBOLS<span class="si">)</span><span class="s2">"</span> <span class="si">$(</span>@<span class="si">)</span>
+</code></pre></div></div>
+
 <h3 id="miscellaneous">Miscellaneous</h3>
 
 <ul>
-  <li>Note that Android kernel module does not support the default <code class="language-plaintext highlighter-rouge">init_module</code> and <code class="language-plaintext highlighter-rouge">cleanup_module</code>. Using these two directly crashes the phone. One needs to explicit specifies the entry point using <code class="language-plaintext highlighter-rouge">module_init()</code> and <code class="language-plaintext highlighter-rouge">module_exit()</code> macros.</li>
+  <li>Note that Android kernel module does not support the default <code class="language-plaintext highlighter-rouge">init_module</code> and <code class="language-plaintext highlighter-rouge">cleanup_module</code>. Using these two directly crashes the phone. One needs to explicitly specifies the entry point using <code class="language-plaintext highlighter-rouge">module_init()</code> and <code class="language-plaintext highlighter-rouge">module_exit()</code> macros.</li>
   <li>Only the <code class="language-plaintext highlighter-rouge">T</code> symbols in the <code class="language-plaintext highlighter-rouge">/proc/kallsyms</code> can be referenced in other modules.</li>
 </ul>
 
