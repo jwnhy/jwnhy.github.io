@@ -175,6 +175,8 @@ Then we just simply add `bear` into the `Makefile` of our module, or any module 
 bear -- $(MAKE) -C $(KERNEL_SRC) M=$(M) W=1 $(KBUILD_OPTIONS) EXTRA_CFLAGS="$(EXTRA_CFLAGS)" KBUILD_EXTRA_SYMBOLS="$(EXTRA_SYMBOLS)" $(@)
 ```
 
+> PS: You shouldn't add `bear --` to targets like `module_install` or `module_clean` as they invoke *no* compile commands, which generates an empty `compile_commands.json` and overrides the correct one.
+
 ### Miscellaneous
 
 - Note that Android kernel module does not support the default `init_module` and `cleanup_module`. Using these two directly crashes the phone. One needs to explicitly specifies the entry point using `module_init()` and `module_exit()` macros.
