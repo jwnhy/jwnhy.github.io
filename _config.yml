@@ -20,8 +20,9 @@ collection_order    :
     "ebpf",
     "misc",
     "programming_language",
-    "posts",
     "cpu",
+    "system",
+    "posts",
   ]
 collections:
   misc:   
