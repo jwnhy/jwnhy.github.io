@@ -49,3 +49,45 @@ qemu-system-aarch64 \
         -kernel ./linux-6.8.8/arch/arm64/boot/Image \       # change this to your kernel path
         --append "console=ttyAMA0 root=/dev/vda rw net.ifnames=0"
 ```
+
+# Sharing between host and guest.
+
+> The following content is taken from [here](https://superuser.com/questions/628169/how-to-share-a-directory-with-the-host-without-networking-in-qemu).
+
+To begin with, we need to enable the following kernel configuration in the *guest* kernel.
+
+```
+CONFIG_9P_FS=y
+CONFIG_9P_FS_POSIX_ACL=y
+CONFIG_9P_FS_SECURITY=y
+CONFIG_NETWORK_FILESYSTEMS=y
+CONFIG_NET_9P=y
+CONFIG_NET_9P_DEBUG=y
+CONFIG_NET_9P_VIRTIO=y
+# if you are using aarch64, add the following as well.
+CONFIG_PCI=y
+CONFIG_PCI_HOST_COMMON=y
+CONFIG_PCI_HOST_GENERIC=y
+CONFIG_VIRTIO_PCI=y
+CONFIG_VIRTIO_BLK=y
+CONFIG_VIRTIO_NET=y
+```
+
+We then add the following stuff, telling QEMU to map a host directory into the guest.
+
+```
+# original post says to use security_model=passthrough, but it doesn't work for me.
+-virtfs local,path=<host-path>,mount_tag=host0,security_model=mapped-xattr,id=host0
+```
+
+In the guest, we can mount the shared directory using the following command.
+
+```
+mount -t 9p -o trans=virtio,version=9p2000.L host0 <guest-path>
+```
+
+Or you can just add a line in `/etc/fstab` to mount the directory automatically.
+
+```
+host0   <guest-path>  9p      trans=virtio,version=9p2000.L   0 0
+```
