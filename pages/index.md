@@ -29,7 +29,7 @@ Here is my [resume](../resume.txt).
 Keywords: `io_uring`, `eBPF`, `DWARF`, `debugger`, `RISC-V`, `Arm`, `x86`
 
 ## Non-selected Publications
-- MOAT: Towards Safe BPF Kernel Extension [[paper]](./) [[code]](https://github.com/jwnhy/MOAT-Open)
+- MOAT: Towards Safe BPF Kernel Extension [[paper]](./) [[code]](https://github.com/jwnhy/MOAT-Open)  
     *Hongyi Lu*, Shuai Wang, Yechang Wu, Wanning He, Fengwei Zhang. **USENIX Security 2024**
 
 - DTD: Comprehensive and Scalable Testing for Debuggers [[paper]](./papers/dtd-fse24.pdf) [[code]](https://github.com/jwnhy/DTD)  
@@ -57,14 +57,15 @@ And some community works.
 
 ## Reject/Accept Timeline
 
-<details><summary>FSE 2024 Accept</summary>
+<details><summary>DTD's FSE 2024 Accept</summary>
 1. ASPLOS 2024 Reject<br>
 2. SIGMETRIC 2024 Reject<br>
 3. FSE 2024 Accept
 </details>
 
-<details><summary>Ongoing...</summary>
+<details><summary>MOAT's USENIX 2024 Accept</summary>
 1. USENIX Security 2023 R2 Reject<br>
 2. S&P 2024 R2 Reject<br>
 3. USENIX Security 2024 Accept
 </details>
+
