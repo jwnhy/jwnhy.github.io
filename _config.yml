@@ -20,8 +20,9 @@ collection_order    :
     "ebpf",
     "misc",
     "programming_language",
-    "posts",
     "cpu",
+    "system",
+    "posts",
   ]
 collections:
   misc:   
@@ -51,6 +52,10 @@ collections:
     output          : true
     permalink       : /:collection/:title/
     alias           : "Build Your Own CPU"
+  system: 
+    output          : true
+    permalink       : /:collection/:title/
+    alias           : "System"
   posts:
     output          : true
 
@@ -108,8 +113,9 @@ plugins:
   - jekyll-feed
   - jekyll-sitemap
   - jekyll-seo-tag
+  - jekyll-mermaid
   
-gems: [jekyll-mermaid]
+plugins: [jekyll-mermaid]
 
 # 8. Others
 # Cross-Origin Resource Sharing header
