@@ -29,23 +29,26 @@ Here is my [resume](../resume.txt).
 Keywords: `io_uring`, `eBPF`, `DWARF`, `debugger`, `RISC-V`, `Arm`, `x86`
 
 ## Non-selected Publications
+
+^ indicates equal contribution; \* indicates corresponding author. I highlighted my name in my 1st-authored works.
+
 - MOAT: Towards Safe BPF Kernel Extension [[paper]](./) [[code]](https://github.com/jwnhy/MOAT-Open)  
-    *Hongyi Lu*, Shuai Wang, Yechang Wu, Wanning He, Fengwei Zhang. **USENIX Security 2024**
+    **Hongyi Lu**, Shuai Wang, Yechang Wu, Wanning He, Fengwei Zhang\*. **USENIX Security 2024**
 
 - DTD: Comprehensive and Scalable Testing for Debuggers [[paper]](./papers/dtd-fse24.pdf) [[code]](https://github.com/jwnhy/DTD)  
-    *Hongyi Lu*, Zhibo Liu, Shuai Wang, and Fengwei Zhang. **FSE 2024** 
+    **Hongyi Lu**, Zhibo Liu\*, Shuai Wang, and Fengwei Zhang\*. **FSE 2024** 
 
 - RingGuard: Guard io_uring with eBPF [[paper]](./papers/ringguard-ebpf23.pdf)  
-    Wanning He, *Hongyi Lu*, Fengwei Zhang, and Shuai Wang. **SIGCOMM eBPF 2023**
+    Wanning He^, **Hongyi Lu^**, Fengwei Zhang\*, and Shuai Wang. **SIGCOMM eBPF 2023**
 
 - Raven: A Novel Kernel Debugging Tool on RISC-V [[paper]](./papers/raven-dac22.pdf) [[code]](https://github.com/jwnhy/raven-open)  
-    *Hongyi Lu* and Fengwei Zhang. **DAC 2022**
+    **Hongyi Lu** and Fengwei Zhang\*. **DAC 2022**
 
 - Revisiting BadUSB with Type-C [[paper]](./papers/badusbc-woot21.pdf) [[CVE-2021-22325]](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-22325)  
-    *Hongyi Lu*, Yechang Wu, Shuqing Li, You Lin, Chaozu Zhang, Fengwei Zhang. **WOOT 2021**
+    **Hongyi Lu^**, Yechang Wu^, Shuqing Li^, You Lin, Chaozu Zhang, Fengwei Zhang\*. **WOOT 2021**
 
 - A Novel Memory Management for RISC-V Enclaves [[paper]](./papers/ashman-hasp21.pdf)  [[code]](https://github.com/Compass-All/Ashman)  
-    Haonan Li, Weijie Huang, Mingde Ren, *Hongyi Lu*, Zhenyu Ning, Heming Cui, and Fengwei Zhang. **HASP 2021**
+    Haonan Li, Weijie Huang, Mingde Ren, Hongyi Lu, Zhenyu Ning, Heming Cui, and Fengwei Zhang\*. **HASP 2021**
 
 
 And some community works.
@@ -57,15 +60,19 @@ And some community works.
 
 ## Reject/Accept Timeline
 
-<details><summary>DTD's FSE 2024 Accept</summary>
+The following are the paper submission timelines; these papers are rejected at least once.
+
+<details><summary>FSE 2024 Accept</summary>
 1. ASPLOS 2024 Reject<br>
 2. SIGMETRIC 2024 Reject<br>
 3. FSE 2024 Accept
 </details>
 
-<details><summary>MOAT's USENIX 2024 Accept</summary>
+<details><summary>USENIX 2024 Accept</summary>
 1. USENIX Security 2023 R2 Reject<br>
 2. S&P 2024 R2 Reject<br>
 3. USENIX Security 2024 Accept
 </details>
 
+<center>艰难困苦 玉汝于成</center>
+<center>--- 张载</center>
