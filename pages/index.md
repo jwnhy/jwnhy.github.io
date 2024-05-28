@@ -33,7 +33,7 @@ Keywords: `io_uring`, `eBPF`, `DWARF`, `debugger`, `RISC-V`, `Arm`, `x86`
 ^ indicates equal contribution; \* indicates corresponding author. I highlighted my name in my 1st-authored works.
 
 - MOAT: Towards Safe BPF Kernel Extension [[paper]](./papers/moat-usenix24.pdf) [[code]](https://github.com/jwnhy/MOAT-Open)  
-    **Hongyi Lu**, Shuai Wang, Yechang Wu, Wanning He, Fengwei Zhang\*. **USENIX Security 2024**
+    **Hongyi Lu**, Shuai Wang*, Yechang Wu, Wanning He, Fengwei Zhang\*. **USENIX Security 2024**
 
 - DTD: Comprehensive and Scalable Testing for Debuggers [[paper]](./papers/dtd-fse24.pdf) [[code]](https://github.com/jwnhy/DTD)  
     **Hongyi Lu**, Zhibo Liu\*, Shuai Wang, and Fengwei Zhang\*. **FSE 2024** 
