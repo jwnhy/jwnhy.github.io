@@ -29,7 +29,7 @@ Research Assistant
 Publications
 --------------------------------------------------------------------------------
 MOAT: Towards Safe BPF Kernel Extension
-Hongyi Lu, Shuai Wang, Yechang Wu, Wanning He, Fengwei Zhang*
+Hongyi Lu, Shuai Wang*, Yechang Wu, Wanning He, Fengwei Zhang*
 USENIX Security Symposium (USENIX Security '24)
 https://jwnhy.github.io/papers/moat-usenix24.pdf
 
