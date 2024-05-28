@@ -15,58 +15,50 @@ Ph.D. Computer Science
 
 June 2021 Southern University of Science And Technology
 Shenzhen, Guangdong, China
-Bachelor of Science Mathematics 
-
-Professional Summary
---------------------------------------------------------------------------------
-Motivated student currently working towards degree in Computer Science. 
-Extensive background in investigating system security research.
-
-Skills
---------------------------------------------------------------------------------
-- Proficient in RISC-V ISA, system software, bootloader
-- System software expertise
-- Familiar to compilers, Linux kernel
-- Know software verification
-- Academic Writing
-- ITELS: L8 R8.5 W7 S6.5
+Bachelor of Science, Mathematics 
 
 Professional Experience
 --------------------------------------------------------------------------------
 December 2021 to 2022
-Southern University Of Science And Technology Shenzhen, Guangdong
-Research Assistant    
+Southern University Of Science And Technology
+Research Assistant
 > Develop system software on RISC-V platform.
 > Research security solutions on RISC-V.
 > Perform verification for system software.
 
-July 2020 to August 2020
-Tencent Holdings Shenzhen, Guangdong
-Intern    
-> Created data visualization graphics.
-> Developed database solutions in multiple SQL languages.
-
 Publications
 --------------------------------------------------------------------------------
+MOAT: Towards Safe BPF Kernel Extension
+Hongyi Lu, Shuai Wang, Yechang Wu, Wanning He, Fengwei Zhang*
+USENIX Security Symposium (USENIX Security '24)
+https://jwnhy.github.io/papers/moat-usenix24.pdf
+
+
+DTD: Comprehensive and Scalable Testing for Debuggers
+Hongyi Lu, Zhibo Liu*, Shuai Wang, and Fengwei Zhang*
+ACM International Conference on the Foundations of Software Engineering (FSE '24)
+https://jwnhy.github.io/papers/dtd-fse24.pdf
+
 RingGuard: Guard io_uring with eBPF
 Wanning He, Hongyi Lu, Fengwei Zhang, Shuai Wang
-To appear in SIGCOMM 2023 Workshop on eBPF and Kernel Extensions (eBPF '23)
+SIGCOMM 2023 Workshop on eBPF and Kernel Extensions (eBPF '23)
+https://jwnhy.github.io/papers/ringguard-ebpf23.pdf
 
 Raven: A Novel Kernel Debugging Tool on RISC-V
 Hongyi Lu, Fengwei Zhang
-In Proceedings of the 2022 Design Automation Conference (DAC' 22).
-https://compass.sustech.edu.cn/paper/raven-dac22.pdf
+Design Automation Conference (DAC' 22).
+https://jwnhy.github.io/papers/raven-dac22.pdf
 
 A Novel Memory Management for RISC-V Enclaves
 Haonan Li, Weijie Huang, Mingde Ren, Hongyi Lu, 
 Zhenyu Ning, Heming Cui, and Fengwei Zhang
-In Proceedings of the Hardware and Architectural Support for Security and Privacy
-(HASP' 21)
+Hardware and Architectural Support for Security and Privacy (HASP' 21)
+https://jwnhy.github.io/papers/ashman-hasp21.pdf
 
 BadUSB-C: Revisiting BadUSB with Type-C
 Hongyi Lu, Yechang Wu, Shuqing Li, You Lin, Chaozu Zhang, Fengwei Zhang
 In Proceedings of the 2021 IEEE Security and Privacy Workshops (WOOT' 21) 
-https://compass.sustech.edu.cn/paper/badusbc-woot21.pdf
+https://jwnhy.github.io/papers/badusbc-woot21.pdf
 
 MISC
 --------------------------------------------------------------------------------
