@@ -54,7 +54,6 @@ Keywords: `io_uring`, `eBPF`, `DWARF`, `debugger`, `RISC-V`, `Arm`, `x86`
 And some community works.
 
 - [A Video to ASCII Player (for fun)](https://github.com/jwnhy/video2ascii)
-- [Pornhub](https://www.pornhub.com) Community Translator
 - [Software Foundation](https://coq-zh.github.io/SF-zh/) Translator
 - [LLVM](https://llvm.org/) Contributor [[bugfix]](https://github.com/llvm/llvm-project/commit/16c2872d7b09eee67dd0c7ef6b5dd3c3724d3cfc)
 
