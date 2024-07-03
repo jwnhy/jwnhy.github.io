@@ -73,5 +73,9 @@ The following are the paper submission timelines; these papers are rejected at l
 3. USENIX Security 2024 Accept
 </details>
 
+## Friends
+
+- [Shuqing Li](https://shuqing-li.github.io/), [Dong Chen](https://blossomin.github.io/), [Yifan Wu](https://ghostfrankwu.github.io/), [Haonan Li](https://haonan.me/)
+
 <center>艰难困苦 玉汝于成</center>
 <center>--- 张载</center>
