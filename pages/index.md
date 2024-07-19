@@ -6,8 +6,8 @@ comment: true
 home_btn: true
 btn_text: true
 footer: true
-title: Welcome to jwnhy's Blog
-author: "jwnhy"
+title: Hongyi Lu's Homepage
+author: "Hongyi Lu (jwnhy)"
 permalink: /
 ---
 
