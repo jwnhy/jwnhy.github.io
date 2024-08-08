@@ -6,18 +6,22 @@ comment: true
 home_btn: true
 btn_text: true
 footer: true
-title: Welcome to jwnhy's Blog
-author: "jwnhy"
+title: Homepage of Hongyi Lu
+author: "Hongyi Lu (jwnhy)"
 permalink: /
 ---
 
+
 ## Who am I?
 
-I am Hongyi Lu (jwnhy), a Computer Science Ph.D student in SUSTech-HKUST joint
-program, under the supervision of [Prof. Shuai Wang](https://www.cse.ust.hk/~shuaiw/) and [Prof. Fengwei
-Zhang](https://fengweiz.github.io/).
+<img src="../photo.jpg" align="right" width="200">
 
-Here is my [resume](../resume.txt).
+I am Hongyi Lu (jwnhy), a Computer Science Ph.D student in SUSTech-HKUST joint
+program under the supervision of [Prof. Shuai Wang](https://www.cse.ust.hk/~shuaiw/) and [Prof. Fengwei
+Zhang](https://fengweiz.github.io/). 
+
+Here is my [resume](../resume.pdf). I am on the right of the photo.
+
 
 ## What interests me?
 
@@ -54,7 +58,6 @@ Keywords: `io_uring`, `eBPF`, `DWARF`, `debugger`, `RISC-V`, `Arm`, `x86`
 And some community works.
 
 - [A Video to ASCII Player (for fun)](https://github.com/jwnhy/video2ascii)
-- [Pornhub](https://www.pornhub.com) Community Translator
 - [Software Foundation](https://coq-zh.github.io/SF-zh/) Translator
 - [LLVM](https://llvm.org/) Contributor [[bugfix]](https://github.com/llvm/llvm-project/commit/16c2872d7b09eee67dd0c7ef6b5dd3c3724d3cfc)
 
@@ -73,6 +76,10 @@ The following are the paper submission timelines; these papers are rejected at l
 2. S&P 2024 R2 Reject<br>
 3. USENIX Security 2024 Accept
 </details>
+
+## Friends
+
+- [Shuqing Li](https://shuqing-li.github.io/), [Dong Chen](https://blossomin.github.io/), [Yifan Wu](https://ghostfrankwu.github.io/), [Haonan Li](https://haonan.me/), [Zhibo Liu](https://monkbai.github.io/), [Yechang Wu](https://wycer.cn/).
 
 <center>艰难困苦 玉汝于成</center>
 <center>--- 张载</center>
