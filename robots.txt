@@ -1,1 +1,2 @@
-Sitemap: http://jwnhy.github.io/sitemap.xml
+User-agent: *
+Sitemap: https://hongyi.lu/sitemap.xml
