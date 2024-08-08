@@ -1,7 +1,7 @@
 # 1. Site Settings
 title               : jwnhy Blog
 owner               : "jwnhy"
-url                : "https://jwnhy.github.io"
+url                : "https://hongyi.lu"
 baseurl            : ""
 permalink           : /:title/
 description         : "Be humble, be better."
