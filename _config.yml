@@ -4,7 +4,7 @@ owner               : "Hongyi Lu"
 url                 : "https://hongyi.lu"
 baseurl             : ""
 permalink           : /:title/
-description         : "The homepage of Hongyi LU"
+description         : "The homepage of Hongyi LU, a 2nd year PhD student. My interests include operating systems, software engineering, and many more cool stuff."
 markdown            : kramdown
 bgtext              : "ABCFGHKLMNPQRSVWXYZabcdefghijklmnopqrstuvwxyz@#$%&*+-;/[]<>~" # texts randomly displayed in background
 
