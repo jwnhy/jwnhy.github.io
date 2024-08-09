@@ -4,9 +4,8 @@ owner               : "Hongyi Lu"
 url                 : "https://hongyi.lu"
 baseurl             : ""
 permalink           : /:title/
-description         : "Be humble, be better."
+description         : "The homepage of Hongyi LU"
 markdown            : kramdown
-statement           : "Designed by DeerRIDER, All Rights Reserved"
 bgtext              : "ABCFGHKLMNPQRSVWXYZabcdefghijklmnopqrstuvwxyz@#$%&*+-;/[]<>~" # texts randomly displayed in background
 
 # 2. Your Collections
@@ -86,7 +85,7 @@ defaults:
 
 # 5. Social Media Accounts
 email               : "jwnhy0@gmail.com"
-linkedin            : 
+linkedin            : ""
 github              : "jwnhy" 
 gitlab              : 
 website             : ""
