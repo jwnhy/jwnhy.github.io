@@ -61,6 +61,20 @@ And some community works.
 - [Software Foundation](https://coq-zh.github.io/SF-zh/) Translator
 - [LLVM](https://llvm.org/) Contributor [[bugfix]](https://github.com/llvm/llvm-project/commit/16c2872d7b09eee67dd0c7ef6b5dd3c3724d3cfc)
 
+And some random award.
+- USENIX 2024 Student Grant Award
+- SUSTech Outstanding Teaching Assistant (I lost the certificate though, sorry)
+
+And some teaching assistant experience.
+- CS102A Introduction to Computer Programming (SUSTech)
+- CS307 Principles of Database Systems (SUSTech)
+- CS303 Artificial Intelligence (SUSTech)
+- MA305 Numerical Analysis (SUSTech)
+- MA113 Linear Algebra II (SUSTech)
+
+- COMP4632 Practicing Cybersecurity: Attacks and Counter-measures (HKUST)
+- COMP3632 Principles of Cybersecurity (HKUST)
+
 ## Reject/Accept Timeline
 
 The following are the paper submission timelines; these papers are rejected at least once.
