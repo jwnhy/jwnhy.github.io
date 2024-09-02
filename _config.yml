@@ -21,6 +21,7 @@ collection_order    :
     "programming_language",
     "cpu",
     "system",
+    "pwn",
     "posts",
   ]
 collections:
