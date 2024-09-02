@@ -55,6 +55,10 @@ collections:
     output          : true
     permalink       : /:collection/:title/
     alias           : "System"
+  pwn:
+    output          : true
+    permalink       : /:collection/:title/
+    alias           : "Pwn"
   posts:
     output          : true
 
