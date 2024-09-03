@@ -64,7 +64,9 @@ lea o(r1,r2,m), rd
 指令的语法糖。例如 `leaq cmd(%rip), %rdi` 所代表的并不是将 `$cmd + %rip` 这个地址赋值给 `%rdi`，而是将 `$cmd` 这个地址以 pc 相对寻址的方式赋值给 `%rdi`。
 
 ### SetUID
-这部分详见 [Linux 中各种各样的 UID](../2024-9-2-uid)。
+这部分详见 [Linux 中各种各样的 UID](../uid)。
 
 ### `argv`
 `argv` 是一个指向字符串指针的指针，我们需要将其设置为一个指向字符串指针的数组。在这里，我们将 `argv` 设置为一个指向字符串指针的数组，其中第一个指针指向 `cmd`，第二个指针指向 `arg2="/flag"`，第三个指针指向 `NULL` 代表终止符。
+
+## Challenge 2 Shellcode with NOP Sled
