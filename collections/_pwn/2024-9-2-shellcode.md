@@ -23,7 +23,7 @@ objdump  -b binary shell.bin -m i386:x86-64 -D  # 输出我们的 shellcode 便�
 <details markdown="1">
 <summary>shell.s</summary>
 
-```asm
+```assembly
 .section .text
 .global _start
 _start:
