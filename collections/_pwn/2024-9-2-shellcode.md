@@ -23,7 +23,7 @@ objdump  -b binary shell.bin -m i386:x86-64 -D  # 输出我们的 shellcode 便�
 <details>
 <summary>shell.s</summary>
 
-```asm
+<pre>
 .section .text
 .global _start
 _start:
@@ -44,6 +44,6 @@ argv2:  .long 0
 	    .long 0
 	    .long 0
 arg2: .string "/flag"
-```
+</pre>
 
 </details>
