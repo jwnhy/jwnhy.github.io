@@ -1,30 +1,59 @@
 <!-- background animations -->
-<div class="div_bg">
-    <canvas id="c"></canvas>
-</div>
-<script>
-var c = document.getElementById("c");
-var ctx = c.getContext("2d");
+const c = document.getElementById("c");
+const ctx = c.getContext("2d");
 c.height = window.innerHeight;
 c.width = window.innerWidth;
-var txts = "{{site.bgtext}}";
-txts = txts.split("");
-var font_size = 12;
-var columns = c.width / font_size;
-var drops = [];
-for (var x = 0; x < columns; x++) drops[x] = 1;
 
-function draw() {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-  ctx.fillRect(0, 0, c.width, c.height);
-  ctx.fillStyle = "#490";
-  ctx.font = font_size + "px arial";
-  for (var i = 0; i < drops.length; i++) {
-    var text = txts[Math.floor(Math.random() * txts.length)];
-    ctx.fillText(text, i * font_size, drops[i] * font_size);
-    if (drops[i] * font_size > c.height || Math.random() > 0.98) drops[i] = 0;
-    drops[i]++;
-  }
+const txts = "ABCFGHKLMNPQRSVWXYZabcdefghijklmnopqrstuvwxyz@#$%&*+-;/[]<>~".split("");
+const font_size = 12;
+const columns = Math.floor(c.width / font_size);
+const drops = new Array(columns).fill(1);
+
+// Create an off-screen canvas
+const offScreenCanvas = document.createElement('canvas');
+offScreenCanvas.width = c.width;
+offScreenCanvas.height = c.height;
+const offScreenCtx = offScreenCanvas.getContext('2d');
+
+// Pre-render characters
+const charCache = {};
+txts.forEach(char => {
+    const charCanvas = document.createElement('canvas');
+    charCanvas.width = font_size;
+    charCanvas.height = font_size;
+    const charCtx = charCanvas.getContext('2d');
+    charCtx.font = font_size + "px arial";
+    charCtx.fillStyle = "#490";
+    charCtx.fillText(char, 0, font_size);
+    charCache[char] = charCanvas;
+});
+
+let lastTime = 0;
+const fps = 30;
+const interval = 1000 / fps;
+
+function draw(currentTime) {
+    requestAnimationFrame(draw);
+
+    if (currentTime - lastTime < interval) return;
+    lastTime = currentTime;
+
+    offScreenCtx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    offScreenCtx.fillRect(0, 0, c.width, c.height);
+
+    for (let i = 0; i < drops.length; i++) {
+        if (drops[i] * font_size > c.height || Math.random() > 0.98) {
+            drops[i] = 0;
+        } else {
+            const text = txts[Math.floor(Math.random() * txts.length)];
+            offScreenCtx.drawImage(charCache[text], i * font_size, drops[i] * font_size);
+            drops[i]++;
+        }
+    }
+
+    // Copy the off-screen canvas to the main canvas
+    ctx.drawImage(offScreenCanvas, 0, 0);
 }
-setInterval(draw, 20);
+
+requestAnimationFrame(draw);
 </script>
