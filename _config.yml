@@ -8,6 +8,7 @@ description         : "The homepage of Hongyi LU, a 2nd year PhD student. My int
 markdown            : kramdown
 bgtext              : "ABCFGHKLMNPQRSVWXYZabcdefghijklmnopqrstuvwxyz@#$%&*+-;/[]<>~" # texts randomly displayed in background
 
+
 # 2. Your Collections
 # You can specify the order shown in Archive window. 
 # Keep it null if you want to show items in alphabetic order.
@@ -62,6 +63,20 @@ collections:
     alias           : "Pwn"
   posts:
     output          : true
+
+feed:
+  collections:
+    - arm
+    - riscv
+    - linux
+    - ebpf
+    - misc
+    - programming_language
+    - cpu
+    - pwn
+    - system
+    - posts
+
 
 # 3. Comment settings（disqus.com）
 disqus_username     : hongyilu
