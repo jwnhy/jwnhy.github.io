@@ -90,16 +90,8 @@ defaults:
 
 # 5. Social Media Accounts
 email               : "jwnhy0@gmail.com"
-linkedin            : ""
+linkedin            : "hongyi-lu-81b4851b3"
 github              : "jwnhy" 
-gitlab              : 
-website             : ""
-twitter             : ""
-facebook            : ""
-instagram           : 
-youtube             : ""
-steam               : ""
-weibo               :
       
 # 6. Where things are
 source              : .
