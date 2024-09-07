@@ -77,29 +77,6 @@ feed:
     - system
     - posts
 
-feed:
-  collections:
-    arm:
-      path: "/feed.xml"
-    riscv:
-      path: "/feed.xml"
-    linux:
-      path: "/feed.xml"
-    ebpf:
-      path: "/feed.xml"
-    misc:
-      path: "/feed.xml"
-    programming_language:
-      path: "/feed.xml"
-    cpu:
-      path: "/feed.xml"
-    pwn:
-      path: "/feed.xml"
-    system:
-      path: "/feed.xml"
-    posts:
-      path: "/feed.xml"
-
 
 # 3. Comment settings（disqus.com）
 disqus_username     : hongyilu
