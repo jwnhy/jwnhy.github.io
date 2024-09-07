@@ -66,7 +66,25 @@ collections:
 
 feed:
   collections:
-    changes:
+    arm:
+      path: "/feed.xml"
+    riscv:
+      path: "/feed.xml"
+    linux:
+      path: "/feed.xml"
+    ebpf:
+      path: "/feed.xml"
+    misc:
+      path: "/feed.xml"
+    programming_language:
+      path: "/feed.xml"
+    cpu:
+      path: "/feed.xml"
+    pwn:
+      path: "/feed.xml"
+    system:
+      path: "/feed.xml"
+    post:
       path: "/feed.xml"
     - arm
     - riscv
