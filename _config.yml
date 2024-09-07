@@ -97,7 +97,7 @@ feed:
       path: "/feed.xml"
     system:
       path: "/feed.xml"
-    post:
+    posts:
       path: "/feed.xml"
 
 
