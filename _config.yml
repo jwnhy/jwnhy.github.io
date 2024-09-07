@@ -66,6 +66,19 @@ collections:
 
 feed:
   collections:
+    - arm
+    - riscv
+    - linux
+    - ebpf
+    - misc
+    - programming_language
+    - cpu
+    - pwn
+    - system
+    - posts
+
+feed:
+  collections:
     arm:
       path: "/feed.xml"
     riscv:
@@ -86,16 +99,6 @@ feed:
       path: "/feed.xml"
     post:
       path: "/feed.xml"
-    - arm
-    - riscv
-    - linux
-    - ebpf
-    - misc
-    - programming_language
-    - cpu
-    - pwn
-    - system
-    - posts
 
 
 # 3. Comment settings（disqus.com）
