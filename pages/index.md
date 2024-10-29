@@ -16,14 +16,14 @@ permalink: /
 
 <img src="../photo.jpg" align="right" width="200">
 
-I am Hongyi Lu (jwnhy), a Computer Science Ph.D student in SUSTech-HKUST joint
+I am Hongyi Lu (jwnhy), a third-year Computer Science Ph.D student in SUSTech-HKUST joint
 program under the supervision of [Prof. Shuai Wang](https://www.cse.ust.hk/~shuaiw/) and [Prof. Fengwei
 Zhang](https://fengweiz.github.io/). 
 
 Here is my [resume](../resume.pdf). I am on the right of the photo.
 
 
-## What interests me?
+## Research Interest
 
 - C00l stuff
 - System security 
