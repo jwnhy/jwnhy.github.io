@@ -55,17 +55,24 @@ Keywords: `io_uring`, `eBPF`, `DWARF`, `debugger`, `RISC-V`, `Arm`, `x86`
     Haonan Li, Weijie Huang, Mingde Ren, Hongyi Lu, Zhenyu Ning, Heming Cui, and Fengwei Zhang\*. **HASP 2021**
 
 
-And some community works.
+## Fun Projects
 
 - [A Video to ASCII Player (for fun)](https://github.com/jwnhy/video2ascii)
 - [Software Foundation](https://coq-zh.github.io/SF-zh/) Translator
 - [LLVM](https://llvm.org/) Contributor [[bugfix]](https://github.com/llvm/llvm-project/commit/16c2872d7b09eee67dd0c7ef6b5dd3c3724d3cfc)
 
-And some random award.
+## Awards
+
 - USENIX 2024 Student Grant Award
 - SUSTech Outstanding Teaching Assistant (I lost the certificate though, sorry)
 
-And some teaching assistant experience.
+## Academic Services
+
+- Reviewer: TIFS
+- External Reviewer: USENIX Security 2023, S&P 2023, PoPET 2023, CCS 2023, CCS 2022
+
+## Teaching Assistant Experience
+
 - CS102A Introduction to Computer Programming (SUSTech)
 - CS307 Principles of Database Systems (SUSTech)
 - CS303 Artificial Intelligence (SUSTech)
