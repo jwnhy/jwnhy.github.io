@@ -6,7 +6,6 @@ comment: true
 home_btn: true
 btn_text: true
 footer: true
-title: Homepage of Hongyi Lu
 author: "Hongyi Lu (jwnhy)"
 permalink: /
 ---
