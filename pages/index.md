@@ -93,7 +93,7 @@ The following are the paper submission timelines; these papers are rejected at l
 
 ## Friends
 
-- [Shuqing Li](https://shuqing-li.github.io/), [Dong Chen](https://blossomin.github.io/), [Yifan Wu](https://ghostfrankwu.github.io/), [Haonan Li](https://haonan.me/), [Zhibo Liu](https://monkbai.github.io/), [Yechang Wu](https://wycer.cn/), [Chuan Yan](https://yanchuan390.github.io/), [Weipeng Jiang](https://sites.google.com/view/weipeng-jiang/).
+- [Shuqing Li](https://shuqing-li.github.io/), [Dong Chen](https://blossomin.github.io/), [Yifan Wu](https://ghostfrankwu.github.io/), [Haonan Li](https://haonan.me/), [Zhibo Liu](https://monkbai.github.io/), [Yechang Wu](https://wycer.cn/), [Chuan Yan](https://yanchuan390.github.io/), [Weipeng Jiang](https://sites.google.com/view/weipeng-jiang/), [Yunjie Deng](https://yunjie-deng.github.io/).
 - [NekoNull](https://nekonull.com/)
 
 <center>艰难困苦 玉汝于成</center>
