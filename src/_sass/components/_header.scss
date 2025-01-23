@@ -60,12 +60,13 @@
     }
   }
   .btn_text {
-    font-style: bold;
+    font-style: normal;
     margin: 0;
     display: inline-block;
     text-transform: capitalize;
     font-family: $font-serif;
     font-size: $header-btn-text-size;
+    font-weight: bold;
   }
   .btn_icon {
     font-size: $header-btn-icon-size;
