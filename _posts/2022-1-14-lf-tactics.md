@@ -6,7 +6,7 @@ title: 常见 More Basic Tactics
 
 1. 需要证明的 goal 与之前假设完全一致时可以使用。
 
-2. 形如 $H:A\rightarrow B$ 的条件假设，将 goal 中需要证明的 $B$ 替换成 $A$ 因为根据 $H$ 如果 $A$ 成立，则 $B$ 也成立。
+2. 形如 \\(H:A\rightarrow B\\) 的条件假设，将 goal 中需要证明的 \\(B\\) 替换成 \\(A\\) 因为根据 \\(H\\) 如果 \\(A\\) 成立，则 \\(B\\) 也成立。
 
 ## The `apply with` Tactic
 
@@ -38,8 +38,8 @@ Coq 也提供了这类传递性通用的 tactic 成为 `transitivity` 它也需�
 
 注意到对于一个 `Inductive` 类型，存在下面两个性质。
 
-1. 构造函数是 injective 的，既 $S n = S m\rightarrow n = m$ 。
-2. 不同的构造函数是 disjoint 的，既 $0 \neq S n \forall n$ 。
+1. 构造函数是 injective 的，既 \\(S n = S m\rightarrow n = m\\) 。
+2. 不同的构造函数是 disjoint 的，既 \\(0 \neq S n \forall n\\) 。
 
 Coq 提供了 `injection` 这个 tactic 来将类型“解构”。
 例如，`injection H as H1 H2.` 提供了下面的功能。
@@ -50,7 +50,7 @@ H_1&: a=x\\
 H_2&: b=y
 \end{align}$$
 
-`discriminate` 则是当假设中出现形同 $H: S n = 0$ 这种不可能出现的情况时，直接处理掉 goal （反证法）。
+`discriminate` 则是当假设中出现形同 \\(H: S n = 0\\) 这种不可能出现的情况时，直接处理掉 goal （反证法）。
 
 ## Using Tactics in Hypothesis
 
@@ -58,10 +58,10 @@ tactics 是同样可以修改假设，使用 `tactics ... in H.` 的形式即可
 
 ## Varying the Induction Hypothesis
 
-`intros x y z.` 是将变量从假设中提取到语境中，含义通常为 *For a particular $x$*。
-在进行数学归纳法时，可能会出现 $n$ 和 $m$ 两个可以归纳的值，若我们想对 $m$ 进行归纳，会不得不先引入 $n$。
-导致出现 *For a particular $n$ and $m$* 这会导致证明卡死，因为两个都是 *particular* 的，我们对其一无所知。
-然后进行归纳时，会出现我们试图证明对于所有的 $m$ 都有对于某个 *particular* 的 $n$ 成立的性质，这是不可能的。
+`intros x y z.` 是将变量从假设中提取到语境中，含义通常为 *For a particular \\(x\\)*。
+在进行数学归纳法时，可能会出现 \\(n\\) 和 \\(m\\) 两个可以归纳的值，若我们想对 \\(m\\) 进行归纳，会不得不先引入 \\(n\\)。
+导致出现 *For a particular \\(n\\) and \\(m\\)* 这会导致证明卡死，因为两个都是 *particular* 的，我们对其一无所知。
+然后进行归纳时，会出现我们试图证明对于所有的 \\(m\\) 都有对于某个 *particular* 的 \\(n\\) 成立的性质，这是不可能的。
 
 因此 Coq 提供了 `generalize dependent n.` 用于将 `intros n.` 提取出去。
 
