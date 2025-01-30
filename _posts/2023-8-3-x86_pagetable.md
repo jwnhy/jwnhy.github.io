@@ -2,6 +2,8 @@
 title: x86 4-level and 5-level pagetable on Linux
 ---
 
+The structures of different page tables on Linux.
+
 ## Theory
 
 Intel supports 5-level paging, supporting over 128 PB of memory.

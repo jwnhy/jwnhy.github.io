@@ -2,6 +2,8 @@
 title: f0rizen's Hash checker 0x01
 ---
 
+A solution for a crackme.
+
 ## Decompile
 
 Dump the binary into Radare2 and decompile it, we get

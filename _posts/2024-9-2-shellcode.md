@@ -2,6 +2,8 @@
 title: Pwn College Shell Code
 ---
 
+Shellcode challenges in pwn.college.
+
 ## 准备工作
 
 首先，我不希望使用类似于 `pwntool` 这类完整的 CTF 框架，这会让我们失去对细节的理解。因此，我们将使用最基础的 `as` 作为我们的汇编器。

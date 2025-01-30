@@ -2,6 +2,8 @@
 title: Android AOSP kernel build, module build, and misc.
 ---
 
+Building Android AOSP kernel and adding custom kernel modules!
+
 ## Build release kernel.
 
 First we need to follow the official [guide](https://source.android.com/docs/setup/build/building-pixel-kernels).

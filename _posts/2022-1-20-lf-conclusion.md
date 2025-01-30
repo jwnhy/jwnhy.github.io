@@ -25,11 +25,11 @@ Check @eq : forall A: Type, A -> A -> Prop
 
 ## 证明中的存在量词
 
-在证明中，常常会出现 $\exists$ 存在量词，它出现的位置可能有两种，目标或者假设中。
+在证明中，常常会出现 \\(\exists\\) 存在量词，它出现的位置可能有两种，目标或者假设中。
 
 #### 出现在目标中的存在量词
 
-对于出现在目标中的 $\exists$ ，我们直接提供 **存在** 的对象即可。
+对于出现在目标中的 \\(\exists\\) ，我们直接提供 **存在** 的对象即可。
 
 ```coq
 Definition Even x := exists n : nat, x = double n.
@@ -43,7 +43,7 @@ Qed.
 
 #### 出现在假设中的存在量词
 
-对于出现在假设中的 $\exists$，我们使用 `destruct` 来获得一个满足条件的对象。
+对于出现在假设中的 \\(\exists\\)，我们使用 `destruct` 来获得一个满足条件的对象。
 
 ```coq
 Theorem exists_example_2 : forall n,
@@ -57,7 +57,7 @@ Proof.
 
 ## 定理的实例化
 
-对于含有全称量词 $\forall$ 的定理，我们可以传入参数或者使用 `specialize` 使其实例化为我们需要的值。
+对于含有全称量词 \\(\forall\\) 的定理，我们可以传入参数或者使用 `specialize` 使其实例化为我们需要的值。
 
 ```coq
 Lemma in_not_nil_42_take4 :

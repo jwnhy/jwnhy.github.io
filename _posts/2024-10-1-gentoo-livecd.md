@@ -2,6 +2,8 @@
 title: Gentoo Live CD Adventures
 ---
 
+Build a custom Gentoo Live CD.
+
 ## Background
 
 To study Intel's latest Linear Address Masking feature, I have my supervisor bought me a ASUS Laptop with latest Intel Ultra 258V CPU. As my usual development environment is built upon Gentoo, I decided to install Gentoo on it and test the LAM feature.

@@ -2,6 +2,8 @@
 title: QEMU made easy.
 ---
 
+How to quickly run a virtual machine in QEMU.
+
 # QEMU Basic.
 
 QEMU is a common virtualization tool used to emulate a full system/user application. In this post, we will cover how to set up a basic QEMU full system emulation. In essence, you need two things to boot a full system in QEMU.
