@@ -10,7 +10,6 @@ author: "Hongyi Lu (jwnhy)"
 permalink: /
 ---
 
-
 Hongyi LU (jwnhy) is a third-year Computer Science Ph.D student in
 SUSTech-HKUST joint program under the supervision of [Prof. Shuai
 Wang](https://www.cse.ust.hk/~shuaiw/) and [Prof. Fengwei
@@ -41,22 +40,15 @@ Here is his [resume](../resume.pdf).
 - A Novel Memory Management for RISC-V Enclaves [[paper]](./papers/ashman-hasp21.pdf)  [[code]](https://github.com/Compass-All/Ashman)  
     Haonan Li, Weijie Huang, Mingde Ren, Hongyi Lu, Zhenyu Ning, Heming Cui, and Fengwei Zhang\*. **HASP 2021**
 
-
-## Fun Projects
-
-- [A Video to ASCII Player (for fun)](https://github.com/jwnhy/video2ascii)
-- [Software Foundation](https://coq-zh.github.io/SF-zh/) Translator
-- [LLVM](https://llvm.org/) Contributor [[bugfix]](https://github.com/llvm/llvm-project/commit/16c2872d7b09eee67dd0c7ef6b5dd3c3724d3cfc)
-
-## Awards
-
-- USENIX 2024 Student Grant Award
-- SUSTech Outstanding Teaching Assistant (I lost the certificate though, sorry)
-
 ## Academic Services
 
 - Reviewer: TIFS
 - External Reviewer: USENIX Security 2023, S&P 2023, PoPET 2023, CCS 2023, CCS 2022
+
+## Awards
+
+- USENIX 2024 Student Grant Award
+- SUSTech Outstanding Teaching Assistant
 
 ## Teaching Assistant Experience
 
@@ -84,6 +76,13 @@ The following are the paper submission timelines; these papers are rejected at l
 2. S&P 2024 R2 Reject<br>
 3. USENIX Security 2024 Accept
 </details>
+
+## Community Contribution
+
+- [A Video to ASCII Player (for fun)](https://github.com/jwnhy/video2ascii)
+- [Software Foundation](https://coq-zh.github.io/SF-zh/) Translator
+- [LLVM](https://llvm.org/) Contributor [[bugfix]](https://github.com/llvm/llvm-project/commit/16c2872d7b09eee67dd0c7ef6b5dd3c3724d3cfc)
+
 
 ## Friends
 
