@@ -2,6 +2,8 @@
 title: 常见 More Basic Tactics
 ---
 
+Coq 中常用的策略。
+
 ## The `apply` Tactic
 
 1. 需要证明的 goal 与之前假设完全一致时可以使用。
