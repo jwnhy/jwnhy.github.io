@@ -1,49 +1,91 @@
 ---
+post_list: false
+collection_list: true
+toc: true
+comment: true
+home_btn: true
+btn_text: true
+footer: true
+author: "Hongyi Lu (jwnhy)"
 permalink: /
-title: "Academic Pages is a ready-to-fork GitHub Pages template for academic personal websites"
-author_profile: true
-redirect_from: 
-  - /about/
-  - /about.html
 ---
 
-This is the front page of a website that is powered by the [Academic Pages template](https://github.com/academicpages/academicpages.github.io) and hosted on GitHub pages. [GitHub pages](https://pages.github.com) is a free service in which websites are built and hosted from code and data stored in a GitHub repository, automatically updating when a new commit is made to the repository. This template was forked from the [Minimal Mistakes Jekyll Theme](https://mmistakes.github.io/minimal-mistakes/) created by Michael Rose, and then extended to support the kinds of content that academics have: publications, talks, teaching, a portfolio, blog posts, and a dynamically-generated CV. You can fork [this template](https://github.com/academicpages/academicpages.github.io) right now, modify the configuration and markdown files, add your own PDFs and other content, and have your own site for free, with no ads!
 
-A data-driven personal website
-======
-Like many other Jekyll-based GitHub Pages templates, Academic Pages makes you separate the website's content from its form. The content & metadata of your website are in structured markdown files, while various other files constitute the theme, specifying how to transform that content & metadata into HTML pages. You keep these various markdown (.md), YAML (.yml), HTML, and CSS files in a public GitHub repository. Each time you commit and push an update to the repository, the [GitHub pages](https://pages.github.com/) service creates static HTML pages based on these files, which are hosted on GitHub's servers free of charge.
+Hongyi LU (jwnhy) is a third-year Computer Science Ph.D student in
+SUSTech-HKUST joint program under the supervision of [Prof. Shuai
+Wang](https://www.cse.ust.hk/~shuaiw/) and [Prof. Fengwei
+Zhang](https://fengweiz.github.io/). His primary interest is **c00l stuff**
+like kernel security, low-level hardware, software testing and exploitation.
 
-Many of the features of dynamic content management systems (like Wordpress) can be achieved in this fashion, using a fraction of the computational resources and with far less vulnerability to hacking and DDoSing. You can also modify the theme to your heart's content without touching the content of your site. If you get to a point where you've broken something in Jekyll/HTML/CSS beyond repair, your markdown files describing your talks, publications, etc. are safe. You can rollback the changes or even delete the repository and start over - just be sure to save the markdown files! Finally, you can also write scripts that process the structured data on the site, such as [this one](https://github.com/academicpages/academicpages.github.io/blob/master/talkmap.ipynb) that analyzes metadata in pages about talks to display [a map of every location you've given a talk](https://academicpages.github.io/talkmap.html).
+Here is his [resume](../resume.pdf).
 
-Getting started
-======
-1. Register a GitHub account if you don't have one and confirm your e-mail (required!)
-1. Fork [this template](https://github.com/academicpages/academicpages.github.io) by clicking the "Use this template" button in the top right. 
-1. Go to the repository's settings (rightmost item in the tabs that start with "Code", should be below "Unwatch"). Rename the repository "[your GitHub username].github.io", which will also be your website's URL.
-1. Set site-wide configuration and create content & metadata (see below -- also see [this set of diffs](http://archive.is/3TPas) showing what files were changed to set up [an example site](https://getorg-testacct.github.io) for a user with the username "getorg-testacct")
-1. Upload any files (like PDFs, .zip files, etc.) to the files/ directory. They will appear at https://[your GitHub username].github.io/files/example.pdf.  
-1. Check status by going to the repository settings, in the "GitHub pages" section
+## Non-selected Publications
 
-Site-wide configuration
-------
-The main configuration file for the site is in the base directory in [_config.yml](https://github.com/academicpages/academicpages.github.io/blob/master/_config.yml), which defines the content in the sidebars and other site-wide features. You will need to replace the default variables with ones about yourself and your site's github repository. The configuration file for the top menu is in [_data/navigation.yml](https://github.com/academicpages/academicpages.github.io/blob/master/_data/navigation.yml). For example, if you don't have a portfolio or blog posts, you can remove those items from that navigation.yml file to remove them from the header. 
+^ indicates equal contribution; \* indicates corresponding author. I highlighted my name in my 1st-authored works.
 
-Create content & metadata
-------
-For site content, there is one markdown file for each type of content, which are stored in directories like _publications, _talks, _posts, _teaching, or _pages. For example, each talk is a markdown file in the [_talks directory](https://github.com/academicpages/academicpages.github.io/tree/master/_talks). At the top of each markdown file is structured data in YAML about the talk, which the theme will parse to do lots of cool stuff. The same structured data about a talk is used to generate the list of talks on the [Talks page](https://academicpages.github.io/talks), each [individual page](https://academicpages.github.io/talks/2012-03-01-talk-1) for specific talks, the talks section for the [CV page](https://academicpages.github.io/cv), and the [map of places you've given a talk](https://academicpages.github.io/talkmap.html) (if you run this [python file](https://github.com/academicpages/academicpages.github.io/blob/master/talkmap.py) or [Jupyter notebook](https://github.com/academicpages/academicpages.github.io/blob/master/talkmap.ipynb), which creates the HTML for the map based on the contents of the _talks directory).
+- MOAT: Towards Safe BPF Kernel Extension [[paper]](./papers/moat-usenix24.pdf) [[code]](https://github.com/jwnhy/MOAT-Open)  
+    **Hongyi Lu**, Shuai Wang*, Yechang Wu, Wanning He, Fengwei Zhang\*. **USENIX Security 2024**
 
-**Markdown generator**
+- DTD: Comprehensive and Scalable Testing for Debuggers [[paper]](./papers/dtd-fse24.pdf) [[code]](https://github.com/jwnhy/DTD)  
+    **Hongyi Lu**, Zhibo Liu\*, Shuai Wang, and Fengwei Zhang\*. **FSE 2024** 
 
-The repository includes [a set of Jupyter notebooks](https://github.com/academicpages/academicpages.github.io/tree/master/markdown_generator
-) that converts a CSV containing structured data about talks or presentations into individual markdown files that will be properly formatted for the Academic Pages template. The sample CSVs in that directory are the ones I used to create my own personal website at stuartgeiger.com. My usual workflow is that I keep a spreadsheet of my publications and talks, then run the code in these notebooks to generate the markdown files, then commit and push them to the GitHub repository.
+- RingGuard: Guard io_uring with eBPF [[paper]](./papers/ringguard-ebpf23.pdf)  
+    Wanning He^, **Hongyi Lu^**, Fengwei Zhang\*, and Shuai Wang. **SIGCOMM eBPF 2023**
 
-How to edit your site's GitHub repository
-------
-Many people use a git client to create files on their local computer and then push them to GitHub's servers. If you are not familiar with git, you can directly edit these configuration and markdown files directly in the github.com interface. Navigate to a file (like [this one](https://github.com/academicpages/academicpages.github.io/blob/master/_talks/2012-03-01-talk-1.md) and click the pencil icon in the top right of the content preview (to the right of the "Raw | Blame | History" buttons). You can delete a file by clicking the trashcan icon to the right of the pencil icon. You can also create new files or upload files by navigating to a directory and clicking the "Create new file" or "Upload files" buttons. 
+- Raven: A Novel Kernel Debugging Tool on RISC-V [[paper]](./papers/raven-dac22.pdf) [[code]](https://github.com/jwnhy/raven-open)  
+    **Hongyi Lu** and Fengwei Zhang\*. **DAC 2022**
 
-Example: editing a markdown file for a talk
-![Editing a markdown file for a talk](/images/editing-talk.png)
+- Revisiting BadUSB with Type-C [[paper]](./papers/badusbc-woot21.pdf) [[CVE-2021-22325]](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-22325)  
+    **Hongyi Lu^**, Yechang Wu^, Shuqing Li^, You Lin, Chaozu Zhang, Fengwei Zhang\*. **WOOT 2021**
 
-For more info
-------
-More info about configuring Academic Pages can be found in [the guide](https://academicpages.github.io/markdown/), the [growing wiki](https://github.com/academicpages/academicpages.github.io/wiki), and you can always [ask a question on GitHub](https://github.com/academicpages/academicpages.github.io/discussions). The [guides for the Minimal Mistakes theme](https://mmistakes.github.io/minimal-mistakes/docs/configuration/) (which this theme was forked from) might also be helpful.
+- A Novel Memory Management for RISC-V Enclaves [[paper]](./papers/ashman-hasp21.pdf)  [[code]](https://github.com/Compass-All/Ashman)  
+    Haonan Li, Weijie Huang, Mingde Ren, Hongyi Lu, Zhenyu Ning, Heming Cui, and Fengwei Zhang\*. **HASP 2021**
+
+
+## Fun Projects
+
+- [A Video to ASCII Player (for fun)](https://github.com/jwnhy/video2ascii)
+- [Software Foundation](https://coq-zh.github.io/SF-zh/) Translator
+- [LLVM](https://llvm.org/) Contributor [[bugfix]](https://github.com/llvm/llvm-project/commit/16c2872d7b09eee67dd0c7ef6b5dd3c3724d3cfc)
+
+## Awards
+
+- USENIX 2024 Student Grant Award
+- SUSTech Outstanding Teaching Assistant (I lost the certificate though, sorry)
+
+## Academic Services
+
+- Reviewer: TIFS
+- External Reviewer: USENIX Security 2023, S&P 2023, PoPET 2023, CCS 2023, CCS 2022
+
+## Teaching Assistant Experience
+
+- CS102A Introduction to Computer Programming (SUSTech)
+- CS307 Principles of Database Systems (SUSTech)
+- CS303 Artificial Intelligence (SUSTech)
+- MA305 Numerical Analysis (SUSTech)
+- MA113 Linear Algebra II (SUSTech)
+
+- COMP4632 Practicing Cybersecurity: Attacks and Counter-measures (HKUST)
+- COMP3632 Principles of Cybersecurity (HKUST)
+
+## Reject/Accept Timeline
+
+The following are the paper submission timelines; these papers are rejected at least once.
+
+<details><summary>FSE 2024 Accept</summary>
+1. ASPLOS 2024 Reject<br>
+2. SIGMETRIC 2024 Reject<br>
+3. FSE 2024 Accept
+</details>
+
+<details><summary>USENIX 2024 Accept</summary>
+1. USENIX Security 2023 R2 Reject<br>
+2. S&P 2024 R2 Reject<br>
+3. USENIX Security 2024 Accept
+</details>
+
+## Friends
+
+- [Shuqing Li](https://shuqing-li.github.io/), [Dong Chen](https://blossomin.github.io/), [Yifan Wu](https://ghostfrankwu.github.io/), [Haonan Li](https://haonan.me/), [Zhibo Liu](https://monkbai.github.io/), [Yechang Wu](https://wycer.cn/), [Chuan Yan](https://yanchuan390.github.io/), [Weipeng Jiang](https://sites.google.com/view/weipeng-jiang/), [Yunjie Deng](https://yunjie-deng.github.io/).
+- [NekoNull](https://nekonull.com/)
