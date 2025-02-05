@@ -10,13 +10,13 @@ author: "Hongyi Lu (jwnhy)"
 permalink: /
 ---
 
-Hongyi LU (jwnhy) is a third-year Computer Science Ph.D student in
-SUSTech-HKUST joint program under the supervision of [Prof. Shuai
-Wang](https://www.cse.ust.hk/~shuaiw/) and [Prof. Fengwei
-Zhang](https://fengweiz.github.io/). His primary interest is **c00l stuff**
-like kernel security, low-level hardware, software testing and exploitation.
-
-Here is his [resume](../resume.pdf).
+Hongyi LU (jwnhy) is a third-year Ph.D. candidate in Computer Science through
+the SUSTech-HKUST Joint Graduate Program, jointly supervised by [Professor
+Shuai Wang](https://www.cse.ust.hk/~shuaiw/) and [Professor Fengwei
+Zhang](https://fengweiz.github.io/). His research focuses on critical areas of
+system security, including operating system kernel hardening, hardware-software
+co-design security mechanisms, automated software vulnerability detection, and
+advanced exploitation techniques.
 
 ## Non-selected Publications
 
