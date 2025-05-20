@@ -10,13 +10,12 @@ author: "Hongyi Lu (jwnhy)"
 permalink: /
 ---
 
-Hongyi LU (jwnhy) is a third-year Ph.D. candidate in Computer Science through
-the SUSTech-HKUST Joint Graduate Program, jointly supervised by [Professor
-Shuai Wang](https://www.cse.ust.hk/~shuaiw/) and [Professor Fengwei
-Zhang](https://fengweiz.github.io/). His research focuses on critical areas of
-system security, including operating system kernel hardening, hardware-software
-co-design security mechanisms, automated software vulnerability detection, and
-advanced exploitation techniques.
+Hongyi LU (jwnhy) is a third-year Ph.D. candidate in Computer Science at HKUST,
+jointly supervised by [Professor Shuai Wang](https://www.cse.ust.hk/~shuaiw/)
+and [Professor Fengwei Zhang](https://fengweiz.github.io/). His research
+focuses on critical areas of system security, including operating system kernel
+hardening, hardware-software co-design security mechanisms, automated software
+vulnerability detection, and advanced exploitation techniques.
 
 ## Non-selected Publications
 
@@ -86,5 +85,5 @@ The following are the paper submission timelines; these papers are rejected at l
 
 ## Friends
 
-- [Shuqing Li](https://shuqing-li.github.io/), [Dong Chen](https://blossomin.github.io/), [Yifan Wu](https://ghostfrankwu.github.io/), [Haonan Li](https://haonan.me/), [Zhibo Liu](https://monkbai.github.io/), [Yechang Wu](https://wycer.cn/), [Chuan Yan](https://yanchuan390.github.io/), [Weipeng Jiang](https://sites.google.com/view/weipeng-jiang/), [Yunjie Deng](https://yunjie-deng.github.io/).
+- [Shuqing Li](https://shuqing-li.github.io/), [Dong Chen](https://blossomin.github.io/), [Weijie Huang](https://macromogic.xyz/), [Yifan Wu](https://ghostfrankwu.github.io/), [Haonan Li](https://haonan.me/), [Zhibo Liu](https://monkbai.github.io/), [Yechang Wu](https://wycer.cn/), [Chuan Yan](https://yanchuan390.github.io/), [Weipeng Jiang](https://sites.google.com/view/weipeng-jiang/), [Yunjie Deng](https://yunjie-deng.github.io/).
 - [NekoNull](https://nekonull.com/)
