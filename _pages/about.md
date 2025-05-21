@@ -21,8 +21,8 @@ vulnerability detection, and advanced exploitation techniques.
 
 ^ indicates equal contribution; \* indicates corresponding author. I highlighted my name in my 1st-authored works.
 
-- MOLE: Breaking GPU TEE with GPU-Embedded MCU [[paper]]() [[site]](https://sites.google.com/view/mole-gpu)
-    **Hongyi Lu^**, Yunjie Deng^, Sukarno Mertoguno, Shuai Wang*, Fengwei Zhang*. **CCS 2025**
+- MOLE: Breaking GPU TEE with GPU-Embedded MCU [[paper]]() [[site]](https://sites.google.com/view/mole-gpu)   
+    **Hongyi Lu^**, Yunjie Deng^, Sukarno Mertoguno, Shuai Wang\*, Fengwei Zhang\*. **CCS 2025**
 
 - MOAT: Towards Safe BPF Kernel Extension [[paper]](./papers/moat-usenix24.pdf) [[code]](https://github.com/jwnhy/MOAT-Open)  
     **Hongyi Lu**, Shuai Wang*, Yechang Wu, Wanning He, Fengwei Zhang\*. **USENIX Security 2024**
