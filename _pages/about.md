@@ -21,20 +21,23 @@ vulnerability detection, and advanced exploitation techniques.
 
 ^ indicates equal contribution; \* indicates corresponding author. I highlighted my name in my 1st-authored works.
 
+- Towards Secure BPF Kernel Extension with Hardware-enhanced Memory Isolation
+    Lijian Huang, **Hongyi Lu**, Shuai Wang*, Fengwei Zhang*. (Under revision)
+
 - MOLE: Breaking GPU TEE with GPU-Embedded MCU [[paper]](./papers/mole-ccs25.pdf) [[site]](https://sites.google.com/view/mole-gpu)   
-    **Hongyi Lu^**, Yunjie Deng^, Sukarno Mertoguno, Shuai Wang\*, Fengwei Zhang\*. **CCS 2025**
+    **Hongyi Lu^**, Yunjie Deng^, Sukarno Mertoguno, Shuai Wang\*, Fengwei Zhang\*. **CCS 2025 (CCF-A, BIG4)**
 
 - MOAT: Towards Safe BPF Kernel Extension [[paper]](./papers/moat-usenix24.pdf) [[code]](https://github.com/jwnhy/MOAT-Open)  
-    **Hongyi Lu**, Shuai Wang*, Yechang Wu, Wanning He, Fengwei Zhang\*. **USENIX Security 2024**
+    **Hongyi Lu**, Shuai Wang*, Yechang Wu, Wanning He, Fengwei Zhang\*. **USENIX Security 2024 (CCF-A, BIG4)**
 
 - DTD: Comprehensive and Scalable Testing for Debuggers [[paper]](./papers/dtd-fse24.pdf) [[code]](https://github.com/jwnhy/DTD)  
-    **Hongyi Lu**, Zhibo Liu\*, Shuai Wang, and Fengwei Zhang\*. **FSE 2024** 
+    **Hongyi Lu**, Zhibo Liu\*, Shuai Wang, and Fengwei Zhang\*. **FSE 2024 (CCF-A)** 
 
 - RingGuard: Guard io_uring with eBPF [[paper]](./papers/ringguard-ebpf23.pdf)  
     Wanning He^, **Hongyi Lu^**, Fengwei Zhang\*, and Shuai Wang. **SIGCOMM eBPF 2023**
 
 - Raven: A Novel Kernel Debugging Tool on RISC-V [[paper]](./papers/raven-dac22.pdf) [[code]](https://github.com/jwnhy/raven-open)  
-    **Hongyi Lu** and Fengwei Zhang\*. **DAC 2022**
+    **Hongyi Lu** and Fengwei Zhang\*. **DAC 2022 (CCF-A)**
 
 - Revisiting BadUSB with Type-C [[paper]](./papers/badusbc-woot21.pdf) [[CVE-2021-22325]](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-22325)  
     **Hongyi Lu^**, Yechang Wu^, Shuqing Li^, You Lin, Chaozu Zhang, Fengwei Zhang\*. **WOOT 2021**
@@ -44,7 +47,7 @@ vulnerability detection, and advanced exploitation techniques.
 
 ## Academic Services
 
-- Reviewer: TIFS
+- Reviewer: TIFS, TDSC
 - External Reviewer: USENIX Security 2023, S&P 2023, PoPET 2023, CCS 2023, CCS 2022
 
 ## Awards
