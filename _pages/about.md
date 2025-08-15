@@ -22,7 +22,7 @@ vulnerability detection, and advanced exploitation techniques.
 ^ indicates equal contribution; \* indicates corresponding author. I highlighted my name in my 1st-authored works.
 
 - Towards Secure BPF Kernel Extension with Hardware-enhanced Memory Isolation  
-    Lijian Huang, **Hongyi Lu**, Shuai Wang*, Fengwei Zhang*. (Under revision)
+    Lijian Huang, **Hongyi Lu**, Shuai Wang\*, Fengwei Zhang\*. (Under revision)
 
 - MOLE: Breaking GPU TEE with GPU-Embedded MCU [[paper]](./papers/mole-ccs25.pdf) [[site]](https://sites.google.com/view/mole-gpu)   
     **Hongyi Lu^**, Yunjie Deng^, Sukarno Mertoguno, Shuai Wang\*, Fengwei Zhang\*. **CCS 2025 (CCF-A, BIG4)**
