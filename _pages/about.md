@@ -21,8 +21,14 @@ vulnerability detection, and advanced exploitation techniques.
 
 ^ indicates equal contribution; \* indicates corresponding author. I highlighted my name in my 1st-authored works.
 
+- CuSafe: Capturing Memory Corruption on NVIDIA GPUs
+    **Hongyi Lu**, Fengwei Zhang\*, Zhenkai Zhang\*, Shuai Wang\*, Yanan Guo\*. (Under review in USENIX Security)
+
 - Towards Secure BPF Kernel Extension with Hardware-enhanced Memory Isolation  
-    Lijian Huang, **Hongyi Lu**, Shuai Wang\*, Fengwei Zhang\*. (Under revision)
+    Lijian Huang^, **Hongyi Lu^**, Shuai Wang\*, Fengwei Zhang\*. (Under revision)
+
+- Hardware-assisted Memory Isolation [[paper]](./)
+    **Hongyi Lu**. **CCS 2025 (PhD Symposium)**
 
 - MOLE: Breaking GPU TEE with GPU-Embedded MCU [[paper]](./papers/mole-ccs25.pdf) [[site]](https://sites.google.com/view/mole-gpu)   
     **Hongyi Lu^**, Yunjie Deng^, Sukarno Mertoguno, Shuai Wang\*, Fengwei Zhang\*. **CCS 2025 (CCF-A, BIG4)**
@@ -52,6 +58,7 @@ vulnerability detection, and advanced exploitation techniques.
 
 ## Awards
 
+- CCS 2025 Student Grant Award
 - USENIX 2024 Student Grant Award
 - SUSTech Outstanding Teaching Assistant
 
