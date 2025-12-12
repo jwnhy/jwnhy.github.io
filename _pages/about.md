@@ -21,11 +21,11 @@ vulnerability detection, and advanced exploitation techniques.
 
 ^ indicates equal contribution; \* indicates corresponding author. I highlighted my name in my 1st-authored works.
 
-<!-- - CuSafe: Capturing Memory Corruption on NVIDIA GPUs  
-    **Hongyi Lu**, Fengwei Zhang\*, Zhenkai Zhang\*, Shuai Wang\*, Yanan Guo\*. (Under review in USENIX Security) -->
+- CuSafe: Capturing Memory Corruption on NVIDIA GPUs  
+    **Hongyi Lu**, Fengwei Zhang\*, Zhenkai Zhang\*, Shuai Wang\*, Yanan Guo\*. **USENIX Security 2026 (CCF-A, BIG4)**
 
 - Towards Secure BPF Kernel Extension with Hardware-enhanced Memory Isolation  
-    Lijian Huang^, **Hongyi Lu^**, Shuai Wang\*, Fengwei Zhang\*. (Under revision in TDSC)
+    Lijian Huang^, **Hongyi Lu^**, Shuai Wang\*, Fengwei Zhang\*. **TDSC (CCF-A)**
 
 - Hardware-assisted Memory Isolation [[paper]](./)  
     **Hongyi Lu**. **CCS 2025 (PhD Symposium)**
