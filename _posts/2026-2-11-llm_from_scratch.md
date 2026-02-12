@@ -2,14 +2,8 @@
 title: LLM from Scratch (TinyLLaMA)
 ---
 
-<!--toc:start-->
-- [Introduction](#introduction)
-  - [Ground Rules](#ground-rules)
-  - [Table of Contents](#table-of-contents)
-- [Tokenization: From Text to Tokens](#tokenization-from-text-to-tokens)
-- [Embeddings: From Tokens to Vectors](#embeddings-from-tokens-to-vectors)
-- [Attention: Where Magic Happens](#attention-where-magic-happens)
-<!--toc:end-->
+* TOC
+{:toc}
 
 ## Introduction
 
@@ -21,17 +15,10 @@ way of learning, which is to implement it from scratch.
 
 I have set some ground rules for myself to follow while implementing the LLM:
 
-- No wheels: I will implement everything (except basic ops like `matmul`) from
+* No wheels: I will implement everything (except basic ops like `matmul`) from
 scratch.
-- Actual LLM: I will aim to implement inference loop for TinyLLaMA, an actual LLM.
-- Understand math, not code: I will study the math behind the LLM.
-
-### Table of Contents
-
-I will be covering the following topics:
-
-- TOC
-{:toc}
+* Actual LLM: I will aim to implement inference loop for TinyLLaMA, an actual LLM.
+* Understand math, not code: I will study the math behind the LLM.
 
 ## Tokenization: From Text to Tokens
 
@@ -130,13 +117,13 @@ print(f"Hello World! ===> {embedded.shape}")
 Attention is the core component of LLMs. It puts three vectors -- $$Q$$, $$K$$ and $$V$$ -- into
 each token; their semantic meaning is as follows:
 
-- Query ($$Q$$): It represents the token's query vector, which represents the
+* Query ($$Q$$): It represents the token's query vector, which represents the
 token's query for information from other tokens.
 
-- Key ($$K$$): It represents the token's key vector, which, receives a query $$Q$$
+* Key ($$K$$): It represents the token's key vector, which, receives a query $$Q$$
 and respond how well $$Q$$ and itself $$K$$ relates.
 
-- Value ($$V$$): It represents the token's value vector, which represents the
+* Value ($$V$$): It represents the token's value vector, which represents the
 actual contextual information of the token.
 
 To obtain these three vectors, LLMs maintain three trainable weight matrices -- $$W_Q$$, $$W_K$$
@@ -175,10 +162,11 @@ equivalent to normalizing the variation of attention score to 1, which prevents
 $$\text{softmax}$$ from being oversaturated (due to dimension increase) and
 thereby having vanishing gradients.
 
-> **Saturated softmax** means that if the input to softmax is out of a reasonable
-> range, e.g., $$\text{softmax}(x\geq 5)\cong 1$$. If all components of the input vector, due
-> to dimension increase, are larger than 5, then the output of softmax will all
-> be near a constant 1, which causes the gradient to vanish (near 0) as constant has zero gradient.
+> **Saturated softmax** means that if the input to softmax is out of a
+> reasonable range, e.g., $$\text{softmax}(x\geq 5)\cong 1$$. If all components
+> of the input vector, due to dimension increase, are larger than 5, then the
+> output of softmax will all be near a constant 1, which causes the gradient to
+> vanish (near 0) as constant has zero gradient.
 
 ## Multi-head Attention: Learn Different Rules of Language
 
@@ -189,3 +177,30 @@ between tokens, such as semantics, syntax, and so on. These rules might be very
 different from each other, so maintaining only one weight matrix causes
 training to be difficult as models might struggle to learn different rules back
 and forth with different batches of training data.
+
+The idea behind Multi-head Attention (MHA) is simple, we partition weight
+matrices $$W_*$$ into smaller matrices $$W_*^i$$ and let them to interact with
+$$x$$ separately, learning different rules of language in different heads.
+
+I found it's simpler to directly understanding the MHA by looking at the shapes
+of the matrices. Assuming we have number of tokens $$T$$, dimension of
+embedding $$H$$, then the shape of $$Q,K,V$$ would be $$[T,H]$$. So, if we want
+to split them into $$h$$ heads, then the shape of each $$Q^i,K^i,V^i$$ would be
+$$[T,H/h]$$. We treat these $$Q^i,K^i,V^i$$ as usual and plug them into the
+attention equation,
+
+$$\text{Attention}(X^i) = \text{softmax}(\frac{Q^i{K^i}^T}{\sqrt{d_i}})V^i$$
+
+We then have $$\text{Attention}(X^i)$$ with shape $$[T,H/h]$$, which can be
+concatenated together back to a matrix of shape $$[T,H]$$, which is the result
+of MHA.
+
+How this works? Let's see the following picture. On the left, we can see MHA
+actually doesn't change the calculation of $$Q,K,V$$; we just split them
+afterwards. On the right, we can see that the MHA calculates attention using
+split $$Q^i,K^i,V^i$$. Though this might seem trivial, this actually separate
+the gradient of different heads as they are simply concatenated. This allows
+the different part of $$W_*$$ (i.e., $$W[H,0{:}H/h]$$ and $$W[H,H/h{:}H]$$) to
+learn different patterns of the language when doing backpropagation.
+
+![1770891828240.png](https://youke.xn--y7xa690gmna.cn/s1/2026/02/12/698da9f346f08.webp)
