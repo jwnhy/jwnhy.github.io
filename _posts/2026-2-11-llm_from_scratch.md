@@ -2,6 +2,15 @@
 title: LLM from Scratch (TinyLLaMA)
 ---
 
+<!--toc:start-->
+- [Introduction](#introduction)
+  - [Ground Rules](#ground-rules)
+  - [Table of Contents](#table-of-contents)
+- [Tokenization: From Text to Tokens](#tokenization-from-text-to-tokens)
+- [Embeddings: From Tokens to Vectors](#embeddings-from-tokens-to-vectors)
+- [Attention: Where Magic Happens](#attention-where-magic-happens)
+<!--toc:end-->
+
 ## Introduction
 
 I've been wanting to learn about the LLM for quite a long time, but didn't have
@@ -21,7 +30,7 @@ scratch.
 
 I will be covering the following topics:
 
-* TOC
+- TOC
 {:toc}
 
 ## Tokenization: From Text to Tokens
@@ -40,12 +49,13 @@ merged.*
 
 Suppose we have the following sentence.
 
-> FloydHub is the fastest way to build, train and deploy deep learning models. Build deep learning models in 
+> FloydHub is the fastest way to build, train and deploy deep learning models. Build deep learning models in
 > the cloud. Train deep learning models.
 
-
-BPE will start from the most basic unit -- letters, and gradually merge adjacent units that appear frequently together. So, in the beginning, BPE compute the frequency of each adjacent pair of letters, yielding the following table.
-
+BPE will start from the most basic unit -- letters, and gradually merge
+adjacent units that appear frequently together. So, in the beginning, BPE
+compute the frequency of each adjacent pair of letters, yielding the following
+table.
 
 | Key | Count | Key | Count | Key | Count |
 |-----|------|-----|------|-----|------|
@@ -58,7 +68,7 @@ BPE will start from the most basic unit -- letters, and gradually merge adjacent
 So, we can merge the most frequent pair `de`, treat it as a single unit, and
 represent it as `X`. Then we get the following sentence.
 
-> FloydHub is the fastest way to build, train and Xploy Xep learning moXls. Build Xep learning moXls in 
+> FloydHub is the fastest way to build, train and Xploy Xep learning moXls. Build Xep learning moXls in
 > the cloud. Train Xep learning moXls.
 
 Then we can repeat the same process, merging the most frequent pair into new
@@ -115,5 +125,67 @@ embedded = embedding[tokens]
 print(f"Hello World! ===> {embedded.shape}")
 ```
 
+## Attention: Where Magic Happens
 
-## Attention: Where Magic Happens!
+Attention is the core component of LLMs. It puts three vectors -- $$Q$$, $$K$$ and $$V$$ -- into
+each token; their semantic meaning is as follows:
+
+- Query ($$Q$$): It represents the token's query vector, which represents the
+token's query for information from other tokens.
+
+- Key ($$K$$): It represents the token's key vector, which, receives a query $$Q$$
+and respond how well $$Q$$ and itself $$K$$ relates.
+
+- Value ($$V$$): It represents the token's value vector, which represents the
+actual contextual information of the token.
+
+To obtain these three vectors, LLMs maintain three trainable weight matrices -- $$W_Q$$, $$W_K$$
+and $$W_V$$; multiplying token's embedding with these weight matrices gives us $$Q,K,V$$.
+
+$$Q = XW_Q^T, \quad K = XW_K^T, \quad V = XW_V^T$$
+
+> Why not $$W_Q x$$?
+>
+> This is because we want to maintain row-major order for
+> token's embedding $$X$$, whose shape is `[T, H]`. $$T$$ is the number of tokens, and
+> $$H$$ is the embedding dimension. Such row-major order is more cache-friendly
+> as computers store data in a row-major order, i.e., a row $$[x_1, x_2, x_3]$$
+> located in neighboring addresses with better spatial locality while column
+> $$[x_1, x_2, x_3]^T$$ is not.
+
+After we have $$Q,K,V$$, we now can do the famous attention equation:
+
+$$\text{Attention}(X) = \text{softmax}(\frac{QK^T}{\sqrt{d}})V$$
+
+Let's first look at $$QK^T$$, it essentially computes the
+inner product of each $$q_i=x_iW_Q^T$$ and $$k_j=x_jW_K^T$$. By easy linear
+algebra, $$q_i\cdot k_j^T$$ equals to $$x_iW_Q^TW_Kx_j^T$$, which is a inner
+product between $$x_i$$ and $$x_j$$ as we're working with row-major vectors.
+
+> **Inner product's definition** $$x\cdot y = \|x\|\|y\|cos\theta$$. When
+> both $$x$$ and $$y$$ are unit vectors, the inner product is simply the cosine
+> similarity between these vectors. Attention score is also a similarity score
+> between tokens, with additional information from the weight matrices $$W_Q$$
+> and $$W_K$$.
+
+The normalization term $$\sqrt{d}$$ is to debloat the attention score. Assume
+$$q,k\sim N(0,1)$$, the variation of $$q\cdot k^T$$ is $$\sum_i^d Var(q_ik_i) =
+\sum_i^d Var(q_i)*Var(k_i) = \sum_i^d 1 = d$$, so dividing by $$\sqrt{d}$$ is
+equivalent to normalizing the variation of attention score to 1, which prevents
+$$\text{softmax}$$ from being oversaturated (due to dimension increase) and
+thereby having vanishing gradients.
+
+> **Saturated softmax** means that if the input to softmax is out of a reasonable
+> range, e.g., $$\text{softmax}(x\geq 5)\cong 1$$. If all components of the input vector, due
+> to dimension increase, are larger than 5, then the output of softmax will all
+> be near a constant 1, which causes the gradient to vanish (near 0) as constant has zero gradient.
+
+## Multi-head Attention: Learn Different Rules of Language
+
+The above mentioned attention is also called single-head attention, as it only
+has one set of weight matrices $$W_Q$$, $$W_K$$ and $$W_V$$. However, in
+real-world languages, there are different rules that govern the relationship
+between tokens, such as semantics, syntax, and so on. These rules might be very
+different from each other, so maintaining only one weight matrix causes
+training to be difficult as models might struggle to learn different rules back
+and forth with different batches of training data.
