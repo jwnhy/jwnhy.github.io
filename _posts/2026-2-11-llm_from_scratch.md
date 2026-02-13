@@ -271,5 +271,44 @@ $$
 We can choose a pair of adjacent dimensions (i.e., $$\|i-j\|=1$$), and rotate
 around these two dimensions. By repeating this process with multiple different
 planes for sufficiently many times, we can obtain any arbitrary rotation.
+In this way, we end up with this block-diagonal rotation matrix for RoPE:
+
+$$
+R_m =
+\begin{bmatrix}
+\cos m\theta_0 & -\sin m\theta_0 & 0 & 0 & \cdots & 0 & 0 \\
+\sin m\theta_0 & \cos m\theta_0 & 0 & 0 & \cdots & 0 & 0 \\
+0 & 0 & \cos m\theta_1 & -\sin m\theta_1 & \cdots & 0 & 0 \\
+0 & 0 & \sin m\theta_1 & \cos m\theta_1 & \cdots & 0 & 0 \\
+\vdots & \vdots & \vdots & \vdots & \ddots & \vdots & \vdots \\
+0 & 0 & 0 & 0 & \cdots & \cos m\theta_{d/2-1} & -\sin m\theta_{d/2-1} \\
+0 & 0 & 0 & 0 & \cdots & \sin m\theta_{d/2-1} & \cos m\theta_{d/2-1}
+\end{bmatrix}
+$$
 
 **Decision of Rotation Angle**
+
+The last question is, if $$R_m$$ is a rotation matrix, how do we decide the
+rotation angle $$\theta_i$$. Let's try a few naive solutions.
+
+* Constant angle: $$\theta_i=\theta$$
+
+If $$\theta$$ is small (low frequency), then the rotation is very slow,
+$$2\theta$$ and $$\theta$$ might be hard to distinguish.
+If $$\theta$$ is large (high frequency), then the rotation is very fast,
+$$1000\theta$$ would be random (many round of $$2\pi$$).
+
+* Linear formation: $$\theta_i=(2\pi)/L_{max}$$ where $$L_{max}$$ is the
+   maximum sequence length.
+
+The problem here is that linear formation doesn't cover sufficiently large
+frequency space. $$L_{max}$$ could be very large (>128K), but the maximum
+dimension is more bounded (~2048)
+
+So, it would be straightforward to use a exponential formation, i.e.,
+$$\theta_i=N^(-2i/d)$$. The $$2/d$$ factor is to get a dimension-invariant
+angle. The negative sign is to make sure the angle is exponentially decreasing
+as $$\theta_0=1$$ (PS: we can make $$\theta_0=2\pi$$, but it won't be that
+useful). As for $$N$$, it can be decided based on $$L_{max}$$, the longer the
+sequence is, the more sparse the frequency space is, so we can choose a larger
+$$N$$. In TinyLLaMA, $$N=10000$$.
