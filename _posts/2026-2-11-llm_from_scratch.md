@@ -204,3 +204,48 @@ the different part of $$W_*$$ (i.e., $$W[H,0{:}H/h]$$ and $$W[H,H/h{:}H]$$) to
 learn different patterns of the language when doing backpropagation.
 
 ![1770891828240.png](https://youke.xn--y7xa690gmna.cn/s1/2026/02/12/698da9f346f08.webp)
+
+## RoPE: Learn Distance between Tokens
+
+Note that the current form of attention is *permutation invariant*, which means
+that the attention score between two tokens is not affected by their *relative
+position*. This is a problem as the meaning of a sentence is often determined
+by the order of words. Therefore, we hope to have a way of injecting positional
+information into the attention mechanism.
+
+Clearly, in human language, the relative position between tokens is more
+important than their absolute position. Knowing a word in the $$X_{\text{th}}$$
+position of a sentence doesn't tell us much, but knowing that a word is right
+after *am/is/are* can be very informative. Therefore, we want to have a way of
+encoding the relative position between tokens into the attention mechanism.
+
+To encoding the relative position between tokens, we can define a linear transformation
+$$R_mx_m$$, where $$x$$ is a token and $$m$$ is its absolute position index.
+We wish we have the following property for this function:
+
+$${R_mx_m}^TR_nx_n = g(x_m,x_n,m-n),\quad R_0=I$$
+
+This property means that the inner product between two tokens' positional
+embeddings can be expressed as a function of their relative position $$m-n$$.
+This way, the attention score between two tokens can be influenced by their
+relative position. Particularly, we define $$R_0=I$$ for convenience. Moreover,
+we also want to have $$R_m$$ doesn't modify vector's length, i.e.,
+$$\|R_mx_m\|=\|x_m\|$$. Because, the following equation holds:
+
+$$m=n\Rightarrow (R_mx_m)^T(R_mx_m) = g(x_m,x_m,0) = (R_0x_m)^T(R_0x_m)\Rightarrow \|R_mx_m\|=\|x_m\|$$
+
+As $$R$$ maintains length, it can only be a composition of rotation and
+reflection. Formally, by [polarization
+identity](https://en.wikipedia.org/wiki/Polarization_identity), we can derive
+$$R_m$$ keep the inner product between any two vectors, i.e., $$x^TR_m^TR_my =
+x^Ty$$. So, we can further derive that $$R_m^TR_m = I$$, which means $$R_m^T =
+R_m^{-1}$$.
+
+So, in the end, we have:
+
+* $$R_0=I$$, manually define position $$0$$ provides no information
+* $$R_m$$ is orthogonal matrix, $$R_m^T=R_m^{-1}$$
+* $$R_m$$ keeps length, $$\|R_mx\|=\|x\|$$
+
+This naturally leads us to the idea of using rotation as the linear
+transformation $$R_m$$.
