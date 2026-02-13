@@ -306,7 +306,7 @@ frequency space. $$L_{max}$$ could be very large (>128K), but the maximum
 dimension is more bounded (~2048)
 
 So, it would be straightforward to use a exponential formation, i.e.,
-$$\theta_i=N^(-2i/d)$$. The $$2/d$$ factor is to get a dimension-invariant
+$$\theta_i=N^{-2i/d}$$. The $$2/d$$ factor is to get a dimension-invariant
 angle. The negative sign is to make sure the angle is exponentially decreasing
 as $$\theta_0=1$$ (PS: we can make $$\theta_0=2\pi$$, but it won't be that
 useful). As for $$N$$, it can be decided based on $$L_{max}$$, the longer the
