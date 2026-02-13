@@ -248,4 +248,28 @@ So, in the end, we have:
 * $$R_m$$ keeps length, $$\|R_mx\|=\|x\|$$
 
 This naturally leads us to the idea of using rotation as the linear
-transformation $$R_m$$.
+transformation.
+
+**Rotation in Higher Dimension**
+
+It might seem unintuitive to use rotation in higher dimension, but it's
+actually quite simple. A high-dimensional rotation matrix (Givens rotation in
+n-dimensions, rotating in the i-j plane):
+
+$$
+R(i, j, \theta) =
+\begin{bmatrix}
+1 & & & & & \\
+& & \ddots & & & \\
+& & \cos\theta & -\sin\theta & & \\
+& & \sin\theta & \cos\theta & & \\
+& & & \ddots & & \\
+& & & & & 1
+\end{bmatrix}
+$$
+
+We can choose a pair of adjacent dimensions (i.e., $$\|i-j\|=1$$), and rotate
+around these two dimensions. By repeating this process with multiple different
+planes for sufficiently many times, we can obtain any arbitrary rotation.
+
+**Decision of Rotation Angle**
