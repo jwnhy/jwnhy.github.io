@@ -103,15 +103,6 @@ semantic relationship between these words through their embeddings.
 
 <div align="center"><img width="60%" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Word_embedding_illustration.svg/1920px-Word_embedding_illustration.svg.png"></div>
 
-Since embeddings is simply a function that maps tokens to vectors, its implementation is straightforward.
-
-```python
-print("--- Test Embedding ---")
-embedding = Embedding(weights.get_tensor("model.embed_tokens.weight"))
-embedded = embedding[tokens]
-print(f"Hello World! ===> {embedded.shape}")
-```
-
 ## Attention: Where Magic Happens
 
 Attention is the core component of LLMs. It puts three vectors -- $$Q$$, $$K$$ and $$V$$ -- into
@@ -204,6 +195,8 @@ the different part of $$W_*$$ (i.e., $$W[H,0{:}H/h]$$ and $$W[H,H/h{:}H]$$) to
 learn different patterns of the language when doing backpropagation.
 
 ![1770891828240.png](https://youke.xn--y7xa690gmna.cn/s1/2026/02/12/698da9f346f08.webp)
+
+**Engineering Tricks: Grouped Query Attention**
 
 ## RoPE: Learn Distance between Tokens
 
