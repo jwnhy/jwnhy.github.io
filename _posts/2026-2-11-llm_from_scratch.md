@@ -196,7 +196,7 @@ learn different patterns of the language when doing backpropagation.
 
 ![1770891828240.png](https://youke.xn--y7xa690gmna.cn/s1/2026/02/12/698da9f346f08.webp)
 
-**Engineering Tricks: Grouped Query Attention**
+**Trick: Grouped Query Attention**
 
 ## RoPE: Learn Distance between Tokens
 
@@ -214,6 +214,11 @@ encoding the relative position between tokens into the attention mechanism.
 
 To encoding the relative position between tokens, we can define a linear transformation
 $$R_mx_m$$, where $$x$$ is a token and $$m$$ is its absolute position index.
+
+> **What are we doing here?** We wish to encoding the relative position between
+> token $$m$$ and every other tokens $$0,1,..m-1,m+1,..L_{max}$$ into the
+> components $$[x_m^1,x_m^2,..,x_m^H]$$ of token vector $$x_m$$. 
+
 We wish we have the following property for this function:
 
 $${R_mx_m}^TR_nx_n = g(x_m,x_n,m-n),\quad R_0=I$$
@@ -286,22 +291,51 @@ rotation angle $$\theta_i$$. Let's try a few naive solutions.
 
 * Constant angle: $$\theta_i=\theta$$
 
-If $$\theta$$ is small (low frequency), then the rotation is very slow,
-$$2\theta$$ and $$\theta$$ might be hard to distinguish.
-If $$\theta$$ is large (high frequency), then the rotation is very fast,
-$$1000\theta$$ would be random (many round of $$2\pi$$).
+If $$\theta$$ is small (low frequency), then the rotation is very slow, words
+that are close to each other (e.g., $$2\theta$$ and $$\theta$$) might be hard
+to distinguish. If $$\theta$$ is large (high frequency), then the rotation is
+very fast, far-away word (e.g., $$1000\theta$$) would be random (many round of
+$$2\pi$$).
 
-* Linear formation: $$\theta_i=(2\pi)/L_{max}$$ where $$L_{max}$$ is the
+* Linear formation: $$\theta_i=(2i\pi)/L_{max}$$ where $$L_{max}$$ is the
    maximum sequence length.
 
 The problem here is that linear formation doesn't cover sufficiently large
 frequency space. $$L_{max}$$ could be very large (>128K), but the maximum
-dimension is more bounded (~2048)
+dimension is more bounded (~2048). Therefore, this formation creates a very
+dense frequency space, where $$\theta_{10}=0.0005$$ and $$\theta{100}=0.005$$
+does make much differences.
 
-So, it would be straightforward to use a exponential formation, i.e.,
-$$\theta_i=N^{-2i/d}$$. The $$2/d$$ factor is to get a dimension-invariant
-angle. The negative sign is to make sure the angle is exponentially decreasing
-as $$\theta_0=1$$ (PS: we can make $$\theta_0=2\pi$$, but it won't be that
-useful). As for $$N$$, it can be decided based on $$L_{max}$$, the longer the
-sequence is, the more sparse the frequency space is, so we can choose a larger
-$$N$$. In TinyLLaMA, $$N=10000$$.
+> **Why linear formation don't work?** Recall that we're trying to encode the
+> relative position between $$x_m$$ with every other tokens
+> $$x_0,x_1,..,x_{m-1},x_{m+1},..x_{L_{max}}$$, which is $$L_{max}-1$$'s
+> distance. But our token vector only has $$d=H$$ components. Any linear
+> mapping from $$L_{max}$$ to $$d/2$$ will result in a very dense projection,
+> which means that many different relative positions will be projected to very
+> close angles, making them hard to distinguish.
+
+So, it would be straightforward to use a exponential formation and allow
+$$\theta_i$$ to grow sparsely across the frequency space to capture all
+$$L_{max}-1$$ distances, i.e., $$\theta_i=N^{-2i/d}$$. The $$2/d$$ factor is to
+get a dimension-invariant angle. The negative sign is to make sure the angle is
+exponentially decreasing, otherwise it will just explode.  (PS: we can make
+$$\theta_0=2\pi$$, but it won't be that useful). As for $$N$$, it can be
+decided based on $$L_{max}$$, the longer the sequence is, the more sparse the
+frequency space is, so we can choose a larger $$N$$. In TinyLLaMA, $$N=10000$$.
+
+Exponential formation creates a sparse frequency space, and covers a wide range
+of frequencies. Thereby, close words can be distinguished by low-frequency
+rotations with smaller $$i$$ while far-away words can be distinguished by
+high-frequency rotations with larger $$i$$.
+
+
+|i|\theta_i|
+|-|-|
+|0|1|
+|10|0.91|
+|100|0.41|
+|200|0.17|
+|500|0.01|
+|1000|0.0001|
+
+
