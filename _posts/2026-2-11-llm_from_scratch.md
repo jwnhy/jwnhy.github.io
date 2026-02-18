@@ -329,7 +329,7 @@ rotations with smaller $$i$$ while far-away words can be distinguished by
 high-frequency rotations with larger $$i$$.
 
 
-|i|\theta_i|
+|i|$$\theta_i$$|
 |-|-|
 |0|1|
 |10|0.91|
