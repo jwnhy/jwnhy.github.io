@@ -159,6 +159,11 @@ thereby having vanishing gradients.
 > output of softmax will all be near a constant 1, which causes the gradient to
 > vanish (near 0) as constant has zero gradient.
 
+
+## KVCache: Save What have been Computed
+
+In attention computation, we need to compute $$K,Q,V$$.
+
 ## Multi-head Attention: Learn Different Rules of Language
 
 The above mentioned attention is also called single-head attention, as it only
@@ -196,7 +201,10 @@ learn different patterns of the language when doing backpropagation.
 
 ![1770891828240.png](https://youke.xn--y7xa690gmna.cn/s1/2026/02/12/698da9f346f08.webp)
 
-**Trick: Grouped Query Attention**
+
+
+**Variant: Grouped Query Attention**
+
 
 ## RoPE: Learn Distance between Tokens
 
