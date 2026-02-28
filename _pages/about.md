@@ -20,6 +20,9 @@ firmware.
 
 ^ indicates equal contribution; \* indicates corresponding author. I highlighted my name in my 1st-authored works.
 
+- **GPU-Fuzz: Finding Memory Errors in Deep Learning Frameworks** [[paper]](https://arxiv.org/abs/2602.10478)  
+    Zihao Li^, **Hongyi Lu^**, Yanan Guo, Zhenkai Zhang, Shuai Wang, Fengwei Zhang\*. **DAC 2026 (CCF-A)**
+
 - **CuSafe: Capturing Memory Corruption on NVIDIA GPUs** [[paper]](./papers/cusafe-sec26.pdf)  
     **Hongyi Lu**, Fengwei Zhang\*, Zhenkai Zhang, Shuai Wang, Yanan Guo\*. **USENIX Security 2026 (CCF-A, BIG4)**
 
