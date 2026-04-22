@@ -23,13 +23,13 @@ firmware.
 - **GPU-Fuzz: Finding Memory Errors in Deep Learning Frameworks** [[paper]](https://arxiv.org/abs/2602.10478)  
     Zihao Li^, **Hongyi Lu^**, Yanan Guo, Zhenkai Zhang, Shuai Wang, Fengwei Zhang\*. **DAC 2026 (CCF-A)**
 
-- **CuSafe: Capturing Memory Corruption on NVIDIA GPUs** [[paper]](./papers/cusafe-sec26.pdf)  
+- **CuSafe: Capturing Memory Corruption on NVIDIA GPUs** [[paper]](./papers/cusafe-usenix26.pdf) [[site]](https://cusafe.github.io) [[code]](https://doi.org/10.6084/m9.figshare.30821396)  
     **Hongyi Lu**, Fengwei Zhang\*, Zhenkai Zhang, Shuai Wang, Yanan Guo\*. **USENIX Security 2026 (CCF-A, BIG4)**
 
-- **Towards Secure BPF Kernel Extension with Hardware-enhanced Memory Isolation**  
+- **Towards Secure BPF Kernel Extension with Hardware-enhanced Memory Isolation** [[paper]](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=11316181)
     Lijian Huang^, **Hongyi Lu^**, Shuai Wang\*, Fengwei Zhang\*. **TDSC (CCF-A)**
 
-- **Hardware-assisted Memory Isolation** [[paper]](./)  
+- **Hardware-assisted Memory Isolation** [[paper]](./papers/doc-symp.pdf)  
     **Hongyi Lu**. **CCS 2025 (PhD Symposium)**
 
 - **MOLE: Breaking GPU TEE with GPU-Embedded MCU** [[paper]](./papers/mole-ccs25.pdf) [[site]](https://sites.google.com/view/mole-gpu)  
@@ -39,7 +39,7 @@ firmware.
     **Hongyi Lu**, Shuai Wang*, Yechang Wu, Wanning He, Fengwei Zhang\*. **USENIX Security 2024 (CCF-A, BIG4)**
 
 - **DTD: Comprehensive and Scalable Testing for Debuggers** [[paper]](./papers/dtd-fse24.pdf) [[code]](https://github.com/jwnhy/DTD)  
-    **Hongyi Lu**, Zhibo Liu\*, Shuai Wang, and Fengwei Zhang\*. **FSE 2024 (CCF-A)** 
+    **Hongyi Lu**, Zhibo Liu\*, Shuai Wang, and Fengwei Zhang\*. **FSE 2024 (CCF-A)**
 
 - **RingGuard: Guard io_uring with eBPF** [[paper]](./papers/ringguard-ebpf23.pdf)  
     Wanning He^, **Hongyi Lu^**, Fengwei Zhang\*, and Shuai Wang. **SIGCOMM eBPF 2023**
@@ -97,7 +97,6 @@ The following are the paper submission timelines; these papers are rejected at l
 - [A Video to ASCII Player (for fun)](https://github.com/jwnhy/video2ascii)
 - [Software Foundation](https://coq-zh.github.io/SF-zh/) Translator
 - [LLVM](https://llvm.org/) Contributor [[bugfix]](https://github.com/llvm/llvm-project/commit/16c2872d7b09eee67dd0c7ef6b5dd3c3724d3cfc)
-
 
 ## Friends
 
