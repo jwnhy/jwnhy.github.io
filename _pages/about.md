@@ -10,11 +10,13 @@ author: "Hongyi Lu (jwnhy)"
 permalink: /
 ---
 
-Hongyi LU (jwnhy) is a final-year Ph.D. candidate in Computer Science at HKUST,
-jointly supervised by [Professor Shuai Wang](https://www.cse.ust.hk/~shuaiw/)
-and [Professor Fengwei Zhang](https://fengweiz.github.io/). His research
-focuses on the security of low-level system components, such as OS, GPU, and
-firmware.
+Hongyi LU (jwnhy) received his Ph.D. in Computer Science from HKUST, where he
+was jointly supervised by [Professor Shuai
+Wang](https://www.cse.ust.hk/~shuaiw/) and [Professor Fengwei
+Zhang](https://fengweiz.github.io/). His doctoral research focused on the
+security of low-level system components, including OS, GPU, and firmware. He is
+currently a Software Expert at NIO, where he applies his expertise in systems
+security to automotive software.
 
 ## Publications
 
